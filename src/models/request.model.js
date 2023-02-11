@@ -1,20 +1,20 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
-const { states } = require('../config/requestStates');
-
 
 const requestSchema = mongoose.Schema(
     {
         // state of the request 
         state: {
             type: String,
-            enum: states,
+            enum: [
+                'processing', 'confirmed', 'accepted', 'pickedup', 'onmyway', 'delivered'
+            ],
             required: true,
             default: 'Processing',
         },
         // rate of the request and valid only numbers from 0-5
         rate: {
-            type: Double,
+            //type: Double,
             required: true,
             trim: true,
             validate(value) {
@@ -23,16 +23,11 @@ const requestSchema = mongoose.Schema(
                 }
             },
         },
-        // reward of the request and valid only numbers
+        // reward of the request
         reward: {
             type: Double,
             required: true,
             trim: true,
-            validate(value) {
-                if (!value.match(/^[0-9]+$/)) {
-                    throw new Error('Only numbers are allowed');
-                }
-            },
         },
         // Qr code that will be stored as URI
         qrCode: {
