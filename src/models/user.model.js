@@ -23,6 +23,18 @@ const userSchema = mongoose.Schema(
         }
       },
     },
+    phone: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      validate(value) {
+        // the length could be changed later
+        if (value.length !== 11 || Number.isNaN(value)) {
+          throw new Error('Invalid phone number');
+        }
+      },
+    },
     password: {
       type: String,
       required: true,
@@ -35,12 +47,20 @@ const userSchema = mongoose.Schema(
       },
       private: true, // used by the toJSON plugin
     },
+    birthdate: {
+      type: Date,
+      // validation to be changed
+    },
     role: {
       type: String,
       enum: roles,
       default: 'user',
     },
     isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    isPhoneVerified: {
       type: Boolean,
       default: false,
     },
@@ -62,6 +82,11 @@ userSchema.plugin(paginate);
  */
 userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
   const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+  return !!user;
+};
+
+userSchema.statics.IsPhoneTaken = async function (phone, excludeUserId) {
+  const user = await this.findOne({ phone, _id: { $ne: excludeUserId } });
   return !!user;
 };
 
