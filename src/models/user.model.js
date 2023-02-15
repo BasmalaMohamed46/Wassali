@@ -46,20 +46,12 @@ const userSchema = mongoose.Schema(
       },
       private: true, // used by the toJSON plugin
     },
-    birthdate: {
-      type: Date,
-      // validation to be changed
-    },
     role: {
       type: String,
       enum: roles,
       default: 'user',
     },
     isEmailVerified: {
-      type: Boolean,
-      default: false,
-    },
-    isPhoneVerified: {
       type: Boolean,
       default: false,
     },
