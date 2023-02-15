@@ -57,7 +57,7 @@ const updateRequestById = async (requestId, updateBody) => {
  * @returns {Promise<Request>}
  */
 const deleteRequestById = async (requestId) => {
-    const request = await getrequestById(requestId);
+    const request = await getRequestById(requestId);
     if (!request) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
     }

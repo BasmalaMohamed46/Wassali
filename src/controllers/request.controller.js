@@ -25,7 +25,7 @@ const getRequest = catchAsync(async (req, res) => {
 });
 
 const updateRequest = catchAsync(async (req, res) => {
-    const request = await requestService.updateRequestById(req.params.request, req.body);
+    const request = await requestService.updateRequestById(req.params.requestId, req.body);
     res.send(request);
 });
 
