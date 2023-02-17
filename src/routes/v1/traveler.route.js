@@ -68,7 +68,6 @@ router.patch(
           })
         }
       }
-
       return res.status(422).json({
         errors: validationErrors.array()
       });
@@ -77,7 +76,7 @@ router.patch(
     }
   },
   // validate(travelerValidation.createTraveler),
-  travelerController.createTraveler
+  travelerController.AddTraveler
 );
 
 router.patch(
@@ -85,17 +84,17 @@ router.patch(
   auth(),
   validate(travelerValidation.updateTraveler),
   multerFn('Traveler', validationType.image),
-  travelerController.updateTraveler
+  travelerController.updateTraveller
 );
 
 router.put(
   '/student',
   auth(),
-  travelerController.Student)
+  travelerController.IsStudent)
 
 router.patch(
   '/employee',
   auth(),
-  travelerController.Employee)
+  travelerController.IsEmployee)
 
 module.exports = router;
