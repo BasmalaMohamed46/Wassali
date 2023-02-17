@@ -29,8 +29,7 @@ const userSchema = mongoose.Schema(
       unique: true,
       trim: true,
       validate(value) {
-        // the length could be changed later
-        if (value.length !== 11 || Number.isNaN(value)) {
+        if (!value.match(/^(010|011|012|015)[0-9]{8}$/)) {
           throw new Error('Invalid phone number');
         }
       },
@@ -80,14 +79,10 @@ userSchema.plugin(paginate);
  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
  * @returns {Promise<boolean>}
  */
-userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
-  const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
-  return !!user;
-};
-
-userSchema.statics.IsPhoneTaken = async function (phone, excludeUserId) {
-  const user = await this.findOne({ phone, _id: { $ne: excludeUserId } });
-  return !!user;
+userSchema.statics.isEmailOrPhoneTaken = async function (email, phone, excludeUserId) {
+  const userEmail = await this.findOne({ email, _id: { $ne: excludeUserId } });
+  const userPhone = await this.findOne({ phone, _id: { $ne: excludeUserId } });
+  return !!userEmail || !!userPhone;
 };
 
 /**

@@ -15,7 +15,14 @@ const password = (value, helpers) => {
   return value;
 };
 
+const phone = (value, helpers) => {
+  if (!value.match(/^(010|011|012|015)[0-9]{8}$/)) {
+    return helpers.message('Invalid phone number');
+  }
+};
+
 module.exports = {
   objectId,
   password,
+  phone,
 };
