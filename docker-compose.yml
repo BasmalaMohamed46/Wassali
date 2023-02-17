@@ -4,6 +4,7 @@ services:
   node-app:
     build: .
     image: node-app
+    command: tail -f /dev/null
     environment:
       - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
     ports:
