@@ -8,7 +8,6 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Request>}
  */
 const createRequest = async (requestBody) => {
-    console.log( 'request body' , requestBody.rate);
     return Request.create(requestBody);
 };
 

@@ -10,7 +10,7 @@ const createRequest = catchAsync(async (req, res) => {
 });
 //↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓
 const getRequests = catchAsync(async (req, res) => {
-    const filter = pick(req.query, ['name', 'role']);
+    const filter = pick(req.query, ['user']);
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
     const result = await requestService.queryRequests(filter, options);
     res.send(result);
