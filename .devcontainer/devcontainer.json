@@ -1,0 +1,8 @@
+{
+    "name": "Wassali",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "node-app",
+    "workspaceFolder": "/usr/src/node-app",
+    "shutdownAction": "stopCompose",
+    "containerEnv": {"NODE_ENV":"development"}
+    }
