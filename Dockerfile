@@ -4,12 +4,12 @@ RUN mkdir -p /usr/src/node-app && chown -R node:node /usr/src/node-app
 
 WORKDIR /usr/src/node-app
 
-COPY package.json yarn.lock ./
+RUN apk update && apk add git && rm -rf /var/cache/apk/*
 
-USER node
+COPY package.json yarn.lock ./
 
 RUN yarn install --pure-lockfile
 
-COPY --chown=node:node . .
+COPY --chown=node . .
 
 EXPOSE 3000
