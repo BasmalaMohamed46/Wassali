@@ -13,6 +13,7 @@ services:
       - mongodb
     volumes:
       - .:/usr/src/node-app
+      - node_modules:/usr/src/node-app/node_modules
     networks:
       - node-network
 
@@ -27,6 +28,7 @@ services:
 
 volumes:
   dbdata:
+  node_modules:
 
 networks:
   node-network:
