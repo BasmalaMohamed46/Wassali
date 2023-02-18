@@ -48,33 +48,7 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  isTraveler: {
-    type: Boolean,
-    default: false,
-  },
-  isStudent: {
-    type: Boolean,
-    default: false,
-  },
-  NationalId: {
-    type: String,
-  },
-  birthdate: {
-    type: Date,
-  },
-  city: String,
-  government: {
-    type: String,
-  },
-  StudentUniversityId: {
-    type: String
-  },
-  CollegeEnrollmentStatement: {
-    type: String,
-  },
-  EmployeeCompanyId: {
-    type: String,
-  },
+  
 }, {
   timestamps: true,
 });

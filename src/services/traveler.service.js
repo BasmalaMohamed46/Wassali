@@ -2,69 +2,58 @@ const User = require('../models/user.model')
 const fs = require('fs');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
+const Traveler = require('../models/traveler.model');
 
-const Student = async (id) => {
+const Student = async (id,res) => {
   // const id = req.user._id;
   const userExist = await User.findById(id)
   if (userExist) {
-    if (userExist.isStudent) {
-      return {
-        message: 'Traveler is already a student',
-      }
-    } else {
-      const updateTraveller = await User.findByIdAndUpdate(id, {
-        isStudent: true,
-      }, {
-        new: true,
-      })
-
-      return {
-        message: 'Traveler is already a student',
-        isStudent: updateTraveller.isStudent
-      }
+    const foundedTraveler=await Traveler.findOne({userId:id})
+    if(foundedTraveler){
+      res.status(httpStatus.NOT_FOUND).send('User is already a student');
     }
-  } else {
-    return {
-      message: 'Traveler is already a student',
+    else{
+    const traveler=await Traveler.create({
+    
+      isStudent:true,
+      userId:id
+    })
+    res.status(httpStatus.CREATED).send(traveler);
+  }}
+    else{
+      res.status(httpStatus.NOT_FOUND).send('User not found');}
     }
-  }
-};
+  
 
-const Employee = async (id) => {
+;
+const Employee = async (id,res) => {
   // const id = req.user._id;
   const userExist = await User.findById(id)
   if (userExist) {
-    if (!userExist.isStudent) {
-      return {
-        message: 'Traveler is already a employee',
-      }
-    } else {
-      const updateTraveller = await User.findByIdAndUpdate(id, {
-        isStudent: false,
-      }, {
-        new: true,
-      })
-      return {
-        message: 'Traveler is a employee',
-        isStudent: updateTraveller.isStudent
-      }
+    const foundedTraveler=await Traveler.findOne({userId:id})
+    if(foundedTraveler){
+      res.status(httpStatus.NOT_FOUND).send('User is already a Employee');
     }
-  } else {
-    return {
-      message: 'User not found',
+    else{
+    const traveler=await Traveler.create({
+   
+      isStudent:false,
+      userId:id
+    })
+    res.status(httpStatus.CREATED).send(traveler);
+  }}
+    else{
+      res.status(httpStatus.NOT_FOUND).send('User not found');}
     }
-  }
-};
+  
+
+;
 
 const createTraveler = async (id, req) => {
   try {
     // const id = req.user._id;
     const foundedUser = await User.findById(id);
-    if (foundedUser.isTraveler) {
-      return {
-        message: 'User is already a traveler',
-      }
-    } else {
+    const foundedTraveler = await Traveler.findOne({userId:id});
       const {
         NationalId,
         birthdate,
@@ -79,13 +68,12 @@ const createTraveler = async (id, req) => {
       }
       // console.log(req.files.CollegeEnrollmentStatement);
       // console.log(req.files.CollegeEnrollmentStatement[0].filename);
-      if (foundedUser.isStudent) {
+      if (foundedTraveler.isStudent) {
         let StudentUniversityId_URL = `${req.protocol}://${req.headers.host}/${req.destination}/${req.files.StudentUniversityId[0].filename}`;
         let CollegeEnrollmentStatement_URL = `${req.protocol}://${req.headers.host}/${req.destination2}/${req.files.CollegeEnrollmentStatement[0].filename}`;
         // console.log(StudentUniversityId_URL);
-        const updatedUser = await User.findByIdAndUpdate(
-          id, {
-            role: 'traveler',
+        const updatedUser = await Traveler.findByIdAndUpdate(
+          foundedTraveler._id, { 
             isTraveler: true,
             NationalId,
             birthdate,
@@ -105,10 +93,9 @@ const createTraveler = async (id, req) => {
       } else {
         let EmployeeCompanyId_URL = `${req.protocol}://${req.headers.host}/${req.destination3}/${req.files.EmployeeCompanyId[0].filename}`;
         // console.log(EmployeeCompanyId_URL);
-        const updatedUser = await User.findByIdAndUpdate(
-          id, {
+        const updatedUser = await Traveler.findByIdAndUpdate(
+          foundedTraveler._id, {
             isTraveler: true,
-            role: 'traveler',
             NationalId,
             birthdate,
             city,
@@ -125,7 +112,7 @@ const createTraveler = async (id, req) => {
           updatedUser,
         }
       }
-    }
+  
   } catch (error) {
     return {
       message: 'Something went wrong',
@@ -146,11 +133,12 @@ const updateTraveler = async (id, req) => {
     } = req.body;
 
     const userExist = await User.findById(id);
-    if (userExist.isTraveler) {
-      if (userExist.isStudent) {
+    const travelerExist=await Traveler.findOne({userId:id})
+    if (travelerExist.isTraveler) {
+      if (travelerExist.isStudent) {
         // console.log(userExist.StudentUniversityId.split('/').pop());
-        const oldStudentUniversityId = userExist.StudentUniversityId.split('/').pop();
-        const oldCollegeEnrollmentStatement = userExist.CollegeEnrollmentStatement.split('/').pop();
+        const oldStudentUniversityId = travelerExist.StudentUniversityId.split('/').pop();
+        const oldCollegeEnrollmentStatement = travelerExist.CollegeEnrollmentStatement.split('/').pop();
         fs.unlink(`./src/uploads/Traveler/StudentUniversityId/${oldStudentUniversityId}`, (err) => {
           if (err) {
             // eslint-disable-next-line no-console
@@ -165,8 +153,8 @@ const updateTraveler = async (id, req) => {
         console.log(req.files);
         let newStudentUniversityIdURL = `${req.protocol}://${req.headers.host}/${req.destination}/${req.files.StudentUniversityId[0].filename}`
         let newCollegeEnrollmentStatementURL = `${req.protocol}://${req.headers.host}/${req.destination2}/${req.files.CollegeEnrollmentStatement[0].filename}`
-        const updateTraveler = await User.findByIdAndUpdate(
-          id, {
+        const updateTraveler = await Traveler.findByIdAndUpdate(
+          travelerExist._id, {
             NationalId,
             birthdate,
             phone,
@@ -183,15 +171,15 @@ const updateTraveler = async (id, req) => {
           updateTraveler,
         }
       } else {
-        const oldEmployeeCompanyId = userExist.EmployeeCompanyId.split('/').pop();
+        const oldEmployeeCompanyId = travelerExist.EmployeeCompanyId.split('/').pop();
         fs.unlink(`./src/uploads/Traveler/EmployeeCompanyId/${oldEmployeeCompanyId}`, (err) => {
           if (err) {
             console.log(err);
           }
         });
         let newEmployeeCompanyIdURL = `${req.protocol}://${req.headers.host}/${req.destination3}/${req.files.EmployeeCompanyId[0].filename}`
-        const updateTraveler = await User.findByIdAndUpdate(
-          id, {
+        const updateTraveler = await Traveler.findByIdAndUpdate(
+          travelerExist._id, {
             NationalId,
             birthdate,
             phone,
@@ -220,47 +208,42 @@ const updateTraveler = async (id, req) => {
 };
 const deleteTraveler = async (id,res) => {
   try{
-    const Traveler = await User.findById(id);
-    if(!Traveler){
-      res.status(httpStatus.NOT_FOUND).json({
-        message: 'Traveler not found',
-      })  
-    }
-    else{
-      if(Traveler.isTraveler){
-        Traveler.isTraveler = false;
-        Traveler.role = 'user';
-        // Traveler.isStudent = false;
-        // Traveler.NationalId = null;
-        // Traveler.birthdate = null;
-        // Traveler.city = null;
-        // Traveler.government = null;
-        // Traveler.StudentUniversityId = null;
-        // Traveler.CollegeEnrollmentStatement = null;
-        // Traveler.EmployeeCompanyId = null;
-        await Traveler.save();
-        res.status(httpStatus.OK).json({
-          message: 'Traveler deleted successfully',
-        })
-      }
-      else{
-        res.status(httpStatus.NOT_FOUND).json({
-          message: 'user is not a traveler',
-        })
-       
-      }
-    } 
+    const foundedTraveler=await Traveler.findOne({userId:id});
+    if(foundedTraveler){
+    const traveler=await Traveler.findOneAndDelete({userId:id});
+    res.status(httpStatus.OK).json({
+      message: 'Traveler deleted successfully',
+      traveler
+    })
   }
+  else{
+    res.status(httpStatus.NOT_FOUND).json({
+      message: 'Traveler not found',
+    })
+
+  }}
   catch(error){
-   res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Something went wrong',
       err: error.message,
     })
   }
+
 }
 const viewTraveler = async (id,res) => {
   try{
-     return User.findById(id);
+     const traveler=await Traveler.findOne({userId:id});
+      if(traveler){
+        res.status(httpStatus.OK).json({
+          message: 'Traveler found',
+          traveler
+        })
+      }
+      else{
+        res.status(httpStatus.NOT_FOUND).json({
+          message: 'Traveler not found',
+        })
+      }
   }
   catch(error){
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({

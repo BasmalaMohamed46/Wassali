@@ -6,7 +6,7 @@ const {
 
 const IsStudent = catchAsync(async (req, res) => {
   const id = req.user._id;
-  const student = await travelerService.Student(id);
+  const student = await travelerService.Student(id,res);
   res.send(student);
 });
 
@@ -34,18 +34,8 @@ const deleteTraveller = catchAsync(async (req, res) => {
 });
 const getTraveller = catchAsync(async (req, res) => {
   const id = req.user._id;
-  const user = await travelerService.viewTraveler(id,res);
-  if(!user){
-    res.status(httpStatus.NOT_FOUND).send('Traveler not found');
-  }
-  else{
-    if(user.isTraveler){
-      res.status(httpStatus.OK).send(user);
-    }
-    else{
-      res.status(httpStatus.NOT_FOUND).send('Traveler not found');
-    }
-  }
+  const traveler = await travelerService.viewTraveler(id,res);
+  res.status(httpStatus.OK).send(traveler);
   
 });
 
