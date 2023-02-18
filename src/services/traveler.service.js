@@ -1,5 +1,7 @@
 const User = require('../models/user.model')
 const fs = require('fs');
+const httpStatus = require('http-status');
+const ApiError = require('../utils/ApiError');
 
 const Student = async (id) => {
   // const id = req.user._id;
@@ -216,10 +218,64 @@ const updateTraveler = async (id, req) => {
     }
   }
 };
+const deleteTraveler = async (id,res) => {
+  try{
+    const Traveler = await User.findById(id);
+    if(!Traveler){
+      res.status(httpStatus.NOT_FOUND).json({
+        message: 'Traveler not found',
+      })  
+    }
+    else{
+      if(Traveler.isTraveler){
+        Traveler.isTraveler = false;
+        Traveler.role = 'user';
+        // Traveler.isStudent = false;
+        // Traveler.NationalId = null;
+        // Traveler.birthdate = null;
+        // Traveler.city = null;
+        // Traveler.government = null;
+        // Traveler.StudentUniversityId = null;
+        // Traveler.CollegeEnrollmentStatement = null;
+        // Traveler.EmployeeCompanyId = null;
+        await Traveler.save();
+        res.status(httpStatus.OK).json({
+          message: 'Traveler deleted successfully',
+        })
+      }
+      else{
+        res.status(httpStatus.NOT_FOUND).json({
+          message: 'user is not a traveler',
+        })
+       
+      }
+    } 
+  }
+  catch(error){
+   res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Something went wrong',
+      err: error.message,
+    })
+  }
+}
+const viewTraveler = async (id,res) => {
+  try{
+     return User.findById(id);
+  }
+  catch(error){
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Something went wrong',
+      err: error.message,
+    })
+  }
+}
+
 
 module.exports = {
   Student,
   Employee,
   createTraveler,
   updateTraveler,
+  deleteTraveler,
+  viewTraveler,
 };

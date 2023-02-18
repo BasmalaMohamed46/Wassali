@@ -97,4 +97,16 @@ router.patch(
   auth(),
   travelerController.IsEmployee)
 
+router.get(
+  '/get',
+  auth(),
+  travelerController.getTraveller
+);
+
+router.delete(
+  '/delete',
+  auth(),
+  travelerController.deleteTraveller
+);
+
 module.exports = router;
