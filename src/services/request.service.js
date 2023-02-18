@@ -8,7 +8,7 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Request>}
  */
 const createRequest = async (requestBody) => {
-    return Request.create(requestBody);
+  return Request.create(requestBody);
 };
 
 /**
@@ -21,8 +21,8 @@ const createRequest = async (requestBody) => {
  * @returns {Promise<QueryRequests>}
  */
 const queryRequests = async (filter, options) => {
-    const requests = await Request.paginate(filter, options);
-    return requests;
+  const requests = await Request.paginate(filter, options);
+  return requests;
 };
 
 /**
@@ -31,7 +31,7 @@ const queryRequests = async (filter, options) => {
  * @returns {Promise<Request>}
  */
 const getRequestById = async (id) => {
-    return Request.findById(id);
+  return Request.findById(id);
 };
 
 /**
@@ -41,13 +41,13 @@ const getRequestById = async (id) => {
  * @returns {Promise<Request>}
  */
 const updateRequestById = async (requestId, updateBody) => {
-    const request = await getRequestById(requestId);
-    if (!request) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
-    }
-    Object.assign(request, updateBody);
-    await request.save();
-    return request;
+  const request = await getRequestById(requestId);
+  if (!request) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
+  }
+  Object.assign(request, updateBody);
+  await request.save();
+  return request;
 };
 
 /**
@@ -56,18 +56,18 @@ const updateRequestById = async (requestId, updateBody) => {
  * @returns {Promise<Request>}
  */
 const deleteRequestById = async (requestId) => {
-    const request = await getRequestById(requestId);
-    if (!request) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
-    }
-    await request.remove();
-    return request;
+  const request = await getRequestById(requestId);
+  if (!request) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
+  }
+  await request.remove();
+  return request;
 };
 
 module.exports = {
-    createRequest,
-    queryRequests,
-    getRequestById,
-    updateRequestById,
-    deleteRequestById,
+  createRequest,
+  queryRequests,
+  getRequestById,
+  updateRequestById,
+  deleteRequestById,
 };
