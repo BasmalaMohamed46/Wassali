@@ -3,7 +3,13 @@ const tokenService = require('./token.service');
 const userService = require('./user.service');
 const Token = require('../models/token.model');
 const ApiError = require('../utils/ApiError');
-const { tokenTypes } = require('../config/tokens');
+const {
+  tokenTypes
+} = require('../config/tokens');
+const passport = require('passport')
+const googleAuth = require('../services/googleAuth')
+const session = require('express-session')
+const User = require('../models/user.model')
 
 /**
  * Login with username and password
@@ -25,7 +31,11 @@ const loginUserWithEmailAndPassword = async (email, password) => {
  * @returns {Promise}
  */
 const logout = async (refreshToken) => {
-  const refreshTokenDoc = await Token.findOne({ token: refreshToken, type: tokenTypes.REFRESH, blacklisted: false });
+  const refreshTokenDoc = await Token.findOne({
+    token: refreshToken,
+    type: tokenTypes.REFRESH,
+    blacklisted: false
+  });
   if (!refreshTokenDoc) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
   }
@@ -64,8 +74,13 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
     if (!user) {
       throw new Error();
     }
-    await userService.updateUserById(user.id, { password: newPassword });
-    await Token.deleteMany({ user: user.id, type: tokenTypes.RESET_PASSWORD });
+    await userService.updateUserById(user.id, {
+      password: newPassword
+    });
+    await Token.deleteMany({
+      user: user.id,
+      type: tokenTypes.RESET_PASSWORD
+    });
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password reset failed');
   }
@@ -83,12 +98,66 @@ const verifyEmail = async (verifyEmailToken) => {
     if (!user) {
       throw new Error();
     }
-    await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
-    await userService.updateUserById(user.id, { isEmailVerified: true });
+    await Token.deleteMany({
+      user: user.id,
+      type: tokenTypes.VERIFY_EMAIL
+    });
+    await userService.updateUserById(user.id, {
+      isEmailVerified: true
+    });
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed');
   }
 };
+
+const loginUserWithGoogle = async (req, res) => {
+  // console.log(req.user);
+  const userExist = await User.findOne({
+    email: req.user.email
+  })
+  if (userExist) {
+    res.redirect('/v1/auth/home')
+  } else {
+    const user = new User({
+      name: req.user.displayName,
+      email: req.user.email,
+      // password: req.user.password,
+      isEmailVerified: 'true',
+      googleId: req.user.id
+    })
+    const savedUser = await user.save()
+    res.redirect('/v1/auth/home')
+    res.status(200).json({
+      message: 'user created',
+      savedUser
+    })
+  }
+}
+
+const userForm = (req, res) => {
+  res.status(200).json({
+    message: 'Hello',
+    user: req.user.email
+  })
+}
+const Googlefailure = (req, res) => {
+  res.status(200).json({
+    message: 'Google Login Failed'
+  })
+}
+const googleCallback = async (req, res) => {
+  passport.authenticate('google', {
+    successRedirect: '/home',
+    failureRedirect: '/auth/failure'
+  })
+}
+
+const Googlelogout = async (req, res) => {
+  req.session.destroy(function (err) {
+    res.redirect('/');
+  });
+}
+
 
 module.exports = {
   loginUserWithEmailAndPassword,
@@ -96,4 +165,9 @@ module.exports = {
   refreshAuth,
   resetPassword,
   verifyEmail,
+  loginUserWithGoogle,
+  userForm,
+  Googlefailure,
+  googleCallback,
+  Googlelogout
 };
