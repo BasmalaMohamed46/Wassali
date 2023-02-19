@@ -8,8 +8,11 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<User>}
  */
 const createUser = async (userBody) => {
-  if (await User.isEmailOrPhoneTaken(userBody.email, userBody.phone)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email or Phone number already taken');
+  if (await User.isEmailTaken(userBody.email)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  }
+  if (await User.isphoneNumberTaken(userBody.phoneNumber)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'PhoneNumber already registered');
   }
   // console.log(userBody)
   return User.create(userBody);
@@ -48,12 +51,12 @@ const getUserByEmail = async (email) => {
 };
 
 /**
- * Get user by phone
- * @param {string} phone
+ * Get user by phoneNumber
+ * @param {string} phoneNumber
  * @returns {Promise<User>}
  */
-const getUserByPhone = async (phone) => {
-  return User.findOne({ phone });
+const getUserByphoneNumber = async (phoneNumber) => {
+  return User.findOne({ phoneNumber });
 };
 
 /**
@@ -70,8 +73,8 @@ const updateUserById = async (userId, updateBody) => {
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
-  if (updateBody.phone && (await User.isPhoneTaken(updateBody.phone))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Phone number already taken');
+  if (updateBody.phoneNumber && (await User.isphoneNumberTaken(updateBody.phoneNumber))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'phoneNumber number already taken');
   }
   Object.assign(user, updateBody);
   await user.save();
@@ -99,5 +102,5 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
-  getUserByPhone,
+  getUserByphoneNumber,
 };

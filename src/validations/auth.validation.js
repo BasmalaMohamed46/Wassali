@@ -1,10 +1,10 @@
 const Joi = require('joi');
-const { password, phone } = require('./custom.validation');
+const { password, phoneNumber } = require('./custom.validation');
 
 const register = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    phone: Joi.string().required().custom(phone),
+    phoneNumber: Joi.string().required().custom(phoneNumber),
     password: Joi.string().required().custom(password),
     birthdate: Joi.date().required(),
     name: Joi.string().required(),
