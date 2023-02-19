@@ -22,7 +22,7 @@ const addTrip = async (id, req) => {
     }}}
     else{
         return {
-            message: 'User not found',      
+            message: 'User not found',
 }}
 }
       catch (error) {
@@ -61,7 +61,7 @@ const deleteTrip = async (id,res,tripId) => {
             message: 'Traveler not found',
         })
     }}
- 
+
   catch(error){
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Something went wrong',
@@ -85,7 +85,7 @@ const viewtrips = async (id, req,res) => {
       res.status(httpStatus.OK).json({
         message: 'No Trips founded',
       })
-    } 
+    }
   }
   else{
     res.status(httpStatus.NOT_FOUND).json({
@@ -98,7 +98,7 @@ const viewtrips = async (id, req,res) => {
       message: 'Something went wrong',
       err: error.message,
     }
-    
+
   }
 }
 
@@ -130,7 +130,7 @@ const viewtravelertrips = async (id, req,res) => {
       message: 'Something went wrong',
       err: error.message,
     }
-    
+
   }
 
 }
@@ -168,14 +168,62 @@ const viewtrip = async (id, req,res,tripId) => {
   }
 }
 
+const updateTrip = async (id, req, res, tripId) => {
+  try {
+    const userExist = await User.findById(id)
+    if (userExist) {
+      let foundedTraveler = await Traveler.findOne({
+        userId: id
+      });
+      const {
+        TripDestination,
+        TripDate,
+        AvailableWeight,
+        unAcceptablaPackage,
+        TripTime
+      } = req.body;
+      if (foundedTraveler) {
+        const trip = await Trip.findByIdAndUpdate({
+          _id: tripId
+        }, {
+          TripDestination,
+          TripDate,
+          AvailableWeight,
+          unAcceptablaPackage,
+          Traveler: foundedTraveler._id,
+          TripTime
+        }, {
+          new: true
+        });
+        return {
+          message: 'Trip updated successfully',
+          trip
+        }
+      } else {
+        res.status(404).json({
+          message: 'Traveler not found',
+        })
+      }
+    } else {
+      res.status(404).json({
+        message: 'User not found',
+      })
+    }
+  } catch (error) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Something went wrong',
+      err: err.message,
+    })
+  }
+};
 
 
 
 module.exports = {
-    addTrip,
+  addTrip,
   deleteTrip,
   viewtrips,
   viewtravelertrips,
-  viewtrip
- 
+  viewtrip,
+  updateTrip
 };

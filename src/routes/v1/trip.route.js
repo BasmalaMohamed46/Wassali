@@ -14,7 +14,7 @@ router.post(
     validate(tripValidation.createTrip),
     tripController.CreateTrip
     );
-    
+
 
 router.delete(
   '/delete/:tripId',
@@ -38,6 +38,13 @@ router.get(
   '/viewtrip/:tripId',
   auth(),
   tripController.ViewTrip
+);
+
+router.put(
+  '/update/:tripId',
+  auth(),
+  validate(tripValidation.updateTrip),
+  tripController.updateTrip
 );
 
 module.exports = router;
