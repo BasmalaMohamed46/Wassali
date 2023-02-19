@@ -22,4 +22,22 @@ router.delete(
   tripController.deleteTrip
 );
 
+router.get(
+  '/view',
+  auth(),
+  tripController.ViewTrips
+);
+
+router.get(
+  '/viewtravelertrips',
+  auth(),
+  tripController.ViewTravelerTrips
+);
+
+router.get(
+  '/viewtrip/:tripId',
+  auth(),
+  tripController.ViewTrip
+);
+
 module.exports = router;

@@ -71,9 +71,111 @@ const deleteTrip = async (id,res,tripId) => {
 
 }
 
+const viewtrips = async (id, req,res) => {
+  try{
+    const user=await User.findById(id);
+    if(user){
+    const trips=await Trip.find();
+    if(trips.length>0){
+      res.status(httpStatus.OK).json({
+        message: 'Trips found successfully',
+        trips
+      })}
+    else{
+      res.status(httpStatus.OK).json({
+        message: 'No Trips founded',
+      })
+    } 
+  }
+  else{
+    res.status(httpStatus.NOT_FOUND).json({
+      message: 'You are not allowed to view trips',
+    })
+}
+   }
+  catch(err){
+    return {
+      message: 'Something went wrong',
+      err: error.message,
+    }
+    
+  }
+}
+
+const viewtravelertrips = async (id, req,res) => {
+  try{
+    const traveler=await Traveler.findOne({userId:id});
+    if(traveler){
+    const trips=await Trip.find({Traveler:traveler._id});
+    if(trips.length>0){
+      res.status(httpStatus.OK).json({
+        message: 'Trips found successfully',
+        trips
+      })}
+    else{
+      res.status(httpStatus.OK).json({
+        message: 'No Trips founded',
+      })
+    }
+  }
+  else{
+    res.status(httpStatus.NOT_FOUND).json({
+      message: 'You are not allowed to view trips',
+    })
+
+  }
+}
+  catch(err){
+    return {
+      message: 'Something went wrong',
+      err: error.message,
+    }
+    
+  }
+
+}
+
+const viewtrip = async (id, req,res,tripId) => {
+  try{
+    const user=await User.findById(id);
+    if(user){
+      const trip=await Trip.findById(tripId);
+      if(trip){
+        res.status(httpStatus.OK).json({
+          message: 'Trip found successfully',
+          trip
+        })
+      }
+      else{
+        res.status(httpStatus.NOT_FOUND).json({
+          message: 'Trip not found',
+        })
+      }
+    }
+    else{
+      res.status(httpStatus.NOT_FOUND).json({
+        message: 'You are not allowed to view trips',
+      })
+    }
+
+  }
+  catch(err){
+    return {
+      message: 'Something went wrong',
+      err: error.message,
+    }
+
+  }
+}
+
+
+
 
 module.exports = {
     addTrip,
   deleteTrip,
+  viewtrips,
+  viewtravelertrips,
+  viewtrip
  
 };

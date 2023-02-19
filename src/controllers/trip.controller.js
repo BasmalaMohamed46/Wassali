@@ -17,8 +17,32 @@ const deleteTrip = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(deleted);
 });
 
+const ViewTrips = catchAsync(async (req, res) => {
+    
+  const id = req.user._id;
+  const viewtrips = await tripService.viewtrips(id,req,res);
+  res.status(httpStatus.CREATED).send(viewtrips);
+});
+
+const ViewTravelerTrips = catchAsync(async (req, res) => {
+    
+  const id = req.user._id;
+  const viewtravelertrips = await tripService.viewtravelertrips(id,req,res);
+  res.status(httpStatus.CREATED).send(viewtravelertrips);
+});
+
+const ViewTrip = catchAsync(async (req, res) => {
+  const tripId = req.params.tripId; 
+  const id = req.user._id;
+  const viewtrip = await tripService.viewtrip(id,req,res,tripId);
+  res.status(httpStatus.CREATED).send(viewtrip);
+});
+
 
 module.exports = {
     CreateTrip,
   deleteTrip,
+  ViewTrips,
+  ViewTravelerTrips,
+  ViewTrip
 };
