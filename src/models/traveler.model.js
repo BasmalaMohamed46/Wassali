@@ -49,6 +49,11 @@ const travelerSchema = mongoose.Schema({
     ref: 'User',
     required: true,
     },
+  Trip:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Trip',
+    }],
+    
 }, {
   timestamps: true,
 });
