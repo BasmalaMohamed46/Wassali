@@ -14,7 +14,7 @@ const Student = async (id,res) => {
     }
     else{
     const traveler=await Traveler.create({
-    
+
       isStudent:true,
       userId:id
     })
@@ -23,8 +23,6 @@ const Student = async (id,res) => {
     else{
       res.status(httpStatus.NOT_FOUND).send('User not found');}
     }
-  
-
 ;
 const Employee = async (id,res) => {
   // const id = req.user._id;
@@ -36,7 +34,7 @@ const Employee = async (id,res) => {
     }
     else{
     const traveler=await Traveler.create({
-   
+
       isStudent:false,
       userId:id
     })
@@ -45,7 +43,7 @@ const Employee = async (id,res) => {
     else{
       res.status(httpStatus.NOT_FOUND).send('User not found');}
     }
-  
+
 
 ;
 
@@ -73,7 +71,7 @@ const createTraveler = async (id, req) => {
         let CollegeEnrollmentStatement_URL = `${req.protocol}://${req.headers.host}/${req.destination2}/${req.files.CollegeEnrollmentStatement[0].filename}`;
         // console.log(StudentUniversityId_URL);
         const updatedUser = await Traveler.findByIdAndUpdate(
-          foundedTraveler._id, { 
+          foundedTraveler._id, {
             isTraveler: true,
             NationalId,
             birthdate,
@@ -112,7 +110,7 @@ const createTraveler = async (id, req) => {
           updatedUser,
         }
       }
-  
+
   } catch (error) {
     return {
       message: 'Something went wrong',

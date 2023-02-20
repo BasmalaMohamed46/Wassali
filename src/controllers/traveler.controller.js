@@ -12,7 +12,7 @@ const IsStudent = catchAsync(async (req, res) => {
 
 const IsEmployee = catchAsync(async (req, res) => {
   const id = req.user._id;
-  const employee = await travelerService.Employee(id);
+  const employee = await travelerService.Employee(id,res);
   res.status(httpStatus.OK).send(employee);
 });
 
@@ -36,7 +36,7 @@ const getTraveller = catchAsync(async (req, res) => {
   const id = req.user._id;
   const traveler = await travelerService.viewTraveler(id,res);
   res.status(httpStatus.OK).send(traveler);
-  
+
 });
 
 
