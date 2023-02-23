@@ -10,7 +10,7 @@ const createUser = {
     birthDate: Joi.date().required(),
     role: Joi.string().valid('user', 'admin'),
     city: Joi.string().required(),
-    goverment: Joi.string().required(),
+    governorate: Joi.string().required(),
   }),
 };
 
@@ -40,7 +40,9 @@ const updateUser = {
       phoneNumber: Joi.string().custom(phoneNumber),
       password: Joi.string().custom(password),
       name: Joi.string(),
-      birthdate: Joi.date().required(),
+      birthDate: Joi.date().required(),
+      city: Joi.string().required(),
+      governorate: Joi.string().required(),
     })
     .min(1),
 };

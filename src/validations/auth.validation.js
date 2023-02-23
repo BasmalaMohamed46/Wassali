@@ -10,7 +10,7 @@ const register = {
     birthDate: Joi.date().required(),
     role: Joi.string().valid('user', 'admin'),
     city: Joi.string().required(),
-    goverment: Joi.string().required(),
+    governorate: Joi.string().required(),
   }),
 };
 

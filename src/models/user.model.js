@@ -36,7 +36,7 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    goverment: {
+    governorate: {
       type: String,
       required: true,
     },
