@@ -28,6 +28,18 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
     },
+    birthDate: {
+      type: Date,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    goverment: {
+      type: String,
+      required: true,
+    },
     password: {
       type: String,
       required: true,

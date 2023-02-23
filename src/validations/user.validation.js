@@ -7,8 +7,10 @@ const createUser = {
     phoneNumber: Joi.string().required().custom(phoneNumber),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
-    birthdate: Joi.date().required(),
-    role: Joi.string().required().valid('user', 'admin'),
+    birthDate: Joi.date().required(),
+    role: Joi.string().valid('user', 'admin'),
+    city: Joi.string().required(),
+    goverment: Joi.string().required(),
   }),
 };
 
