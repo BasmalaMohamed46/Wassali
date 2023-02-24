@@ -23,6 +23,7 @@ const defaultRoutes = [{
     path: '/requests',
     route: requestRoutes,
   },
+  {
     path: '/travelers',
     route: travelerRoute,
   },
