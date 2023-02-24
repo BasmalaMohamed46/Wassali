@@ -2,9 +2,10 @@ const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const docsRoute = require('./docs.route');
+const requestRoutes = require('./request.route');
 const travelerRoute = require('./traveler.route');
 const tripRoute = require('./trip.route');
-const requestRoute = require('./request.route');
+
 
 const config = require('../../config/config');
 
@@ -19,6 +20,9 @@ const defaultRoutes = [{
     route: userRoute,
   },
   {
+    path: '/requests',
+    route: requestRoutes,
+  },
     path: '/travelers',
     route: travelerRoute,
   },
@@ -26,10 +30,6 @@ const defaultRoutes = [{
     path: '/trips',
     route: tripRoute,
   },
-  {
-    path: '/requests',
-    route: requestRoute,
-  }
 ];
 
 const devRoutes = [
