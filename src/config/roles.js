@@ -1,5 +1,6 @@
 const allRoles = {
   user: [],
+  traveler: [],
   admin: ['getUsers', 'manageUsers'],
 };
 
