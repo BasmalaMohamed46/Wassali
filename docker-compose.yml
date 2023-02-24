@@ -1,4 +1,4 @@
-version: '3'
+version: '3.1'
 
 services:
   node-app:
@@ -6,23 +6,40 @@ services:
     image: node-app
     command: tail -f /dev/null
     environment:
-      - MONGODB_URL=mongodb://mongodb:27017/node-boilerplate
+      MONGODB_URL: mongodb://wassali:pass@mongo:27017/
+      MONGO_DATABASE: wassalidb
     ports:
       - '3000:3000'
     depends_on:
-      - mongodb
+      - mongo
     volumes:
       - .:/usr/src/node-app
       - node_modules:/usr/src/node-app/node_modules
     networks:
       - node-network
 
-  mongodb:
+  mongo:
     image: mongo:4.2.1-bionic
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: wassali
+      MONGO_INITDB_ROOT_PASSWORD: pass
+
     ports:
       - '27017:27017'
     volumes:
       - dbdata:/data/db
+    networks:
+      - node-network
+
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    restart: always
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: wassali
+      ME_CONFIG_MONGODB_ADMINPASSWORD: pass
+      ME_CONFIG_MONGODB_URL: mongodb://wassali:pass@mongo:27017/
     networks:
       - node-network
 
