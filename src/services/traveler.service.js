@@ -225,11 +225,13 @@ const deleteTraveler = async (id,res) => {
 }
 const viewTraveler = async (id,res) => {
   try{
+    const user=await User.findById(id);
      const traveler=await Traveler.findOne({userId:id});
       if(traveler){
         res.status(httpStatus.OK).json({
           message: 'Traveler found',
-          traveler
+          traveler,
+          user
         })
       }
       else{
