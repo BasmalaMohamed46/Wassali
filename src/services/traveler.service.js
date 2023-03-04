@@ -14,7 +14,7 @@ const Student = async (id,res) => {
     }
     else{
     const traveler=await Traveler.create({
-    
+
       isStudent:true,
       userId:id
     })
@@ -23,7 +23,7 @@ const Student = async (id,res) => {
     else{
       res.status(httpStatus.NOT_FOUND).send('User not found');}
     }
-  
+
 
 ;
 const Employee = async (id,res) => {
@@ -36,7 +36,7 @@ const Employee = async (id,res) => {
     }
     else{
     const traveler=await Traveler.create({
-   
+
       isStudent:false,
       userId:id
     })
@@ -45,14 +45,13 @@ const Employee = async (id,res) => {
     else{
       res.status(httpStatus.NOT_FOUND).send('User not found');}
     }
-  
+
 
 ;
 
 const createTraveler = async (id, req) => {
   try {
     // const id = req.user._id;
-    const foundedUser = await User.findById(id);
     const foundedTraveler = await Traveler.findOne({userId:id});
       const {
         NationalId,
@@ -73,10 +72,8 @@ const createTraveler = async (id, req) => {
         let CollegeEnrollmentStatement_URL = `${req.protocol}://${req.headers.host}/${req.destination2}/${req.files.CollegeEnrollmentStatement[0].filename}`;
         // console.log(StudentUniversityId_URL);
         const updatedUser = await Traveler.findByIdAndUpdate(
-          foundedTraveler._id, { 
-            isTraveler: true,
+          foundedTraveler._id, {
             NationalId,
-            birthdate,
             city,
             government,
             StudentUniversityId: StudentUniversityId_URL,
@@ -95,9 +92,7 @@ const createTraveler = async (id, req) => {
         // console.log(EmployeeCompanyId_URL);
         const updatedUser = await Traveler.findByIdAndUpdate(
           foundedTraveler._id, {
-            isTraveler: true,
             NationalId,
-            birthdate,
             city,
             government,
             EmployeeCompanyId: EmployeeCompanyId_URL,
@@ -112,7 +107,7 @@ const createTraveler = async (id, req) => {
           updatedUser,
         }
       }
-  
+
   } catch (error) {
     return {
       message: 'Something went wrong',
@@ -126,13 +121,11 @@ const updateTraveler = async (id, req) => {
     // const id = req.user._id;
     const {
       NationalId,
-      birthdate,
       phone,
       city,
       government
     } = req.body;
 
-    const userExist = await User.findById(id);
     const travelerExist=await Traveler.findOne({userId:id})
     if (travelerExist.isTraveler) {
       if (travelerExist.isStudent) {
@@ -156,7 +149,6 @@ const updateTraveler = async (id, req) => {
         const updateTraveler = await Traveler.findByIdAndUpdate(
           travelerExist._id, {
             NationalId,
-            birthdate,
             phone,
             city,
             government,
@@ -181,7 +173,6 @@ const updateTraveler = async (id, req) => {
         const updateTraveler = await Traveler.findByIdAndUpdate(
           travelerExist._id, {
             NationalId,
-            birthdate,
             phone,
             city,
             government,

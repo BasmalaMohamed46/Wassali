@@ -16,20 +16,12 @@ const travelerSchema = mongoose.Schema({
     enum: roles,
     default: 'traveler',
   },
-
-  isTraveler: {
-    type: Boolean,
-    default: false,
-  },
   isStudent: {
     type: Boolean,
     default: false,
   },
   NationalId: {
     type: String,
-  },
-  birthdate: {
-    type: Date,
   },
   city: String,
   government: {
