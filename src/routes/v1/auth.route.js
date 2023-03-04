@@ -23,7 +23,8 @@ function isLoggedIn(req, res, next) {
   req.user ? next() : res.sendStatus(401)
 }
 router.get('/signUp', (req, res) => {
-  res.send('<a href="/v1/auth/google">Google Sign Up</a>')
+  res.redirect('/v1/auth/google')
+  // res.send('<a href="/v1/auth/google">Google Sign Up</a>')
 });
 
 router.get('/google',
