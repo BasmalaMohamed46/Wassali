@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session')
 const helmet = require('helmet');
 const xss = require('xss-clean');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -8,13 +9,28 @@ const passport = require('passport');
 const httpStatus = require('http-status');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
-const { jwtStrategy } = require('./config/passport');
-const { authLimiter } = require('./middlewares/rateLimiter');
+const {
+  jwtStrategy
+} = require('./config/passport');
+const {
+  authLimiter
+} = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
-const { errorConverter, errorHandler } = require('./middlewares/error');
+const {
+  errorConverter,
+  errorHandler
+} = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 
 const app = express();
+
+app.use(session({
+  secret: 'shipping',
+  resave: false,
+  saveUninitialized: true
+}))
+app.use(passport.initialize())
+app.use(passport.session())
 
 if (config.env !== 'test') {
   app.use(morgan.successHandler);
@@ -28,7 +44,9 @@ app.use(helmet());
 app.use(express.json());
 
 // parse urlencoded request body
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({
+  extended: true
+}));
 
 // sanitize request data
 app.use(xss());

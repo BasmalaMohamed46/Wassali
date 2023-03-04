@@ -23,6 +23,7 @@ const Student = async (id,res) => {
     else{
       res.status(httpStatus.NOT_FOUND).send('User not found');}
     }
+
 ;
 const Employee = async (id,res) => {
   // const id = req.user._id;
@@ -50,7 +51,6 @@ const Employee = async (id,res) => {
 const createTraveler = async (id, req) => {
   try {
     // const id = req.user._id;
-    const foundedUser = await User.findById(id);
     const foundedTraveler = await Traveler.findOne({userId:id});
       const {
         NationalId,
@@ -72,9 +72,10 @@ const createTraveler = async (id, req) => {
         // console.log(StudentUniversityId_URL);
         const updatedUser = await Traveler.findByIdAndUpdate(
           foundedTraveler._id, {
+
             isTraveler: true,
+
             NationalId,
-            birthdate,
             city,
             government,
             StudentUniversityId: StudentUniversityId_URL,
@@ -93,9 +94,7 @@ const createTraveler = async (id, req) => {
         // console.log(EmployeeCompanyId_URL);
         const updatedUser = await Traveler.findByIdAndUpdate(
           foundedTraveler._id, {
-            isTraveler: true,
             NationalId,
-            birthdate,
             city,
             government,
             EmployeeCompanyId: EmployeeCompanyId_URL,
@@ -124,13 +123,11 @@ const updateTraveler = async (id, req) => {
     // const id = req.user._id;
     const {
       NationalId,
-      birthdate,
       phone,
       city,
       government
     } = req.body;
 
-    const userExist = await User.findById(id);
     const travelerExist=await Traveler.findOne({userId:id})
     if (travelerExist.isTraveler) {
       if (travelerExist.isStudent) {
@@ -154,7 +151,6 @@ const updateTraveler = async (id, req) => {
         const updateTraveler = await Traveler.findByIdAndUpdate(
           travelerExist._id, {
             NationalId,
-            birthdate,
             phone,
             city,
             government,
@@ -179,7 +175,6 @@ const updateTraveler = async (id, req) => {
         const updateTraveler = await Traveler.findByIdAndUpdate(
           travelerExist._id, {
             NationalId,
-            birthdate,
             phone,
             city,
             government,
