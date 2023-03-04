@@ -24,7 +24,6 @@ const Student = async (id,res) => {
       res.status(httpStatus.NOT_FOUND).send('User not found');}
     }
 
-
 ;
 const Employee = async (id,res) => {
   // const id = req.user._id;
@@ -73,6 +72,9 @@ const createTraveler = async (id, req) => {
         // console.log(StudentUniversityId_URL);
         const updatedUser = await Traveler.findByIdAndUpdate(
           foundedTraveler._id, {
+
+            isTraveler: true,
+
             NationalId,
             city,
             government,
