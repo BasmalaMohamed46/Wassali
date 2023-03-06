@@ -1,3 +1,4 @@
+const { boolean } = require('joi');
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
@@ -8,22 +9,22 @@ const requestSchema = mongoose.Schema(
     state: {
       type: String,
       enum: ['processing', 'confirmed', 'accepted', 'pickedup', 'onmyway', 'delivered'],
-      required: true,
+      // required: true,
       default: 'processing',
     },
     rate: {
       type: Number,
-      required: true,
+      // required: true,
       trim: true,
     },
     reward: {
       type: Number,
-      required: true,
+      // required: true,
       trim: true,
     },
     qrCode: {
       type: String,
-      required: true,
+      // required: true,
     },
     userId: {
       type: Schema.Types.ObjectId,
@@ -35,15 +36,46 @@ const requestSchema = mongoose.Schema(
       // required: true,
       ref: 'Traveler',
     },
-    package: {
-      type: Schema.Types.ObjectId,
-      // required: true,
-      ref: 'Package',
-    },
     trip: {
       type: Schema.Types.ObjectId,
       // required: true,
       ref: 'Trip',
+    },
+    to:{
+      type: String,
+      required: true,
+    },
+    from:{
+      type: String,
+      required: true,
+    },
+    item:{
+      type: String,
+      required: true,
+    },
+    weight:{
+      type: Number,
+      required: true,
+    },
+    location:{
+      type: String,
+      required: true,
+    },
+    targetLocation:{
+      type: String,
+      required: true,
+    },
+    anotherPhone:{
+      type: String,
+      required: true,
+    },
+    category:{
+      type: String,
+      required: true,
+    },
+    buyOrdeliver:{
+    type:String,
+    enum:['buy','deliver'],
     },
   },
   {

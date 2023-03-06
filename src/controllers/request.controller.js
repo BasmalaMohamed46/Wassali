@@ -5,7 +5,8 @@ const catchAsync = require('../utils/catchAsync');
 const { requestService } = require('../services');
 
 const createRequest = catchAsync(async (req, res) => {
-  const request = await requestService.createRequest(req.body);
+const id=req.user._id;
+  const request = await requestService.createRequest(id,req);
   res.status(httpStatus.CREATED).send(request);
 });
 // ↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓.↓
@@ -25,7 +26,8 @@ const getRequest = catchAsync(async (req, res) => {
 });
 
 const updateRequest = catchAsync(async (req, res) => {
-  const request = await requestService.updateRequestById(req.params.requestId, req.body);
+  const id=req.user._id;
+  const request = await requestService.updateRequestById(id,req);
   res.send(request);
 });
 
@@ -34,10 +36,36 @@ const deleteRequest = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const sendRequest = catchAsync(async (req, res) => {
+  const id=req.user._id;
+  const tripId=req.params.tripId;
+  const request=await requestService.sendrequest(id,tripId,req);
+  res.status(httpStatus.CREATED).send(request);
+});
+
+const userViewRequests = catchAsync(async (req, res) => {
+  const id=req.user._id;
+  const request=await requestService.userviewrequests(id,req);
+  res.status(httpStatus.OK).send(request);
+});
+
+const userViewRequest = catchAsync(async (req, res) => {
+  const id=req.user._id;
+  const request=await requestService.userviewrequest(id,req);
+  res.status(httpStatus.CREATED).send(request);
+});
+
+
+
+
+
 module.exports = {
   createRequest,
   getRequests,
   getRequest,
   updateRequest,
   deleteRequest,
+  sendRequest,
+  userViewRequests,
+  userViewRequest
 };

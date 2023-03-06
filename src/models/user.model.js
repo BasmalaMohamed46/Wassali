@@ -29,7 +29,7 @@ const userSchema = mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    // required: true,
     trim: true,
     minlength: 8,
     validate(value) {
@@ -48,7 +48,13 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  
+  googleId: {
+    type: String,
+  },
+  requests: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Request',
+  }],
 }, {
   timestamps: true,
 });

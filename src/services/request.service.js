@@ -1,5 +1,7 @@
 const httpStatus = require('http-status');
 const { Request } = require('../models');
+const { User } = require('../models');
+const { Trip } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -7,8 +9,27 @@ const ApiError = require('../utils/ApiError');
  * @param {Object} requestBody
  * @returns {Promise<Request>}
  */
-const createRequest = async (requestBody) => {
-  return Request.create(requestBody);
+const createRequest = async (id,req) => {
+  const user=await User.findById(id)
+  if(user){
+  const request = await Request.create({
+    userId:id,
+    ...req.body
+  });
+  await User.findByIdAndUpdate(id, {
+    $push: {
+      requests: request._id
+    }
+  }); 
+  return {
+    message: 'Request added successfully',
+    request
+  }
+}
+else{
+  throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+}
+  
 };
 
 /**
@@ -40,14 +61,25 @@ const getRequestById = async (id) => {
  * @param {Object} updateBody
  * @returns {Promise<Request>}
  */
-const updateRequestById = async (requestId, updateBody) => {
-  const request = await getRequestById(requestId);
-  if (!request) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
+const updateRequestById = async (id,req) => {
+  const user=await User.findById(id)
+  if(user){
+    if(user.requests.includes(req.params.requestId)){
+      const request=await Request.findByIdAndUpdate(req.params.requestId,req.body,{new:true})
+      return {
+        message: 'Request updated successfully',
+        request
+      }
   }
-  Object.assign(request, updateBody);
-  await request.save();
-  return request;
+  else{
+    throw new ApiError(httpStatus.NOT_FOUND, 'you are not allowed to update this request');
+  }
+}
+   
+  else{
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
 };
 
 /**
@@ -63,6 +95,67 @@ const deleteRequestById = async (requestId) => {
   await request.remove();
   return request;
 };
+const sendrequest = async (id,tripId,req) => {
+  const user=await User.findById(id)
+  if(user){
+  const request = await Request.create({
+    userId:id,
+    ...req.body
+  });
+  await User.findByIdAndUpdate(id, {
+    $push: {
+      requests: request._id
+    }
+  }); 
+  await Trip.findByIdAndUpdate(tripId, {
+    $push: {
+      RequestsList: request._id
+    }
+  });
+  return {
+    message: 'Request added successfully',
+    request
+  }
+}
+else{
+  throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+}
+}
+
+const userviewrequests = async (id,req) => {
+  const user=await User.findById(id)
+  if(user){
+
+    const requests=await Request.find({userId:id})
+    return {
+      message: 'Requests found successfully',
+      requests}
+
+  }
+  else{
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+}
+
+const userviewrequest = async (id,req) => {
+  const user=await User.findById(id)
+  if(user){
+    if(user.requests.includes(req.params.requestId)){
+      const request=await Request.findById(req.params.requestId)
+      return {
+        message: 'Request found successfully',
+        request
+      }
+  }
+  else{
+    throw new ApiError(httpStatus.NOT_FOUND, 'you are not allowed to view this request');
+  }
+}
+else{
+  throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+}
+}
 
 module.exports = {
   createRequest,
@@ -70,4 +163,7 @@ module.exports = {
   getRequestById,
   updateRequestById,
   deleteRequestById,
+  sendrequest,
+  userviewrequests,
+  userviewrequest
 };
