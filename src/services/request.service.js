@@ -20,7 +20,7 @@ const createRequest = async (id,req) => {
     $push: {
       requests: request._id
     }
-  }); 
+  });
   return {
     message: 'Request added successfully',
     request
@@ -29,7 +29,7 @@ const createRequest = async (id,req) => {
 else{
   throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
 }
-  
+
 };
 
 /**
@@ -75,7 +75,7 @@ const updateRequestById = async (id,req) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'you are not allowed to update this request');
   }
 }
-   
+
   else{
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -98,15 +98,18 @@ const deleteRequestById = async (requestId) => {
 const sendrequest = async (id,tripId,req) => {
   const user=await User.findById(id)
   if(user){
+  const trip = await Trip.findById(req.params.tripId)
+  if(trip){
   const request = await Request.create({
     userId:id,
+    trip: tripId,
     ...req.body
   });
   await User.findByIdAndUpdate(id, {
     $push: {
       requests: request._id
     }
-  }); 
+  });
   await Trip.findByIdAndUpdate(tripId, {
     $push: {
       RequestsList: request._id
@@ -116,6 +119,11 @@ const sendrequest = async (id,tripId,req) => {
     message: 'Request added successfully',
     request
   }
+}else{
+  return{
+    message: 'Trip not found'
+  }
+}
 }
 else{
   throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -155,7 +163,112 @@ const userviewrequest = async (id,req) => {
 else{
   throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
 }
+};
+
+// accept specific request
+const acceptrequest = async (id, requestId, req) => {
+  // let requestId = req.params.requestId;
+  const userExist = await User.findById(id);
+  if (userExist) {
+    const request = await Request.findById(req.params.requestId)
+    const tripId = request.trip;
+    console.log(tripId);
+    const trip = await Trip.findById(tripId);
+    if (trip) {
+      await Trip.findByIdAndUpdate(
+        tripId, {
+          $push: {
+            AcceptedRequests: requestId
+          },
+          $pull: {
+            RequestsList: requestId
+          }
+        }
+      )
+      await Request.findByIdAndUpdate(
+        requestId, {
+          $set: {
+            state: 'accepted'
+          }
+        }
+      )
+      return {
+        message: 'Request accepted successfully'
+      }
+    } else {
+      return {
+        message: 'Trip not found'
+      }
+    }
+  } else {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
 }
+
+//accept any request
+const acceptanyrequest = async (id, requestId, tripId, req) => {
+  const userExist = await User.findById(id);
+  if (userExist) {
+    const request = await Request.findById(req.params.requestId);
+    if (request) {
+      await Trip.findByIdAndUpdate(tripId, {
+        $push: {
+          AcceptedRequests: requestId
+        },
+
+      }, {
+        new: true
+      })
+      await Request.findByIdAndUpdate(requestId, {
+        $set: {
+          state: 'accepted'
+        }
+      }, {
+        new: true
+      })
+      return {
+        message: 'Request accepted successfully'
+      }
+    } else {
+      return {
+        message: 'Request not found'
+      }
+    }
+  } else {
+    return {
+      message: 'User not found'
+    }
+  }
+}
+const declinerequest = async (id, requestId, req) => {
+  // let requestId = req.params.requestId;
+  const userExist = await User.findById(id);
+  if (userExist) {
+    const request = await Request.findById(req.params.requestId)
+    const tripId = request.trip;
+    const trip = await Trip.findById(tripId);
+    if (trip) {
+      await Trip.findByIdAndUpdate(
+        tripId, {
+          $pull: {
+            RequestsList: requestId
+          }
+        }
+      )
+      return {
+        message: 'Request declined successfully'
+      }
+    } else {
+      return {
+        message: 'Trip not found'
+      }
+    }
+  } else {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+}
+
+
 
 module.exports = {
   createRequest,
@@ -165,5 +278,8 @@ module.exports = {
   deleteRequestById,
   sendrequest,
   userviewrequests,
-  userviewrequest
+  userviewrequest,
+  acceptrequest,
+  acceptanyrequest,
+  declinerequest
 };

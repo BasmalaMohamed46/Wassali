@@ -8,7 +8,7 @@ const requestSchema = mongoose.Schema(
   {
     state: {
       type: String,
-      enum: ['processing', 'confirmed', 'accepted', 'pickedup', 'onmyway', 'delivered'],
+      enum: ['processing', 'accepted', 'pickedup', 'onmyway', 'delivered'],
       // required: true,
       default: 'processing',
     },
@@ -67,7 +67,7 @@ const requestSchema = mongoose.Schema(
     },
     anotherPhone:{
       type: String,
-      required: true,
+      // required: true,
     },
     category:{
       type: String,

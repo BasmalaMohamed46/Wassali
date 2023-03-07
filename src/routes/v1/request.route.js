@@ -16,9 +16,13 @@ router
   .route('/:requestId')
   .get(validate(requestValidation.getRequest), requestController.getRequest)
   .patch(validate(requestValidation.updateRequest),auth() ,requestController.updateRequest)
-  .delete(validate(requestValidation.deleteRequest), requestController.deleteRequest);
+  .delete(validate(requestValidation.deleteRequest),auth(), requestController.deleteRequest);
 
-router.post('/sendrequest/:tripId',validate(requestValidation.sendRequest),auth(),requestController.sendRequest) 
+router.post('/sendrequest/:tripId',validate(requestValidation.sendRequest),auth(),requestController.sendRequest)
+
+router.post('/acceptrequest/:requestId', auth(), requestController.acceptRequest)
+router.post('/acceptanyrequest/:requestId/:tripId', auth(), requestController.acceptAnyRequest)
+router.post('/declinerequest/:requestId', auth(), requestController.declineRequest)
 
 
 module.exports = router;

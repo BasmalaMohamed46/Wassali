@@ -16,7 +16,7 @@ const createRequest = {
         weight: Joi.number().required(),
         location: Joi.string().required(),
         targetLocation: Joi.string().required(),
-        anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
+        anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
         category: Joi.string().required(),
         buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
 
@@ -57,7 +57,7 @@ const updateRequest = {
             weight: Joi.number().required(),
             location: Joi.string().required(),
             targetLocation: Joi.string().required(),
-            anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
+            anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
             category: Joi.string().required(),
             buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
         })
@@ -88,7 +88,7 @@ const sendRequest = {
         weight: Joi.number().required(),
         location: Joi.string().required(),
         targetLocation: Joi.string().required(),
-        anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}).required(),
+        anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
         category: Joi.string().required(),
         buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
 

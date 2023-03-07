@@ -24,12 +24,12 @@ const defaultRoutes = [{
     route: requestRoutes,
   },
   {
-  path: '/travelers',
-  route: travelerRoute,
+    path: '/travelers',
+    route: travelerRoute,
   },
   {
-  path: '/trips',
-  route: tripRoute,
+    path: '/trips',
+    route: tripRoute,
   },
 ];
 
