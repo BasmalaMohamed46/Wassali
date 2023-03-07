@@ -34,8 +34,9 @@ const updateRequest = catchAsync(async (req, res) => {
 });
 
 const deleteRequest = catchAsync(async (req, res) => {
-  await requestService.deleteRequestById(req.params.requestId, req);
-  res.status(httpStatus.NO_CONTENT).send();
+  const id = req.user._id;
+  const request= await requestService.deleteRequestById(id,req.params.requestId, req);
+  res.status(httpStatus.OK).send(request);
 });
 
 const sendRequest = catchAsync(async (req, res) => {

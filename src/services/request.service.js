@@ -87,13 +87,41 @@ const updateRequestById = async (id,req) => {
  * @param {ObjectId} requestId
  * @returns {Promise<Request>}
  */
-const deleteRequestById = async (requestId) => {
-  const request = await getRequestById(requestId);
-  if (!request) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
+const deleteRequestById = async (id , requestId , req , res) => {
+  const userExist =await User.findById(id);
+  if(userExist){
+    if(userExist.requests.includes(req.params.requestId)){
+      const request=await Request.findById(req.params.requestId)
+      if(request.state=='accepted'|| request.state=='pickedup' || request.state=='onmyway' || request.state=='delivered'){
+        return{
+          message: 'Sorry, you can not delete this request'
+        }
+      }else{
+        await Request.findByIdAndDelete(req.params.requestId)
+        await User.findByIdAndUpdate(id, {
+          $pull: {
+            requests:req.params.requestId
+          }
+        });
+        const tripId=request.trip;
+        await Trip.findByIdAndUpdate(tripId,
+        {
+          $pull: {
+            RequestsList:req.params.requestId
+          }
+        })
+        return {
+          message: 'Request deleted successfully',
+          request
+        }
+      }
   }
-  await request.remove();
-  return request;
+  else{
+    return{
+      message: 'you are not allowed to delete this request'
+    }
+  }
+}
 };
 const sendrequest = async (id,tripId,req) => {
   const user=await User.findById(id)
@@ -222,7 +250,8 @@ const acceptanyrequest = async (id, requestId, tripId, req) => {
       await Request.findByIdAndUpdate(requestId, {
         $set: {
           state: 'accepted'
-        }
+        },
+        trip:tripId
       }, {
         new: true
       })
