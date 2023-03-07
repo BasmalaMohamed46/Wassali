@@ -35,7 +35,7 @@ const updateRequest = catchAsync(async (req, res) => {
 
 const deleteRequest = catchAsync(async (req, res) => {
   const id = req.user._id;
-  const request= await requestService.deleteRequestById(id,req.params.requestId, req);
+  const request= await requestService.deleteRequestById(id, req);
   res.status(httpStatus.OK).send(request);
 });
 
@@ -60,7 +60,6 @@ const userViewRequest = catchAsync(async (req, res) => {
 
 const acceptRequest = catchAsync(async (req, res) => {
   const id = req.user._id;
-  // const tripId = req.params.tripId;
   const requestId = req.params.requestId
   const request = await requestService.acceptrequest(id, requestId, req);
   res.status(httpStatus.CREATED).send(request);
@@ -68,9 +67,8 @@ const acceptRequest = catchAsync(async (req, res) => {
 
 const acceptAnyRequest = catchAsync(async (req, res) => {
   const id = req.user._id;
-  const tripId = req.params.tripId;
   const requestId = req.params.requestId;
-  const request = await requestService.acceptanyrequest(id, requestId, tripId, req);
+  const request = await requestService.acceptanyrequest(id, requestId, req);
   res.status(httpStatus.CREATED).send(request);
 })
 
