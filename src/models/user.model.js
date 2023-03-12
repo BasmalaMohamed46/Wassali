@@ -52,6 +52,12 @@ const userSchema = mongoose.Schema(
       },
       private: true, // used by the toJSON plugin
     },
+    confirmpassword: {
+      type: String,
+      required: true,
+      trim: true,
+      private: true, // used by the toJSON plugin
+    },
     role: {
       type: String,
       enum: roles,
@@ -106,7 +112,10 @@ userSchema.methods.isPasswordMatch = async function (password) {
 
 userSchema.pre('save', async function (next) {
   const user = this;
-  if (user.isModified('password')) {
+  if (user.isModified('password', 'confirmpassword')) {
+    if (user.password !== user.confirmpassword) {
+      throw new Error('Confirm password not match');
+    }
     user.password = await bcrypt.hash(user.password, 8);
   }
   next();
