@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
-const { toJSON, paginate } = require('./plugins');
-const { roles } = require('../config/roles');
+const {
+  toJSON,
+  paginate
+} = require('./plugins');
+const {
+  roles
+} = require('../config/roles');
 
 const userSchema = mongoose.Schema(
   {
@@ -68,10 +73,12 @@ const userSchema = mongoose.Schema(
       default: false,
     },
   },
-  {
-    timestamps: true,
+  googleId: {
+    type: String,
   }
-);
+}, {
+  timestamps: true,
+});
 
 // add plugin that converts mongoose to json
 userSchema.plugin(toJSON);
@@ -97,6 +104,13 @@ userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
 
 userSchema.statics.isphoneNumberTaken = async function (phoneNumber, excludeUserId) {
   const user = await this.findOne({ phoneNumber, _id: { $ne: excludeUserId } });
+
+  const user = await this.findOne({
+    email,
+    _id: {
+      $ne: excludeUserId
+    }
+  });
   return !!user;
 };
 
