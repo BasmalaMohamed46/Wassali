@@ -73,12 +73,13 @@ const userSchema = mongoose.Schema(
       default: false,
     },
   },
-  googleId: {
-    type: String,
-  }
-}, {
-  timestamps: true,
-});
+  {
+    googleId: {
+      type: String,
+    }
+    ,
+    timestamps: true,
+  });
 
 // add plugin that converts mongoose to json
 userSchema.plugin(toJSON);
@@ -105,12 +106,6 @@ userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
 userSchema.statics.isphoneNumberTaken = async function (phoneNumber, excludeUserId) {
   const user = await this.findOne({ phoneNumber, _id: { $ne: excludeUserId } });
 
-  const user = await this.findOne({
-    email,
-    _id: {
-      $ne: excludeUserId
-    }
-  });
   return !!user;
 };
 
