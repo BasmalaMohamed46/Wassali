@@ -10,7 +10,6 @@ const {
 } = require('../config/roles');
 
 const travelerSchema = mongoose.Schema({
-
   role: {
     type: String,
     enum: roles,

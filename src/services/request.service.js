@@ -370,6 +370,16 @@ const declinerequest = async (id, requestId, req) => {
 
 
 
+
+const viewAllRequests = async (req) => {
+  const requests = await Request.find();
+
+  return {
+    message: 'Requests found successfully',
+    requests
+  }
+}
+
 module.exports = {
   createRequest,
   queryRequests,
@@ -381,5 +391,6 @@ module.exports = {
   userviewrequest,
   acceptrequest,
   acceptanyrequest,
-  declinerequest
+  declinerequest,
+  viewAllRequests
 };

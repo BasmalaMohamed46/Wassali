@@ -81,6 +81,12 @@ const declineRequest = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(request);
 })
 
+const viewAllRequest = catchAsync(async (req, res) => {
+
+    const request = await requestService.viewAllRequests(req);
+    res.status(httpStatus.CREATED).send(request);
+  })
+
 module.exports = {
   createRequest,
   getRequests,
@@ -92,5 +98,6 @@ module.exports = {
   userViewRequest,
   acceptRequest,
   acceptAnyRequest,
-  declineRequest
+  declineRequest,
+  viewAllRequest
 };

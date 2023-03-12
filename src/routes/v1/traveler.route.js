@@ -109,4 +109,16 @@ router.delete(
   travelerController.deleteTraveller
 );
 
+router.get(
+  '/getTravellerOwnRequests',
+  auth(),
+  travelerController.gettravellerOwnRequests
+)
+
+router.get(
+  '/travelerViewRequestById/:requestId',
+  auth(),
+  travelerController.TravelerViewRequestById
+)
+
 module.exports = router;

@@ -5,8 +5,11 @@ const requestController = require('../../controllers/request.controller');
 const auth = require('../../middlewares/auth');
 
 const router = express.Router();
+
 router.get('/userviewrequests',auth(),requestController.userViewRequests)
 router.get('/userviewrequest/:requestId',auth(),requestController.userViewRequest)
+router.get('/viewAllRequests' , auth() ,requestController.viewAllRequest);
+
 router
   .route('/')
   .post(validate(requestValidation.createRequest),auth() ,requestController.createRequest)
@@ -18,6 +21,7 @@ router
   .patch(validate(requestValidation.updateRequest),auth() ,requestController.updateRequest)
   .delete(validate(requestValidation.deleteRequest),auth(), requestController.deleteRequest);
 
+  
 router.post('/sendrequest/:tripId',validate(requestValidation.sendRequest),auth(),requestController.sendRequest)
 
 router.post('/acceptrequest/:requestId', auth(), requestController.acceptRequest)

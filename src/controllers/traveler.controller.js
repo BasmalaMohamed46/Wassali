@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const {
-  travelerService
+  travelerService, requestService
 } = require('../services');
 
 const IsStudent = catchAsync(async (req, res) => {
@@ -40,6 +40,18 @@ const getTraveller = catchAsync(async (req, res) => {
 });
 
 
+const gettravellerOwnRequests = catchAsync(async (req, res) => {
+  const id = req.user._id;
+  const requests = await travelerService.getTravellerOwnRequests(id,res);
+  res.status(httpStatus.OK).send(requests);
+});
+
+const TravelerViewRequestById = catchAsync(async (req, res) => {
+  const id = req.user._id;
+  const requestId = req.params.requestId;
+  const request = await travelerService.travelerViewRequestById(id,requestId,res);
+  res.status(httpStatus.OK).send(request);
+});
 
 
 module.exports = {
@@ -49,4 +61,7 @@ module.exports = {
   updateTraveller,
   deleteTraveller,
   getTraveller,
+  gettravellerOwnRequests,
+  TravelerViewRequestById
+ 
 };

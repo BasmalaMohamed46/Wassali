@@ -3,6 +3,8 @@ const fs = require('fs');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const Traveler = require('../models/traveler.model');
+const Request = require('../models/request.model');
+const Trip = require('../models/trip.model');
 
 const Student = async (id, res) => {
   // const id = req.user._id;
@@ -24,6 +26,7 @@ const Student = async (id, res) => {
     res.status(httpStatus.NOT_FOUND).send('User not found');
   }
 };
+
 const Employee = async (id, res) => {
   // const id = req.user._id;
   const userExist = await User.findById(id)
@@ -249,6 +252,80 @@ const viewTraveler = async (id, res) => {
   }
 }
 
+const getTravellerOwnRequests = async (id, res) => {
+  try {
+    const traveler = await Traveler.findOne({
+      userId: id
+    });
+    if (traveler) {
+      const trips = await Trip.find({
+        Traveler: traveler._id
+
+      }).populate('RequestsList');
+  
+
+      res.status(httpStatus.OK).json({
+        message: 'Requests',
+        trips
+      })
+    } else {
+      res.status(httpStatus.NOT_FOUND).json({
+        message: 'No requests',
+      })
+    }
+  } catch (error) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Something went wrong',
+      err: error.message,
+    })
+  }
+}
+
+
+const travelerViewRequestById = async (id, requestId,res) => {
+  try {
+    const traveler = await Traveler.findOne({
+      userId: id
+    });
+    if (traveler) {
+      const trips = await Trip.find({
+        Traveler: traveler._id
+      }).populate('RequestsList');
+      
+   const requ =   trips.map(
+        (trip) => trip.RequestsList.map(
+          (request) => {
+            if(request._id == requestId){
+              res.status(
+                httpStatus.OK
+              ).json({
+                message: 'Request found',
+                request
+              }
+              )}
+          }
+
+        )
+      )
+
+
+      res.status(httpStatus.OK).json({
+        message: 'Requests',
+        requ
+      })
+    } 
+    else {
+      res.status(httpStatus.NOT_FOUND).json({
+        message: 'Traveler not found',
+      })
+    }
+  } catch (error) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Something went wrong',
+      err: error.message,
+    })
+  }
+}
 
 module.exports = {
   Student,
@@ -257,4 +334,6 @@ module.exports = {
   updateTraveler,
   deleteTraveler,
   viewTraveler,
-};
+  getTravellerOwnRequests,
+  travelerViewRequestById
+}
