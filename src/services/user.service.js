@@ -13,6 +13,10 @@ const createUser = async (userBody) => {
   if (await User.isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
+  if (await User.isphoneNumberTaken(userBody.phoneNumber)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'PhoneNumber already registered');
+  }
+  // console.log(userBody)
   return User.create(userBody);
 };
 
@@ -51,6 +55,15 @@ const getUserByEmail = async (email) => {
 };
 
 /**
+ * Get user by phoneNumber
+ * @param {string} phoneNumber
+ * @returns {Promise<User>}
+ */
+const getUserByphoneNumber = async (phoneNumber) => {
+  return User.findOne({ phoneNumber });
+};
+
+/**
  * Update user by id
  * @param {ObjectId} userId
  * @param {Object} updateBody
@@ -63,6 +76,9 @@ const updateUserById = async (userId, updateBody) => {
   }
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  }
+  if (updateBody.phoneNumber && (await User.isphoneNumberTaken(updateBody.phoneNumber))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'phoneNumber number already taken');
   }
   Object.assign(user, updateBody);
   await user.save();
@@ -90,4 +106,5 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  getUserByphoneNumber,
 };
