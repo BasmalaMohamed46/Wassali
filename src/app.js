@@ -9,6 +9,7 @@ const passport = require('passport');
 const httpStatus = require('http-status');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
+const path=require('path')
 const {
   jwtStrategy
 } = require('./config/passport');
@@ -23,7 +24,7 @@ const {
 const ApiError = require('./utils/ApiError');
 
 const app = express();
-
+app.use('/uploads',express.static(path.join(__dirname,'/uploads')))
 app.use(session({
   secret: 'shipping',
   resave: false,
