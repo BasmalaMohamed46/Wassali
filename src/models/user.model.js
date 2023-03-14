@@ -31,7 +31,7 @@ const userSchema = mongoose.Schema(
     phoneNumber: {
       type: String,
       // required: true,
-      unique: true,
+      // unique: true,
     },
     birthDate: {
       type: Date,

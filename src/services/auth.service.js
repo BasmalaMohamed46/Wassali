@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const tokenService = require('./token.service');
 const userService = require('./user.service');
 const Token = require('../models/token.model');
+const jwt = require('jsonwebtoken');
 const ApiError = require('../utils/ApiError');
 const {
   tokenTypes
@@ -111,12 +112,15 @@ const verifyEmail = async (verifyEmailToken) => {
 };
 
 const loginUserWithGoogle = async (req, res) => {
-  // console.log(req.user);
   const userExist = await User.findOne({
     email: req.user.email
   })
   if (userExist) {
-    const token = await tokenService.generateAuthTokens(userExist._id)
+    // const token = await tokenService.generateAuthTokens(userExist._id)
+    const token = jwt.sign({
+      id: userExist._id,
+      user: userExist,
+    }, process.env.JWT_SECRET)
     res.status(200).json({
       message: 'user exist',
       user: req.user,
@@ -127,15 +131,17 @@ const loginUserWithGoogle = async (req, res) => {
       name: req.user.displayName,
       email: req.user.email,
       // password: req.user.password,
-      isEmailVerified: 'true',
+      isEmailVerified: req.user.email_verified,
       googleId: req.user.id,
       profilePic: req.user.picture,
-      phoneNumber: null,
     })
-    const token = await tokenService.generateAuthTokens(user._id)
+    // const token = await tokenService.generateAuthTokens(user._id)
+    const token = jwt.sign({
+      id: user._id,
+      user: user
+    }, process.env.JWT_SECRET)
     res.status(200).json({
       message: 'user created',
-      user,
       token
     })
   }
