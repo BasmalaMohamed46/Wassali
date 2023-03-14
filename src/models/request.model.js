@@ -77,6 +77,10 @@ const requestSchema = mongoose.Schema(
     type:String,
     enum:['buy','deliver'],
     },
+    date:{
+      type:Date,
+      required:true,
+    }
   },
   {
     timestamps: true,

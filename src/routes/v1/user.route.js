@@ -3,8 +3,14 @@ const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const userValidation = require('../../validations/user.validation');
 const userController = require('../../controllers/user.controller');
+const {
+  multerFn,
+  validationType,
+  multerHandelErrors
+} = require('../../services/multer');
 
 const router = express.Router();
+router.patch('/profileImage',auth(),validate(userValidation.profileImage),multerFn('User', validationType.image),userController.profileImage);
 
 router
   .route('/')

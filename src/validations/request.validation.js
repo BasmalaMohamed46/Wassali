@@ -19,6 +19,10 @@ const createRequest = {
         anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
         category: Joi.string().required(),
         buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
+        date: Joi.date().greater(Date.now() - 24 * 60 * 60 * 1000).iso().messages({
+            'date.format': `Date format is YYYY-MM-DD`,
+            'date.min': `Date should not be passed`
+          }).required(),
 
     }),
 };
@@ -60,6 +64,10 @@ const updateRequest = {
             anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
             category: Joi.string().required(),
             buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
+            date: Joi.date().greater(Date.now() - 24 * 60 * 60 * 1000).iso().messages({
+                'date.format': `Date format is YYYY-MM-DD`,
+                'date.min': `Date should not be passed`
+              }).required(),
         })
         .min(1),
 };
@@ -91,6 +99,10 @@ const sendRequest = {
         anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
         category: Joi.string().required(),
         buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
+        date: Joi.date().greater(Date.now() - 24 * 60 * 60 * 1000).iso().messages({
+            'date.format': `Date format is YYYY-MM-DD`,
+            'date.min': `Date should not be passed`
+          }).required(),
 
     }),
 

@@ -33,6 +33,11 @@ const deleteUser = catchAsync(async (req, res) => {
   await userService.deleteUserById(req.params.userId);
   res.status(httpStatus.NO_CONTENT).send();
 });
+const profileImage = catchAsync(async (req, res) => {
+  const id = req.user._id;
+  const user = await userService.profileImage(id,req);
+  res.status(httpStatus.CREATED).send(user);
+});
 
 module.exports = {
   createUser,
@@ -40,4 +45,5 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
+  profileImage
 };

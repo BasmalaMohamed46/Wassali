@@ -17,15 +17,15 @@ const userSchema = mongoose.Schema(
       trim: true,
 
   },
-  password: {
-    type: String,
-    // required: true,
-    trim: true,
-    minlength: 8,
-    validate(value) {
-      if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-        throw new Error('Password must contain at least one letter and one number');
-      }},
+  // password: {
+  //   type: String,
+  //   // required: true,
+  //   trim: true,
+  //   minlength: 8,
+  //   validate(value) {
+  //     if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
+  //       throw new Error('Password must contain at least one letter and one number');
+  //     }},
 
     email: {
       type: String,
@@ -87,14 +87,11 @@ const userSchema = mongoose.Schema(
     googleId: {
       type: String,
     },
-    profilePic: {
-    type: String,
-  }
-  },
+    ProfileImage:{
+      type: String,
+      
+    },
 
-  googleId: {
-    type: String,
-  },
   requests: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Request',

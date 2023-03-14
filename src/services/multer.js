@@ -23,6 +23,7 @@ function multerFn(customDest, type) {
     // eslint-disable-next-line no-param-reassign
     customDest = 'GeneralData';
   }
+  if(customDest == 'Traveler'){
   if (!fs.existsSync(path.join(__dirname, `../uploads/${customDest}/StudentUniversityId`))) {
     fs.mkdirSync(path.join(__dirname, `../uploads/${customDest}/StudentUniversityId`), {
       recursive: true,
@@ -37,7 +38,14 @@ function multerFn(customDest, type) {
     fs.mkdirSync(path.join(__dirname, `../uploads/${customDest}/EmployeeCompanyId`), {
       recursive: true,
     })
+  }}
+  if(customDest == 'User'){
+  if (!fs.existsSync(path.join(__dirname, `../uploads/${customDest}/ProfileImage`))) {
+    fs.mkdirSync(path.join(__dirname, `../uploads/${customDest}/ProfileImage`), {
+      recursive: true,
+    })
   }
+}
 
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -53,6 +61,10 @@ function multerFn(customDest, type) {
         req.destination3 = `uploads/${customDest}/EmployeeCompanyId`;
         cb(null, path.join(__dirname, `../uploads/${customDest}/EmployeeCompanyId`));
       }
+      if (file.fieldname === 'ProfileImage') {
+        req.destination4 = `uploads/${customDest}/ProfileImage`;
+        cb(null, path.join(__dirname, `../uploads/${customDest}/ProfileImage`));
+      }
     },
 
     filename: (req, file, cb) => {
@@ -66,6 +78,10 @@ function multerFn(customDest, type) {
       }
       if (file.fieldname === 'EmployeeCompanyId') {
         const fullName = `TravelerCompanyId-${new Date().getTime()}-${file.originalname}`;
+        cb(null, fullName);
+      }
+      if (file.fieldname === 'ProfileImage') {
+        const fullName = `UserProfileImage-${new Date().getTime()}-${file.originalname}`;
         cb(null, fullName);
       }
     },
@@ -92,6 +108,10 @@ function multerFn(customDest, type) {
     },
     {
       name: 'EmployeeCompanyId',
+      maxCount: 1
+    },
+    {
+      name: 'ProfileImage',
       maxCount: 1
     }
   ])
