@@ -8,10 +8,15 @@ const createUser = {
     password: Joi.string().required().custom(password),
     confirmpassword: Joi.string().required().custom(password),
     name: Joi.string().required(),
+
+    role: Joi.string().required().valid('user', 'admin'),
+    // confirmPassword: Joi.string().required().valid(Joi.ref('password')),
+
     birthDate: Joi.date().required(),
     role: Joi.string().valid('user', 'admin'),
     city: Joi.string().required(),
     governorate: Joi.string().required(),
+
   }),
 };
 

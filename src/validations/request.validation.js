@@ -3,14 +3,23 @@ const { objectId } = require('./custom.validation');
 
 const createRequest = {
     body: Joi.object().keys({
-        state: Joi.string().required().valid('processing', 'confirmed', 'accepted', 'pickedup', 'onmyway', 'delivered').default('processing'),
-        rate: Joi.number().required(),
-        reward: Joi.number().required(),
-        qrCode: Joi.string().required(),
+        state: Joi.string().valid('processing', 'confirmed', 'accepted', 'pickedup', 'onmyway', 'delivered').default('processing'),
+        rate: Joi.number(),
+        reward: Joi.number(),
+        qrCode: Joi.string(),
         userId: Joi.string().custom(objectId),
-        traveler: Joi.string().custom(objectId),
-        package: Joi.string().custom(objectId),
+        // traveler: Joi.string().custom(objectId),
         trip: Joi.string().custom(objectId),
+        to: Joi.string().required(),
+        from: Joi.string().required(),
+        item: Joi.string().required(),
+        weight: Joi.number().required(),
+        location: Joi.string().required(),
+        targetLocation: Joi.string().required(),
+        anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
+        category: Joi.string().required(),
+        buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
+
     }),
 };
 
@@ -38,11 +47,19 @@ const updateRequest = {
             state: Joi.string().valid('processing', 'confirmed', 'accepted', 'pickedup', 'onmyway', 'delivered').default('processing'),
             rate: Joi.number(),
             reward: Joi.number(),
-            qrCode : Joi.string(),
+            qrCode: Joi.string(),
             userId: Joi.string().custom(objectId),
-            traveler: Joi.string().custom(objectId),
-            package: Joi.string().custom(objectId),
+            // traveler: Joi.string().custom(objectId),
             trip: Joi.string().custom(objectId),
+            to: Joi.string().required(),
+            from: Joi.string().required(),
+            item: Joi.string().required(),
+            weight: Joi.number().required(),
+            location: Joi.string().required(),
+            targetLocation: Joi.string().required(),
+            anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
+            category: Joi.string().required(),
+            buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
         })
         .min(1),
 };
@@ -53,10 +70,37 @@ const deleteRequest = {
     }),
 };
 
+const sendRequest = {
+    params: Joi.object().keys({
+        tripId: Joi.string().custom(objectId),
+    }),
+    body: Joi.object().keys({
+        state: Joi.string().valid('processing', 'confirmed', 'accepted', 'pickedup', 'onmyway', 'delivered').default('processing'),
+        rate: Joi.number(),
+        reward: Joi.number(),
+        qrCode: Joi.string(),
+        userId: Joi.string().custom(objectId),
+        // traveler: Joi.string().custom(objectId),
+        trip: Joi.string().custom(objectId),
+        to: Joi.string().required(),
+        from: Joi.string().required(),
+        item: Joi.string().required(),
+        weight: Joi.number().required(),
+        location: Joi.string().required(),
+        targetLocation: Joi.string().required(),
+        anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
+        category: Joi.string().required(),
+        buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
+
+    }),
+
+};
+
 module.exports = {
     createRequest,
     getRequests,
     getRequest,
     updateRequest,
     deleteRequest,
+    sendRequest,
 };

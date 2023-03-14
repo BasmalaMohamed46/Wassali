@@ -15,7 +15,18 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-    },
+
+  },
+  password: {
+    type: String,
+    // required: true,
+    trim: true,
+    minlength: 8,
+    validate(value) {
+      if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
+        throw new Error('Password must contain at least one letter and one number');
+      }
+
     email: {
       type: String,
       required: true,
@@ -27,6 +38,7 @@ const userSchema = mongoose.Schema(
           throw new Error('Invalid email');
         }
       },
+
     },
     phoneNumber: {
       type: String,
@@ -79,9 +91,18 @@ const userSchema = mongoose.Schema(
     type: String,
   }
   },
-  {
-    timestamps: true,
-  });
+
+  googleId: {
+    type: String,
+  },
+  requests: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Request',
+  }],
+}, {
+  timestamps: true,
+});
+
 
 // add plugin that converts mongoose to json
 userSchema.plugin(toJSON);

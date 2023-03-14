@@ -10,7 +10,6 @@ const {
 } = require('../config/roles');
 
 const travelerSchema = mongoose.Schema({
-
   role: {
     type: String,
     enum: roles,
@@ -45,6 +44,7 @@ const travelerSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Trip',
   }],
+
 
 }, {
   timestamps: true,

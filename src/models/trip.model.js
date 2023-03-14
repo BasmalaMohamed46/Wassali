@@ -27,7 +27,13 @@ const tripSchema = mongoose.Schema({
     ref: 'Traveler',
     required: true,
     },
-  Request:[{
+    //requests sent to this trip but not accepted yet
+  RequestsList:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Request',
+    }],
+    //
+  AcceptedRequests:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Request',
     }],
