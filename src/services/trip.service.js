@@ -183,6 +183,7 @@ const updateTrip = async (id, req, res, tripId) => {
         TripTime
       } = req.body;
       if (foundedTraveler) {
+        if(foundedTraveler.Trip.includes(tripId)){
         const trip = await Trip.findByIdAndUpdate({
           _id: tripId
         }, {
@@ -198,6 +199,12 @@ const updateTrip = async (id, req, res, tripId) => {
         return {
           message: 'Trip updated successfully',
           trip
+        }
+        }
+        else{
+          res.status(404).json({
+            message: 'You are not allowed to update this trip',
+          })
         }
       } else {
         res.status(404).json({

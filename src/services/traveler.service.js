@@ -27,7 +27,8 @@ const Student = async (id, res) => {
   }
 };
 
-const Employee = async (id, res) => {
+const Employee = async (id,res) => {
+
   // const id = req.user._id;
   const userExist = await User.findById(id)
   if (userExist) {
@@ -54,6 +55,7 @@ const Employee = async (id, res) => {
 const createTraveler = async (id, req) => {
   try {
     // const id = req.user._id;
+
     const foundedTraveler = await Traveler.findOne({
       userId: id
     });
@@ -63,10 +65,12 @@ const createTraveler = async (id, req) => {
       government
     } = req.body;
 
+
     if (req.fileUploadError) {
       return {
         message: 'invalid file, accepted files->(png,jpg,jpeg)',
       }
+
     }
     // console.log(req.files.CollegeEnrollmentStatement);
     // console.log(req.files.CollegeEnrollmentStatement[0].filename);
@@ -103,6 +107,7 @@ const createTraveler = async (id, req) => {
           CollegeEnrollmentStatement: null,
         }, {
           new: true,
+
         }
       );
       return {
@@ -129,9 +134,11 @@ const updateTraveler = async (id, req) => {
       government
     } = req.body;
 
+
     const travelerExist = await Traveler.findOne({
       userId: id
     })
+
     if (travelerExist.isTraveler) {
       if (travelerExist.isStudent) {
         // console.log(userExist.StudentUniversityId.split('/').pop());
@@ -229,27 +236,32 @@ const deleteTraveler = async (id, res) => {
   }
 
 }
-const viewTraveler = async (id, res) => {
-  try {
-    const traveler = await Traveler.findOne({
-      userId: id
-    });
-    if (traveler) {
-      res.status(httpStatus.OK).json({
-        message: 'Traveler found',
-        traveler
-      })
-    } else {
-      res.status(httpStatus.NOT_FOUND).json({
-        message: 'Traveler not found',
-      })
-    }
-  } catch (error) {
+
+
+const viewTraveler = async (id,res) => {
+  try{
+    const user=await User.findById(id);
+     const traveler=await Traveler.findOne({userId:id});
+      if(traveler){
+        res.status(httpStatus.OK).json({
+          message: 'Traveler found',
+          traveler,
+          user
+        })
+      }
+      else{
+        res.status(httpStatus.NOT_FOUND).json({
+          message: 'Traveler not found',
+        })
+      }
+
+
+  }
+  catch (error) {
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Something went wrong',
       err: error.message,
     })
-  }
 }
 
 const getTravellerOwnRequests = async (id, res) => {
