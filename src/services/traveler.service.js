@@ -263,6 +263,7 @@ const viewTraveler = async (id,res) => {
       err: error.message,
     })
 }
+}
 
 const getTravellerOwnRequests = async (id, res) => {
   try {
