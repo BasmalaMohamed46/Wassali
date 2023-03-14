@@ -14,7 +14,14 @@ const Student = async (id, res) => {
       userId: id
     })
     if (foundedTraveler) {
-      res.status(httpStatus.NOT_FOUND).send('User is already a student');
+      if(foundedTraveler.isStudent){
+        res.status(httpStatus.NOT_FOUND).send('User is already a student');
+      }else{
+        const traveler = await Traveler.findByIdAndUpdate(foundedTraveler._id, {
+          isStudent: true,
+        })
+        res.status(httpStatus.CREATED).send(traveler);
+      }
     } else {
       const traveler = await Traveler.create({
         isStudent: true,
@@ -28,7 +35,6 @@ const Student = async (id, res) => {
 };
 
 const Employee = async (id,res) => {
-
   // const id = req.user._id;
   const userExist = await User.findById(id)
   if (userExist) {
@@ -36,7 +42,14 @@ const Employee = async (id,res) => {
       userId: id
     })
     if (foundedTraveler) {
-      res.status(httpStatus.NOT_FOUND).send('User is already a Employee');
+      if(!foundedTraveler.isStudent){
+        res.status(httpStatus.NOT_FOUND).send('User is already a Employee');
+      }else{
+        const traveler = await Traveler.findByIdAndUpdate(foundedTraveler._id, {
+          isStudent: false,
+        })
+        res.status(httpStatus.CREATED).send(traveler);
+      }
     } else {
       const traveler = await Traveler.create({
         isStudent: false,
@@ -275,7 +288,7 @@ const getTravellerOwnRequests = async (id, res) => {
         Traveler: traveler._id
 
       }).populate('RequestsList');
-  
+
 
       res.status(httpStatus.OK).json({
         message: 'Requests',
@@ -304,7 +317,7 @@ const travelerViewRequestById = async (id, requestId,res) => {
       const trips = await Trip.find({
         Traveler: traveler._id
       }).populate('RequestsList');
-      
+
    const requ =   trips.map(
         (trip) => trip.RequestsList.map(
           (request) => {
@@ -326,7 +339,7 @@ const travelerViewRequestById = async (id, requestId,res) => {
         message: 'Requests',
         requ
       })
-    } 
+    }
     else {
       res.status(httpStatus.NOT_FOUND).json({
         message: 'Traveler not found',
