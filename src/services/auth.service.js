@@ -123,26 +123,15 @@ const loginUserWithGoogle = async (req, res) => {
       token
     })
   } else {
-    //updatedOne First Clone
-    // const user = new User({
-    //   name: req.user.displayName,
-    //   email: req.user.email,
-    //   // password: req.user.password,
-    //   isEmailVerified: 'true',
-    //   googleId: req.user.id,
-    //   profilePic: req.user.picture
-    // })
     const user = await User.create({
       name: req.user.displayName,
       email: req.user.email,
       // password: req.user.password,
-      birthDate: req.user.birthday,
       isEmailVerified: 'true',
       googleId: req.user.id,
       profilePic: req.user.picture,
       phoneNumber: null,
     })
-    console.log(req.user.birthday);
     const token = await tokenService.generateAuthTokens(user._id)
     res.status(200).json({
       message: 'user created',
