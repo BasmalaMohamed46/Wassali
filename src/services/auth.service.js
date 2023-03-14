@@ -116,30 +116,42 @@ const loginUserWithGoogle = async (req, res) => {
     email: req.user.email
   })
   if (userExist) {
-    res.redirect('/v1/auth/home')
+    const token = await tokenService.generateAuthTokens(userExist._id)
+    res.status(200).json({
+      message: 'user exist',
+      user: req.user,
+      token
+    })
   } else {
-    const user = new User({
+    //updatedOne First Clone
+    // const user = new User({
+    //   name: req.user.displayName,
+    //   email: req.user.email,
+    //   // password: req.user.password,
+    //   isEmailVerified: 'true',
+    //   googleId: req.user.id,
+    //   profilePic: req.user.picture
+    // })
+    const user = await User.create({
       name: req.user.displayName,
       email: req.user.email,
       // password: req.user.password,
+      birthDate: req.user.birthday,
       isEmailVerified: 'true',
-      googleId: req.user.id
+      googleId: req.user.id,
+      profilePic: req.user.picture,
+      phoneNumber: null,
     })
-    const savedUser = await user.save()
-    res.redirect('/v1/auth/home')
+    console.log(req.user.birthday);
+    const token = await tokenService.generateAuthTokens(user._id)
     res.status(200).json({
       message: 'user created',
-      savedUser
+      user,
+      token
     })
   }
 }
 
-const userForm = (req, res) => {
-  res.status(200).json({
-    message: 'Hello',
-    user: req.user.email
-  })
-}
 const Googlefailure = (req, res) => {
   res.status(200).json({
     message: 'Google Login Failed'
@@ -166,7 +178,6 @@ module.exports = {
   resetPassword,
   verifyEmail,
   loginUserWithGoogle,
-  userForm,
   Googlefailure,
   googleCallback,
   Googlelogout

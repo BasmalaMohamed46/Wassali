@@ -69,17 +69,8 @@ const verifyEmail = catchAsync(async (req, res) => {
 
 const googleLogin = catchAsync(async (req, res) => {
   const user = await authService.loginUserWithGoogle(req, res);
-  const tokens = await tokenService.generateAuthTokens(user);
-  res.send({
-    user,
-    tokens
-  });
+  res.send(user);
 });
-
-const userForm = catchAsync(async (req, res) => {
-  const user = await authService.userForm(req, res);
-  res.status(200).send(user);
-})
 
 const failureGoogle = catchAsync(async (req, res) => {
   res.status(200).send('Google login failed');
@@ -101,7 +92,6 @@ module.exports = {
   sendVerificationEmail,
   verifyEmail,
   googleLogin,
-  userForm,
   failureGoogle,
   logoutGoogle
 };

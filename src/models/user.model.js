@@ -30,24 +30,24 @@ const userSchema = mongoose.Schema(
     },
     phoneNumber: {
       type: String,
-      required: true,
+      // required: true,
       unique: true,
     },
     birthDate: {
       type: Date,
-      required: true,
+      // required: true,
     },
     city: {
       type: String,
-      required: true,
+      // required: true,
     },
     governorate: {
       type: String,
-      required: true,
+      // required: true,
     },
     password: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
       minlength: 8,
       validate(value) {
@@ -59,7 +59,7 @@ const userSchema = mongoose.Schema(
     },
     confirmpassword: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
       private: true, // used by the toJSON plugin
     },
@@ -72,12 +72,14 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-  },
-  {
     googleId: {
       type: String,
-    }
-    ,
+    },
+    profilePic: {
+    type: String,
+  }
+  },
+  {
     timestamps: true,
   });
 
@@ -121,10 +123,10 @@ userSchema.methods.isPasswordMatch = async function (password) {
 
 userSchema.pre('save', async function (next) {
   const user = this;
-  if (user.isModified('password', 'confirmpassword')) {
-    if (user.password !== user.confirmpassword) {
-      throw new Error('Confirm password not match');
-    }
+  if (user.isModified('password')) {
+    // if (user.password !== user.confirmpassword) {
+    //   throw new Error('Confirm password not match');
+    // }
     user.password = await bcrypt.hash(user.password, 8);
   }
   next();

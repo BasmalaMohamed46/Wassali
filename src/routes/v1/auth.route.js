@@ -39,8 +39,7 @@ router.get('/google/callback',
   }))
 
 router.get('/register', authController.googleLogin)
-//redirect to user form
-router.get('/home', isLoggedIn, authController.userForm)
+
 
 router.get('/failure', authController.failureGoogle)
 router.get('/logout', authController.logoutGoogle)
