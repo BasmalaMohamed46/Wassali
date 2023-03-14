@@ -1,33 +1,38 @@
-const passport = require('passport');
-const httpStatus = require('http-status');
-const ApiError = require('../utils/ApiError');
-const { roleRights } = require('../config/roles');
-
-const verifyCallback = (req, resolve, reject, requiredRights) => async (err, user, info) => {
-  if (err || info || !user) {
-    return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
-  }
-  req.user = user;
-
-  if (requiredRights.length) {
-    const userRights = roleRights.get(user.role);
-    const hasRequiredRights = requiredRights.every((requiredRight) => userRights.includes(requiredRight));
-    if (!hasRequiredRights && req.params.userId !== user.id) {
-      return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
+const jwt = require('jsonwebtoken');
+const User = require('../models/user.model')
+const auth = () => {
+  return (req, res, next) => {
+    const authorization = req.headers.authorization;
+    if (!authorization || authorization == null || authorization == undefined || !authorization.startsWith('Bearer ')) {
+      res.status(401).json({
+        message: "you are not authorized",
+      })
+    } else {
+      const decodedToken = req.headers.authorization.split(' ')[1];
+      jwt.verify(decodedToken, process.env.JWT_SECRET, async function (err, decoded) {
+        if (decoded) {
+          let userData = await User.findById(decoded.id);
+          if (userData) {
+            if (userData.isAdmin || !userData.isDeleted) {
+              req.user = userData;
+              next()
+            } else {
+              res.status(401).json({
+                message: "you are not authorized",
+              })
+            }
+          } else {
+            res.status(404).json({
+              message: "User Not Exist",
+            })
+          }
+        } else {
+          res.json({
+            message: "invalid token"
+          })
+        }
+      })
     }
   }
-
-  resolve();
-};
-
-const auth =
-  (...requiredRights) =>
-  async (req, res, next) => {
-    return new Promise((resolve, reject) => {
-      passport.authenticate('jwt', { session: false }, verifyCallback(req, resolve, reject, requiredRights))(req, res, next);
-    })
-      .then(() => next())
-      .catch((err) => next(err));
-  };
-
+}
 module.exports = auth;

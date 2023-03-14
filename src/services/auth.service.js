@@ -18,12 +18,21 @@ const User = require('../models/user.model')
  * @param {string} password
  * @returns {Promise<User>}
  */
-const loginUserWithEmailAndPassword = async (email, password) => {
+const loginUserWithEmailAndPassword = async (email, password, res) => {
   const user = await userService.getUserByEmail(email);
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
-  return user;
+  const token = jwt.sign({
+    id: user._id,
+    user: user,
+  },
+    process.env.JWT_SECRET)
+  // return user;
+  res.json({
+    message: 'user exist',
+    token
+  })
 };
 
 /**
