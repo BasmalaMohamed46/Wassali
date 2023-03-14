@@ -120,6 +120,9 @@ const profileImage = async (id,req) => {
   
   }
   }
+  const getAllUserss = async () => {
+    return User.find();
+  };
 
 module.exports = {
   createUser,
@@ -129,5 +132,6 @@ module.exports = {
   updateUserById,
   deleteUserById,
   getUserByphoneNumber,
-  profileImage
+  profileImage,
+  getAllUserss
 };

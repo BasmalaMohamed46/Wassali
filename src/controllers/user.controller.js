@@ -39,11 +39,16 @@ const profileImage = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
+const getAllUsers = catchAsync(async (req, res) => {
+  const users = await userService.getAllUserss();
+  res.send(users);
+});
 module.exports = {
   createUser,
   getUsers,
   getUser,
   updateUser,
   deleteUser,
-  profileImage
+  profileImage,
+  getAllUsers
 };
