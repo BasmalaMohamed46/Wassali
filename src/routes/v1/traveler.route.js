@@ -67,6 +67,13 @@ router.patch(
             }
           })
         }
+        if (req.files.EmployeeCompanyId) {
+          fs.unlink(`./uploads/Traveler/NationalIdCard/${req.files.NationalIdCard[0].filename}`, (err) => {
+            if (err) {
+              console.log(err)
+            }
+          })
+        }
       }
       return res.status(422).json({
         errors: validationErrors.array()

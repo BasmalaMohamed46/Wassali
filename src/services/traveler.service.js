@@ -85,17 +85,19 @@ const createTraveler = async (id, req) => {
       }
 
     }
-    // console.log(req.files.CollegeEnrollmentStatement);
-    // console.log(req.files.CollegeEnrollmentStatement[0].filename);
+    // console.log(req.files.NationalIdCard);
+    // console.log(req.files.NationalIdCard[0].filename);
     if (foundedTraveler.isStudent) {
       let StudentUniversityId_URL = `${req.protocol}://${req.headers.host}/${req.destination}/${req.files.StudentUniversityId[0].filename}`;
       let CollegeEnrollmentStatement_URL = `${req.protocol}://${req.headers.host}/${req.destination2}/${req.files.CollegeEnrollmentStatement[0].filename}`;
+      let NationalIdCard_URL = `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`;
       // console.log(StudentUniversityId_URL);
       const updatedUser = await Traveler.findByIdAndUpdate(
         foundedTraveler._id, {
           NationalId,
           city,
           government,
+          NationalIdCard:NationalIdCard_URL,
           StudentUniversityId: StudentUniversityId_URL,
           CollegeEnrollmentStatement: CollegeEnrollmentStatement_URL,
           EmployeeCompanyId: null,
@@ -109,6 +111,7 @@ const createTraveler = async (id, req) => {
       }
     } else {
       let EmployeeCompanyId_URL = `${req.protocol}://${req.headers.host}/${req.destination3}/${req.files.EmployeeCompanyId[0].filename}`;
+      let NationalIdCard_URL = `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`;
       // console.log(EmployeeCompanyId_URL);
       const updatedUser = await Traveler.findByIdAndUpdate(
         foundedTraveler._id, {
@@ -116,6 +119,7 @@ const createTraveler = async (id, req) => {
           city,
           government,
           EmployeeCompanyId: EmployeeCompanyId_URL,
+          NationalIdCard:NationalIdCard_URL,
           StudentUniversityId: null,
           CollegeEnrollmentStatement: null,
         }, {
@@ -146,17 +150,16 @@ const updateTraveler = async (id, req) => {
       city,
       government
     } = req.body;
-
-
     const travelerExist = await Traveler.findOne({
       userId: id
     })
-
     if (travelerExist.isTraveler) {
       if (travelerExist.isStudent) {
         // console.log(userExist.StudentUniversityId.split('/').pop());
         const oldStudentUniversityId = travelerExist.StudentUniversityId.split('/').pop();
         const oldCollegeEnrollmentStatement = travelerExist.CollegeEnrollmentStatement.split('/').pop();
+        const oldNationalIdCard = travelerExist.NationalIdCard.split('/').pop();
+
         fs.unlink(`./src/uploads/Traveler/StudentUniversityId/${oldStudentUniversityId}`, (err) => {
           if (err) {
             // eslint-disable-next-line no-console
@@ -168,9 +171,15 @@ const updateTraveler = async (id, req) => {
             console.log(err);
           }
         });
+        fs.unlink(`./src/uploads/Traveler/NationalIdCard/${oldNationalIdCard}`, (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
         console.log(req.files);
         let newStudentUniversityIdURL = `${req.protocol}://${req.headers.host}/${req.destination}/${req.files.StudentUniversityId[0].filename}`
         let newCollegeEnrollmentStatementURL = `${req.protocol}://${req.headers.host}/${req.destination2}/${req.files.CollegeEnrollmentStatement[0].filename}`
+        let newNationalIdCardURL = `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`
         const updateTraveler = await Traveler.findByIdAndUpdate(
           travelerExist._id, {
             NationalId,
@@ -179,6 +188,7 @@ const updateTraveler = async (id, req) => {
             government,
             StudentUniversityId: newStudentUniversityIdURL,
             CollegeEnrollmentStatement: newCollegeEnrollmentStatementURL,
+            NationalIdCard:newNationalIdCardURL,
           }, {
             new: true,
           })
@@ -189,12 +199,20 @@ const updateTraveler = async (id, req) => {
         }
       } else {
         const oldEmployeeCompanyId = travelerExist.EmployeeCompanyId.split('/').pop();
+        const oldNationalIdCard = travelerExist.NationalIdCard.split('/').pop();
         fs.unlink(`./src/uploads/Traveler/EmployeeCompanyId/${oldEmployeeCompanyId}`, (err) => {
           if (err) {
             console.log(err);
           }
         });
+        fs.unlink(`./src/uploads/Traveler/NationalIdCard/${oldNationalIdCard}`, (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+
         let newEmployeeCompanyIdURL = `${req.protocol}://${req.headers.host}/${req.destination3}/${req.files.EmployeeCompanyId[0].filename}`
+        let newNationalIdCardURL = `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`
         const updateTraveler = await Traveler.findByIdAndUpdate(
           travelerExist._id, {
             NationalId,
@@ -202,6 +220,7 @@ const updateTraveler = async (id, req) => {
             city,
             government,
             EmployeeCompanyId: newEmployeeCompanyIdURL,
+            NationalIdCard:newNationalIdCardURL,
           }, {
             new: true,
           })

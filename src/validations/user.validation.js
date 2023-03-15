@@ -1,5 +1,9 @@
 const Joi = require('joi');
-const { password, objectId, phoneNumber } = require('./custom.validation');
+const {
+  password,
+  objectId,
+  phoneNumber
+} = require('./custom.validation');
 
 const createUser = {
   body: Joi.object().keys({
@@ -12,11 +16,17 @@ const createUser = {
     role: Joi.string().required().valid('user', 'admin'),
     // confirmPassword: Joi.string().required().valid(Joi.ref('password')),
 
-    birthDate: Joi.date().required(),
-    role: Joi.string().valid('user', 'admin'),
+    birthdate: Joi
+      .date()
+      .max('01-01-2003')
+      .iso()
+      .messages({
+        'date.format': `Date format is YYYY-MM-DD`,
+        'date.max': `Age must be 18+`
+      }).required(),
     city: Joi.string().required(),
     governorate: Joi.string().required(),
-
+    address:Joi.string().required(),
   }),
 };
 
@@ -46,9 +56,17 @@ const updateUser = {
       phoneNumber: Joi.string().custom(phoneNumber),
       password: Joi.string().custom(password),
       name: Joi.string(),
-      birthDate: Joi.date().required(),
+      birthdate: Joi
+        .date()
+        .max('01-01-2003')
+        .iso()
+        .messages({
+          'date.format': `Date format is YYYY-MM-DD`,
+          'date.max': `Age must be 18+`
+        }).required(),
       city: Joi.string().required(),
       governorate: Joi.string().required(),
+      address:Joi.string().required(),
     })
     .min(1),
 };
@@ -63,7 +81,7 @@ const profileImage = {
     .keys({
       ProfileImage: Joi.string(),
     })
-   
+
 
 };
 

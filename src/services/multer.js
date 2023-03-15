@@ -38,7 +38,13 @@ function multerFn(customDest, type) {
     fs.mkdirSync(path.join(__dirname, `../uploads/${customDest}/EmployeeCompanyId`), {
       recursive: true,
     })
-  }}
+  }
+  if (!fs.existsSync(path.join(__dirname, `../uploads/${customDest}/NationalIdCard`))) {
+    fs.mkdirSync(path.join(__dirname, `../uploads/${customDest}/NationalIdCard`), {
+      recursive: true,
+    })
+  }
+}
   if(customDest == 'User'){
   if (!fs.existsSync(path.join(__dirname, `../uploads/${customDest}/ProfileImage`))) {
     fs.mkdirSync(path.join(__dirname, `../uploads/${customDest}/ProfileImage`), {
@@ -61,6 +67,10 @@ function multerFn(customDest, type) {
         req.destination3 = `uploads/${customDest}/EmployeeCompanyId`;
         cb(null, path.join(__dirname, `../uploads/${customDest}/EmployeeCompanyId`));
       }
+      if (file.fieldname === 'NationalIdCard') {
+        req.destination5 = `uploads/${customDest}/NationalIdCard`;
+        cb(null, path.join(__dirname, `../uploads/${customDest}/NationalIdCard`));
+      }
       if (file.fieldname === 'ProfileImage') {
         req.destination4 = `uploads/${customDest}/ProfileImage`;
         cb(null, path.join(__dirname, `../uploads/${customDest}/ProfileImage`));
@@ -78,6 +88,10 @@ function multerFn(customDest, type) {
       }
       if (file.fieldname === 'EmployeeCompanyId') {
         const fullName = `TravelerCompanyId-${new Date().getTime()}-${file.originalname}`;
+        cb(null, fullName);
+      }
+      if (file.fieldname === 'NationalIdCard') {
+        const fullName = `TravelerNationalIdCard-${new Date().getTime()}-${file.originalname}`;
         cb(null, fullName);
       }
       if (file.fieldname === 'ProfileImage') {
@@ -108,6 +122,10 @@ function multerFn(customDest, type) {
     },
     {
       name: 'EmployeeCompanyId',
+      maxCount: 1
+    },
+    {
+      name: 'NationalIdCard',
       maxCount: 1
     },
     {

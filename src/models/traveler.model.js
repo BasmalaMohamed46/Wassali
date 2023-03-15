@@ -27,7 +27,7 @@ const travelerSchema = mongoose.Schema({
     type: String,
   },
   StudentUniversityId: {
-    type: String
+    type: String,
   },
   CollegeEnrollmentStatement: {
     type: String,
@@ -44,7 +44,9 @@ const travelerSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Trip',
   }],
-
+  NationalIdCard: {
+    type: String,
+  }
 
 }, {
   timestamps: true,
