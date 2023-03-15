@@ -78,16 +78,29 @@ const createTraveler = async (id, req) => {
       government
     } = req.body;
 
-
     if (req.fileUploadError) {
       return {
         message: 'invalid file, accepted files->(png,jpg,jpeg)',
       }
-
     }
     // console.log(req.files.NationalIdCard);
     // console.log(req.files.NationalIdCard[0].filename);
     if (foundedTraveler.isStudent) {
+      if(!req.files.NationalIdCard){
+        return {
+          message: 'NationalIdCard is required',
+        }
+      }
+      if(!req.files.StudentUniversityId){
+        return {
+          message: 'StudentUniversityId is required',
+        }
+      }
+      if(!req.files.CollegeEnrollmentStatement){
+        return {
+          message: 'CollegeEnrollmentStatement is required',
+        }
+      }
       let StudentUniversityId_URL = `${req.protocol}://${req.headers.host}/${req.destination}/${req.files.StudentUniversityId[0].filename}`;
       let CollegeEnrollmentStatement_URL = `${req.protocol}://${req.headers.host}/${req.destination2}/${req.files.CollegeEnrollmentStatement[0].filename}`;
       let NationalIdCard_URL = `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`;
@@ -110,6 +123,16 @@ const createTraveler = async (id, req) => {
         updatedUser,
       }
     } else {
+      if(!req.files.NationalIdCard){
+        return {
+          message: 'NationalIdCard is required',
+        }
+      }
+      if(!req.files.EmployeeCompanyId){
+        return {
+          message: 'EmployeeCompanyId is required',
+        }
+      }
       let EmployeeCompanyId_URL = `${req.protocol}://${req.headers.host}/${req.destination3}/${req.files.EmployeeCompanyId[0].filename}`;
       let NationalIdCard_URL = `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`;
       // console.log(EmployeeCompanyId_URL);
