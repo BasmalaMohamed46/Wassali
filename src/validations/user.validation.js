@@ -8,12 +8,12 @@ const {
 const createUser = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    phoneNumber: Joi.string().required().custom(phoneNumber),
-    password: Joi.string().required().custom(password),
-    confirmpassword: Joi.string().required().custom(password),
+    phoneNumber: Joi.string().custom(phoneNumber),
+    password: Joi.string().custom(password),
+    confirmpassword: Joi.string().custom(password),
     name: Joi.string().required(),
 
-    role: Joi.string().required().valid('user', 'admin'),
+    role: Joi.string().valid('user', 'admin'),
     // confirmPassword: Joi.string().required().valid(Joi.ref('password')),
 
     birthdate: Joi
@@ -23,10 +23,10 @@ const createUser = {
       .messages({
         'date.format': `Date format is YYYY-MM-DD`,
         'date.max': `Age must be 18+`
-      }).required(),
-    city: Joi.string().required(),
-    governorate: Joi.string().required(),
-    address:Joi.string().required(),
+      }),
+    city: Joi.string(),
+    governorate: Joi.string(),
+    address:Joi.string(),
   }),
 };
 
@@ -63,10 +63,10 @@ const updateUser = {
         .messages({
           'date.format': `Date format is YYYY-MM-DD`,
           'date.max': `Age must be 18+`
-        }).required(),
-      city: Joi.string().required(),
-      governorate: Joi.string().required(),
-      address:Joi.string().required(),
+        }),
+      city: Joi.string(),
+      governorate: Joi.string(),
+      address:Joi.string(),
     })
     .min(1),
 };
