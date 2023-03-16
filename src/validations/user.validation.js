@@ -69,6 +69,7 @@ const updateUser = {
       city: Joi.string().optional().allow(''),
       governorate: Joi.string().optional().allow(''),
       address:Joi.string().optional().allow(''),
+      ProfileImage: Joi.string().optional().allow(''),
     })
  
 };
@@ -78,14 +79,14 @@ const deleteUser = {
     userId: Joi.string().custom(objectId),
   }),
 };
-const profileImage = {
-  body: Joi.object()
-    .keys({
-      ProfileImage: Joi.string(),
-    })
+// const profileImage = {
+//   body: Joi.object()
+//     .keys({
+//       ProfileImage: Joi.string(),
+//     })
 
 
-};
+// };
 
 
 module.exports = {
@@ -94,5 +95,5 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
-  profileImage
+  // profileImage
 };
