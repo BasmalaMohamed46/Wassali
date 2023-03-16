@@ -8,7 +8,7 @@ const {
 const createUser = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    phoneNumber: Joi.string().optional().custom(phoneNumber),
+    phoneNumber: Joi.string().custom(phoneNumber).optional().allow(''),
     password: Joi.string().custom(password),
     confirmpassword: Joi.string().custom(password),
     name: Joi.string().required(),
@@ -16,7 +16,7 @@ const createUser = {
     role: Joi.string().valid('user', 'admin'),
     // confirmPassword: Joi.string().required().valid(Joi.ref('password')),
 
-    birthdate: Joi
+    birthDate: Joi
       .date()
       .max('01-01-2003')
       .iso()
@@ -25,10 +25,10 @@ const createUser = {
         'date.max': `Age must be 18+`
       })
       .optional()
-      .allow(null),
-    city: Joi.string().optional().allow(null),
-    governorate: Joi.string().optional().allow(null),
-    address:Joi.string().optional().allow(null),
+      .allow(''),
+    city: Joi.string().optional().allow(''),
+    governorate: Joi.string().optional().allow(''),
+    address:Joi.string().optional().allow(''),
   }),
 };
 
@@ -55,22 +55,22 @@ const updateUser = {
   body: Joi.object()
     .keys({
       email: Joi.string().email(),
-      phoneNumber: Joi.string().custom(phoneNumber),
+      phoneNumber: Joi.string().custom(phoneNumber).optional().allow(''),
       password: Joi.string().custom(password),
       name: Joi.string(),
-      birthdate: Joi
+      birthDate: Joi
         .date()
         .max('01-01-2003')
         .iso()
         .messages({
           'date.format': `Date format is YYYY-MM-DD`,
           'date.max': `Age must be 18+`
-        }).optional().allow(null),
-      city: Joi.string().optional().allow(null),
-      governorate: Joi.string().optional().allow(null),
-      address:Joi.string().optional().allow(null),
+        }).optional().allow(''),
+      city: Joi.string().optional().allow(''),
+      governorate: Joi.string().optional().allow(''),
+      address:Joi.string().optional().allow(''),
     })
-    .min(1),
+ 
 };
 
 const deleteUser = {

@@ -69,7 +69,7 @@ const updateRequest = {
                 'date.min': `Date should not be passed`
               }).required(),
         })
-        .min(1),
+     
 };
 
 const deleteRequest = {
