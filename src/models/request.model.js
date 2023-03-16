@@ -55,7 +55,7 @@ const requestSchema = mongoose.Schema(
     },
     weight:{
       type: Number,
-      required: true,
+      // required: true,
     },
     location:{
       type: String,
@@ -63,7 +63,7 @@ const requestSchema = mongoose.Schema(
     },
     targetLocation:{
       type: String,
-      required: true,
+      // required: true,
     },
     anotherPhone:{
       type: String,
@@ -80,6 +80,15 @@ const requestSchema = mongoose.Schema(
     date:{
       type:Date,
       required:true,
+    },
+    storeLocation:{
+      type:String,
+    },
+    storeName:{
+      type:String,
+    },
+    price:{
+      type:Number,
     }
   },
   {

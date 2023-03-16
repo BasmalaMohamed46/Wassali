@@ -15,7 +15,7 @@ const createRequest = {
         item: Joi.string().required(),
         weight: Joi.number().required(),
         location: Joi.string().required(),
-        targetLocation: Joi.string().required(),
+        targetLocation: Joi.string(),
         anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
         category: Joi.string().required(),
         buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
@@ -23,6 +23,9 @@ const createRequest = {
             'date.format': `Date format is YYYY-MM-DD`,
             'date.min': `Date should not be passed`
           }).required(),
+        storeLocation: Joi.string(),
+        storeName: Joi.string(),
+        price: Joi.number(),
 
     }),
 };
@@ -60,7 +63,7 @@ const updateRequest = {
             item: Joi.string().required(),
             weight: Joi.number().required(),
             location: Joi.string().required(),
-            targetLocation: Joi.string().required(),
+            targetLocation: Joi.string(),
             anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
             category: Joi.string().required(),
             buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
@@ -68,6 +71,9 @@ const updateRequest = {
                 'date.format': `Date format is YYYY-MM-DD`,
                 'date.min': `Date should not be passed`
               }).required(),
+              storeLocation: Joi.string(),
+        storeName: Joi.string(),
+        price: Joi.number(),
         })
      
 };
@@ -95,7 +101,7 @@ const sendRequest = {
         item: Joi.string().required(),
         weight: Joi.number().required(),
         location: Joi.string().required(),
-        targetLocation: Joi.string().required(),
+        targetLocation: Joi.string(),
         anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
         category: Joi.string().required(),
         buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
@@ -103,6 +109,9 @@ const sendRequest = {
             'date.format': `Date format is YYYY-MM-DD`,
             'date.min': `Date should not be passed`
           }).required(),
+          storeLocation: Joi.string(),
+        storeName: Joi.string(),
+        price: Joi.number(),
 
     }),
 
