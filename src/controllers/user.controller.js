@@ -25,7 +25,7 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
-  const user = await userService.updateUserById(req.params.userId, req.body);
+  const user = await userService.updateUserById(req.params.userId, req.body,req);
   res.send(user);
 });
 
@@ -33,11 +33,11 @@ const deleteUser = catchAsync(async (req, res) => {
   await userService.deleteUserById(req.params.userId);
   res.status(httpStatus.NO_CONTENT).send();
 });
-const profileImage = catchAsync(async (req, res) => {
-  const id = req.user._id;
-  const user = await userService.profileImage(id,req);
-  res.status(httpStatus.CREATED).send(user);
-});
+// const profileImage = catchAsync(async (req, res) => {
+//   const id = req.user._id;
+//   const user = await userService.profileImage(id,req);
+//   res.status(httpStatus.CREATED).send(user);
+// });
 
 const getAllUsers = catchAsync(async (req, res) => {
   const users = await userService.getAllUserss();
@@ -49,6 +49,6 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
-  profileImage,
+  // profileImage,
   getAllUsers
 };

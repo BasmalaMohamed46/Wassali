@@ -10,7 +10,7 @@ const {
 } = require('../../services/multer');
 
 const router = express.Router();
-router.patch('/profileImage',auth(),validate(userValidation.profileImage),multerFn('User', validationType.image),userController.profileImage);
+// router.patch('/profileImage',auth(),validate(userValidation.profileImage),multerFn('User', validationType.image),userController.profileImage);
 
 router
   .route('/')
@@ -23,7 +23,7 @@ router
 router
   .route('/:userId')
   .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)
-  .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
+  .patch(auth('manageUsers'), validate(userValidation.updateUser), multerFn('User', validationType.image),userController.updateUser)
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
 module.exports = router;

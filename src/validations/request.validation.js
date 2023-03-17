@@ -15,14 +15,17 @@ const createRequest = {
         item: Joi.string().required(),
         weight: Joi.number().required(),
         location: Joi.string().required(),
-        targetLocation: Joi.string().required(),
-        anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
+        targetLocation: Joi.string().optional().allow(''),
+        anotherPhone:Joi.string().regex(/^[0-9]{11}$/).messages({'string.pattern.base': `Phone number must have 11 digits.`}),
         category: Joi.string().required(),
-        buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
+        buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('deliver'),
         date: Joi.date().greater(Date.now() - 24 * 60 * 60 * 1000).iso().messages({
             'date.format': `Date format is YYYY-MM-DD`,
             'date.min': `Date should not be passed`
           }).required(),
+        storeLocation: Joi.string().optional().allow(''),
+        storeName: Joi.string().optional().allow(''),
+        price: Joi.number().optional().allow(''),
 
     }),
 };
@@ -60,16 +63,19 @@ const updateRequest = {
             item: Joi.string().required(),
             weight: Joi.number().required(),
             location: Joi.string().required(),
-            targetLocation: Joi.string().required(),
-            anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
+            targetLocation: Joi.string().optional().allow(''),
+            anotherPhone:Joi.string().regex(/^[0-9]{11}$/).messages({'string.pattern.base': `Phone number must have 11 digits.`}),
             category: Joi.string().required(),
-            buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
+            buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('deliver'),
             date: Joi.date().greater(Date.now() - 24 * 60 * 60 * 1000).iso().messages({
                 'date.format': `Date format is YYYY-MM-DD`,
                 'date.min': `Date should not be passed`
               }).required(),
+              storeLocation: Joi.string().optional().allow(''),
+        storeName: Joi.string().optional().allow(''),
+        price: Joi.number().optional().allow(''),
         })
-        .min(1),
+     
 };
 
 const deleteRequest = {
@@ -95,14 +101,17 @@ const sendRequest = {
         item: Joi.string().required(),
         weight: Joi.number().required(),
         location: Joi.string().required(),
-        targetLocation: Joi.string().required(),
-        anotherPhone:Joi.string().regex(/^[0-9]{10}$/).messages({'string.pattern.base': `Phone number must have 10 digits.`}),
+        targetLocation: Joi.string().optional().allow(''),
+        anotherPhone:Joi.string().regex(/^[0-9]{11}$/).messages({'string.pattern.base': `Phone number must have 11 digits.`}),
         category: Joi.string().required(),
-        buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('buy'),
+        buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('deliver'),
         date: Joi.date().greater(Date.now() - 24 * 60 * 60 * 1000).iso().messages({
             'date.format': `Date format is YYYY-MM-DD`,
             'date.min': `Date should not be passed`
           }).required(),
+          storeLocation: Joi.string().optional().allow(''),
+        storeName: Joi.string().optional().allow(''),
+        price: Joi.number().optional().allow(''),
 
     }),
 
