@@ -42,45 +42,45 @@ router.patch(
   ],
   (req, res, next) => {
     const validationErrors = validationResult(req);
-    if (!validationErrors.isEmpty()) {
-      // console.log(req.files.StudentUniversityId);
-      console.log(req.files.StudentUniversityId[0].filename);
-      if (req.files) {
-        if (req.files.StudentUniversityId) {
-          fs.unlink(`./uploads/Traveler/StudentUniversityId/${req.files.StudentUniversityId[0].filename}`, (err) => {
-            if (err) {
-              console.log(err)
-            }
-          })
-        }
-        if (req.files.CollegeEnrollmentStatement) {
-          fs.unlink(`./uploads/Traveler/CollegeEnrollmentStatement/${req.files.CollegeEnrollmentStatement[0].filename}`, (err) => {
-            if (err) {
-              console.log(err)
-            }
-          })
-        }
-        if (req.files.EmployeeCompanyId) {
-          fs.unlink(`./uploads/Traveler/EmployeeCompanyId/${req.files.EmployeeCompanyId[0].filename}`, (err) => {
-            if (err) {
-              console.log(err)
-            }
-          })
-        }
-        if (req.files.EmployeeCompanyId) {
-          fs.unlink(`./uploads/Traveler/NationalIdCard/${req.files.NationalIdCard[0].filename}`, (err) => {
-            if (err) {
-              console.log(err)
-            }
-          })
-        }
-      }
-      return res.status(422).json({
-        errors: validationErrors.array()
-      });
-    } else {
-      next();
-    }
+    // if (!validationErrors.isEmpty()) {
+    //   // console.log(req.files.StudentUniversityId);
+    //   console.log(req.files.StudentUniversityId[0].filename);
+    //   if (req.files) {
+    //     if (req.files.StudentUniversityId) {
+    //       fs.unlink(`./uploads/Traveler/StudentUniversityId/${req.files.StudentUniversityId[0].filename}`, (err) => {
+    //         if (err) {
+    //           console.log(err)
+    //         }
+    //       })
+    //     }
+    //     if (req.files.CollegeEnrollmentStatement) {
+    //       fs.unlink(`./uploads/Traveler/CollegeEnrollmentStatement/${req.files.CollegeEnrollmentStatement[0].filename}`, (err) => {
+    //         if (err) {
+    //           console.log(err)
+    //         }
+    //       })
+    //     }
+    //     if (req.files.EmployeeCompanyId) {
+    //       fs.unlink(`./uploads/Traveler/EmployeeCompanyId/${req.files.EmployeeCompanyId[0].filename}`, (err) => {
+    //         if (err) {
+    //           console.log(err)
+    //         }
+    //       })
+    //     }
+    //     if (req.files.EmployeeCompanyId) {
+    //       fs.unlink(`./uploads/Traveler/NationalIdCard/${req.files.NationalIdCard[0].filename}`, (err) => {
+    //         if (err) {
+    //           console.log(err)
+    //         }
+    //       })
+    //     }
+    //   }
+    //   return res.status(422).json({
+    //     errors: validationErrors.array()
+    //   });
+    // } else {
+    //   next();
+    // }
   },
   // validate(travelerValidation.createTraveler),
   travelerController.AddTraveler
