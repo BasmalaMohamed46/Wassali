@@ -22,7 +22,7 @@ const login = catchAsync(async (req, res) => {
     password
   } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password, res);
-  res.send(user);
+  res.status(httpStatus.OK).send(user);
 });
 
 const logout = catchAsync(async (req, res) => {
