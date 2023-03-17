@@ -10,6 +10,16 @@ const httpStatus = require('http-status');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
 const path=require('path')
+const mongoose = require('mongoose');
+const logger = require('./config/logger');
+
+let server;
+mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
+  logger.info('Connected to MongoDB');
+  server = app.listen(9000, () => {
+    logger.info(`Listening to port 9000`);
+  });
+});
 const {
   jwtStrategy
 } = require('./config/passport');
