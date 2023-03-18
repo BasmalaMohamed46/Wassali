@@ -55,21 +55,21 @@ const userViewRequests = catchAsync(async (req, res) => {
 const userViewRequest = catchAsync(async (req, res) => {
   const id = req.user._id;
   const request = await requestService.userviewrequest(id, req);
-  res.status(httpStatus.CREATED).send(request);
+  res.status(httpStatus.OK).send(request);
 });
 
 const acceptRequest = catchAsync(async (req, res) => {
   const id = req.user._id;
   const requestId = req.params.requestId
   const request = await requestService.acceptrequest(id, requestId, req);
-  res.status(httpStatus.CREATED).send(request);
+  res.status(httpStatus.OK).send(request);
 })
 
 const acceptAnyRequest = catchAsync(async (req, res) => {
   const id = req.user._id;
   const requestId = req.params.requestId;
   const request = await requestService.acceptanyrequest(id, requestId, req);
-  res.status(httpStatus.CREATED).send(request);
+  res.status(httpStatus.OK).send(request);
 })
 
 
@@ -78,13 +78,13 @@ const declineRequest = catchAsync(async (req, res) => {
   const id = req.user._id;
   const requestId = req.params.requestId;
   const request = await requestService.declinerequest(id, requestId, req);
-  res.status(httpStatus.CREATED).send(request);
+  res.status(httpStatus.OK).send(request);
 })
 
 const viewAllRequest = catchAsync(async (req, res) => {
 
     const request = await requestService.viewAllRequests(req);
-    res.status(httpStatus.CREATED).send(request);
+    res.status(httpStatus.OK).send(request);
   })
 
 module.exports = {
