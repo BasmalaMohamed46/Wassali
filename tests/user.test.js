@@ -53,3 +53,42 @@ describe('User Login with Email Not Exist',()=>{
     })
 }
 )
+
+
+const userPayload4={
+  email:'test@gmail.com',
+  password:'test12D34',
+}
+jest.setTimeout(10000)
+
+describe('User service',()=>{
+    describe('Get User',()=>{
+        it('Should get user',async()=>{
+            const user=await User.findOne({email:userPayload4.email})
+            const res = await request(app).post('/v1/auth/login').send(userPayload4)
+            const token=res.body.token;
+            await request(app).get(`/v1/users/${user._id}`).set('Authorization',`Bearer ${token}`).expect(200)
+})
+    })
+}
+)
+
+// delete user
+
+const userPayload5={
+  email:'test@gmail.com',
+  password:'test12D34',
+}
+jest.setTimeout(10000)
+
+describe('User service',()=>{
+    describe('Delete User',()=>{
+        it('Should delete user',async()=>{
+            const user=await User.findOne({email:userPayload5.email})
+            const res = await request(app).post('/v1/auth/login').send(userPayload5)
+            const token=res.body.token;
+            await request(app).delete(`/v1/users/${user._id}`).set('Authorization',`Bearer ${token}`).expect(204)
+})
+    })
+}
+)
