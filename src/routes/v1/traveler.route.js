@@ -19,29 +19,29 @@ router.patch(
   '/create',
   auth(),
   multerFn('Traveler', validationType.image),
-  [
-    check('NationalId')
-    .not()
-    .isEmpty()
-    .withMessage('NationalId is required')
-    .isLength({
-      min: 16,
-      max: 16
-    })
-    .withMessage('NationalId must be 16 digit'),
-    check('city').not().isEmpty().withMessage('City field is required'),
-    check('birthdate')
-    .not()
-    .isEmpty()
-    .withMessage('BirthDay field is required')
-    .isISO8601()
-    .withMessage('Date format is YYYY-MM-DD')
-    .isBefore('2003-01-01')
-    .withMessage('Age must be 18+'),
-    check('government', 'government field is required').not().isEmpty(),
-  ],
-  (req, res, next) => {
-    const validationErrors = validationResult(req);
+  // [
+  //   check('NationalId')
+  //   .not()
+  //   .isEmpty()
+  //   .withMessage('NationalId is required')
+  //   .isLength({
+  //     min: 16,
+  //     max: 16
+  //   })
+  //   .withMessage('NationalId must be 16 digit'),
+  //   check('city').not().isEmpty().withMessage('City field is required'),
+  //   check('birthdate')
+  //   .not()
+  //   .isEmpty()
+  //   .withMessage('BirthDay field is required')
+  //   .isISO8601()
+  //   .withMessage('Date format is YYYY-MM-DD')
+  //   .isBefore('2003-01-01')
+  //   .withMessage('Age must be 18+'),
+  //   check('government', 'government field is required').not().isEmpty(),
+  // ],
+  // (req, res, next) => {
+  //   const validationErrors = validationResult(req);
     // if (!validationErrors.isEmpty()) {
     //   // console.log(req.files.StudentUniversityId);
     //   console.log(req.files.StudentUniversityId[0].filename);
@@ -81,8 +81,8 @@ router.patch(
     // } else {
     //   next();
     // }
-  },
-  // validate(travelerValidation.createTraveler),
+  // },
+  validate(travelerValidation.createTraveler),
   travelerController.AddTraveler
 );
 

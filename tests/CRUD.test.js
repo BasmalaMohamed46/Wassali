@@ -2,7 +2,11 @@ const request=require('supertest')
 const app=require('../src/app')
 const { deleteOne } = require('../src/models/user.model')
 const User=require('../src/models/user.model')
+const Traveler = require('../src/models/traveler.model');
+const fs = require('fs');
+const path = require('path');
 
+//User Test
 const userPayload={
     name:'test',
     email:'test@gmail.com',
@@ -92,3 +96,40 @@ describe('User service',()=>{
     })
 }
 )
+
+//Traveler Test
+
+const userPayloadd = {
+  email: 'test@gmail.com',
+  password: 'test12D34',
+};
+
+describe('Traveler service', () => {
+  describe('Create Student traveler', () => {
+    it('Should create a new Employee traveler', async () => {
+      const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
+      const token = res.body.token;
+      await request(app).patch('/v1/travelers/employee').set('Authorization', `Bearer ${token}`).expect(201);
+    });
+  });
+});
+
+describe('Traveler service', () => {
+  describe('Create traveler', () => {
+    it('Should create a new traveler', async () => {
+      const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
+      const token = res.body.token;
+      await request(app)
+        .patch('/v1/travelers/create')
+        .set('Authorization', `Bearer ${token}`)
+        .field({
+          NationalId: '1200580001514031',
+          city: 'aaa',
+          government: 'sss',
+        })
+        .attach('NationalIdCard', path.join(__dirname, 'images', '2.jpg'))
+        .attach('EmployeeCompanyId', path.join(__dirname, 'images', '2.jpg'))
+        .expect(201);
+    });
+  });
+});

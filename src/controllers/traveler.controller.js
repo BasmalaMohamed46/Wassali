@@ -19,7 +19,7 @@ const IsEmployee = catchAsync(async (req, res) => {
 const AddTraveler = catchAsync(async (req, res) => {
   const id = req.user._id;
   const addTraveler = await travelerService.createTraveler(id,req);
-  res.status(httpStatus.OK).send(addTraveler);
+  res.status(httpStatus.CREATED).send(addTraveler);
 });
 
 const updateTraveller = catchAsync(async (req, res) => {

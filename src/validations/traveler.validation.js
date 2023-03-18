@@ -7,14 +7,12 @@ const createTraveler = {
       NationalId: Joi.string().regex(/^[1-3](19|20)\d{2}[7-8]\d{7}[0-9]\d{2}$/).messages({
         'string.pattern.base': `National Id must have 16 digits.`
       }).required(),
-      city: Joi.string().required().max(20),
-      government: Joi.string().required().max(20),
+      city: Joi.string().max(20).required(),
+      government: Joi.string().max(20).required(),
       StudentUniversityId: Joi.string(),
       CollegeEnrollmentStatement: Joi.string(),
       EmployeeCompanyId: Joi.string(),
-      NationalIdCard: Joi.string().required().messages({
-        'string.empty': `National Id Card is required.`
-      })
+      NationalIdCard: Joi.string(),
     }),
 
 };
