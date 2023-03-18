@@ -28,14 +28,14 @@ const ViewTravelerTrips = catchAsync(async (req, res) => {
 
   const id = req.user._id;
   const viewtravelertrips = await tripService.viewtravelertrips(id,req,res);
-  res.status(httpStatus.CREATED).send(viewtravelertrips);
+  res.status(httpStatus.OK).send(viewtravelertrips);
 });
 
 const ViewTrip = catchAsync(async (req, res) => {
   const tripId = req.params.tripId;
   const id = req.user._id;
   const viewtrip = await tripService.viewtrip(id,req,res,tripId);
-  res.status(httpStatus.CREATED).send(viewtrip);
+  res.status(httpStatus.OK).send(viewtrip);
 });
 
 const updateTrip = catchAsync(async (req, res) => {

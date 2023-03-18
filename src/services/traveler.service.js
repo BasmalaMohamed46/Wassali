@@ -176,7 +176,7 @@ const updateTraveler = async (id, req) => {
     const travelerExist = await Traveler.findOne({
       userId: id
     })
-    if (travelerExist.isTraveler) {
+  
       if (travelerExist.isStudent) {
         // console.log(userExist.StudentUniversityId.split('/').pop());
         const oldStudentUniversityId = travelerExist.StudentUniversityId.split('/').pop();
@@ -252,11 +252,7 @@ const updateTraveler = async (id, req) => {
           updateTraveler,
         }
       }
-    } else {
-      return {
-        message: 'User is not a traveler',
-      }
-    }
+  
   } catch (error) {
     return {
       message: 'Something went wrong',

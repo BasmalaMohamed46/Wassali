@@ -89,8 +89,8 @@ router.patch(
 router.patch(
   '/update',
   auth(),
-  validate(travelerValidation.updateTraveler),
   multerFn('Traveler', validationType.image),
+  validate(travelerValidation.updateTraveler),
   travelerController.updateTraveller
 );
 
