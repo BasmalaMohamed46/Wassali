@@ -1,12 +1,34 @@
 const Joi = require('joi');
-const { password, objectId } = require('./custom.validation');
+const {
+  password,
+  objectId,
+  phoneNumber
+} = require('./custom.validation');
 
 const createUser = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
+    phoneNumber: Joi.string().custom(phoneNumber).optional().allow(''),
+    password: Joi.string().custom(password),
+    confirmpassword: Joi.string().custom(password),
     name: Joi.string().required(),
-    role: Joi.string().required().valid('user', 'admin'),
+
+    role: Joi.string().valid('user', 'admin'),
+    // confirmPassword: Joi.string().required().valid(Joi.ref('password')),
+
+    birthDate: Joi
+      .date()
+      .max('01-01-2003')
+      .iso()
+      .messages({
+        'date.format': `Date format is YYYY-MM-DD`,
+        'date.max': `Age must be 18+`
+      })
+      .optional()
+      .allow(''),
+    city: Joi.string().optional().allow(''),
+    governorate: Joi.string().optional().allow(''),
+    address:Joi.string().optional().allow(''),
   }),
 };
 
@@ -33,10 +55,23 @@ const updateUser = {
   body: Joi.object()
     .keys({
       email: Joi.string().email(),
+      phoneNumber: Joi.string().custom(phoneNumber).optional().allow(''),
       password: Joi.string().custom(password),
       name: Joi.string(),
+      birthDate: Joi
+        .date()
+        .max('01-01-2003')
+        .iso()
+        .messages({
+          'date.format': `Date format is YYYY-MM-DD`,
+          'date.max': `Age must be 18+`
+        }).optional().allow(''),
+      city: Joi.string().optional().allow(''),
+      governorate: Joi.string().optional().allow(''),
+      address:Joi.string().optional().allow(''),
+      ProfileImage: Joi.string().optional().allow(''),
     })
-    .min(1),
+ 
 };
 
 const deleteUser = {
@@ -44,6 +79,15 @@ const deleteUser = {
     userId: Joi.string().custom(objectId),
   }),
 };
+// const profileImage = {
+//   body: Joi.object()
+//     .keys({
+//       ProfileImage: Joi.string(),
+//     })
+
+
+// };
+
 
 module.exports = {
   createUser,
@@ -51,4 +95,5 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
+  // profileImage
 };

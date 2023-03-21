@@ -1,5 +1,7 @@
 const httpStatus = require('http-status');
-const { User } = require('../models');
+const {
+  User
+} = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -11,6 +13,10 @@ const createUser = async (userBody) => {
   if (await User.isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
+  // if (await User.isphoneNumberTaken(userBody.phoneNumber)) {
+  //   throw new ApiError(httpStatus.BAD_REQUEST, 'PhoneNumber already registered');
+  // }
+  // console.log(userBody)
   return User.create(userBody);
 };
 
@@ -43,7 +49,18 @@ const getUserById = async (id) => {
  * @returns {Promise<User>}
  */
 const getUserByEmail = async (email) => {
-  return User.findOne({ email });
+  return User.findOne({
+    email
+  });
+};
+
+/**
+ * Get user by phoneNumber
+ * @param {string} phoneNumber
+ * @returns {Promise<User>}
+ */
+const getUserByphoneNumber = async (phoneNumber) => {
+  return User.findOne({ phoneNumber });
 };
 
 /**
@@ -52,7 +69,7 @@ const getUserByEmail = async (email) => {
  * @param {Object} updateBody
  * @returns {Promise<User>}
  */
-const updateUserById = async (userId, updateBody) => {
+const updateUserById = async (userId, updateBody,req) => {
   const user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -60,6 +77,17 @@ const updateUserById = async (userId, updateBody) => {
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
+  if (updateBody.phoneNumber && (await User.isphoneNumberTaken(updateBody.phoneNumber))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'phoneNumber number already taken');
+  }
+  if (req.fileUploadError) {
+    return {
+      message: 'invalid file, accepted files->(png,jpg,jpeg)',
+    }
+  }
+  let ProfileImage_URL = `${req.protocol}://${req.headers.host}/${req.destination4}/${req.files.ProfileImage[0].filename}`;
+  
+  updateBody.ProfileImage=ProfileImage_URL;
   Object.assign(user, updateBody);
   await user.save();
   return user;
@@ -78,6 +106,31 @@ const deleteUserById = async (userId) => {
   await user.remove();
   return user;
 };
+// const profileImage = async (id,req) => {
+//   const user = await User.findById(id);
+//   if (req.fileUploadError) {
+//     return {
+//       message: 'invalid file, accepted files->(png,jpg,jpeg)',
+//     }
+//   }
+//   if(!user){
+//     return {
+//       message: 'user not found',
+//     }
+//   }
+//   else{
+//     let ProfileImage_URL = `${req.protocol}://${req.headers.host}/${req.destination4}/${req.files.ProfileImage[0].filename}`;
+//     // const updated=await User.findByIdAndUpdate(id, {profileImage:ProfileImage_URL}, {new: true});
+//     // return updated;
+//     user.ProfileImage=ProfileImage_URL;
+//     await user.save();
+//     return user;
+  
+//   }
+//   }
+  const getAllUserss = async () => {
+    return User.find();
+  };
 
 module.exports = {
   createUser,
@@ -86,4 +139,7 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  getUserByphoneNumber,
+  // profileImage,
+  getAllUserss
 };

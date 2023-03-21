@@ -3,18 +3,27 @@ const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const userValidation = require('../../validations/user.validation');
 const userController = require('../../controllers/user.controller');
+const {
+  multerFn,
+  validationType,
+  multerHandelErrors
+} = require('../../services/multer');
 
 const router = express.Router();
+// router.patch('/profileImage',auth(),validate(userValidation.profileImage),multerFn('User', validationType.image),userController.profileImage);
 
 router
   .route('/')
   .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
   .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
 
+  router.route('/allusers').get( userController.getAllUsers);
+
+
 router
   .route('/:userId')
   .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)
-  .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
+  .patch(auth('manageUsers'), validate(userValidation.updateUser), multerFn('User', validationType.image),userController.updateUser)
   .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
 
 module.exports = router;

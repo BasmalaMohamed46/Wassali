@@ -1,0 +1,23 @@
+{
+    "name": "Wassali",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "node-app",
+    "workspaceFolder": "/usr/src/node-app",
+    "shutdownAction": "stopCompose",
+    "containerEnv": {"NODE_ENV":"development"},
+    "customizations": {
+        "vscode": {
+            "extensions":[
+				"dbaeumer.vscode-eslint",
+				"mhutchie.git-graph",
+				"donjayamanne.githistory",
+				"eamodio.gitlens",
+				"christian-kohler.npm-intellisense",
+				"esbenp.prettier-vscode",
+				"rangav.vscode-thunder-client",
+				"vscode-icons-team.vscode-icons",
+				"bengreenier.vscode-node-readme"
+			]
+        }
+    }
+    }

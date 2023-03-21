@@ -3,6 +3,9 @@ const validate = require('../../middlewares/validate');
 const authValidation = require('../../validations/auth.validation');
 const authController = require('../../controllers/auth.controller');
 const auth = require('../../middlewares/auth');
+const passport = require('passport')
+const googleAuth = require('../../services/googleAuth')
+const session = require('express-session')
 
 const router = express.Router();
 
@@ -14,6 +17,32 @@ router.post('/forgot-password', validate(authValidation.forgotPassword), authCon
 router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
 router.post('/send-verification-email', auth(), authController.sendVerificationEmail);
 router.post('/verify-email', validate(authValidation.verifyEmail), authController.verifyEmail);
+
+
+function isLoggedIn(req, res, next) {
+  req.user ? next() : res.sendStatus(401)
+}
+router.get('/signUp', (req, res) => {
+  res.redirect('/v1/auth/google')
+  // res.send('<a href="/v1/auth/google">Google Sign Up</a>')
+});
+
+router.get('/google',
+  passport.authenticate('google', {
+    scope: ['profile', 'email']
+  }))
+
+router.get('/google/callback',
+  passport.authenticate('google', {
+    successRedirect: '/v1/auth/register',
+    failureRedirect: '/v1/auth/failure'
+  }))
+
+router.get('/register', authController.googleLogin)
+
+
+router.get('/failure', authController.failureGoogle)
+router.get('/logout', authController.logoutGoogle)
 
 module.exports = router;
 
