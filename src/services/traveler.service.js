@@ -15,7 +15,9 @@ const Student = async (id, res) => {
     })
     if (foundedTraveler) {
       if(foundedTraveler.isStudent){
-        res.status(httpStatus.NOT_FOUND).send('User is already a student');
+        res.status(httpStatus.NOT_FOUND).json({
+          message:'User is already a student'
+        })
       }else{
         const traveler = await Traveler.findByIdAndUpdate(foundedTraveler._id, {
           isStudent: true,
@@ -43,7 +45,9 @@ const Employee = async (id,res) => {
     })
     if (foundedTraveler) {
       if(!foundedTraveler.isStudent){
-        res.status(httpStatus.NOT_FOUND).send('User is already a Employee');
+        res.status(httpStatus.NOT_FOUND).json({
+          message:'User is already an employee' 
+        })
       }else{
         const traveler = await Traveler.findByIdAndUpdate(foundedTraveler._id, {
           isStudent: false,
