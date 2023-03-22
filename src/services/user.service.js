@@ -80,14 +80,7 @@ const updateUserById = async (userId, updateBody,req) => {
   if (updateBody.phoneNumber && (await User.isphoneNumberTaken(updateBody.phoneNumber))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'phoneNumber number already taken');
   }
-  if (req.fileUploadError) {
-    return {
-      message: 'invalid file, accepted files->(png,jpg,jpeg)',
-    }
-  }
-  let ProfileImage_URL = `${req.protocol}://${req.headers.host}/${req.destination4}/${req.files.ProfileImage[0].filename}`;
-  
-  updateBody.ProfileImage=ProfileImage_URL;
+
   Object.assign(user, updateBody);
   await user.save();
   return user;
