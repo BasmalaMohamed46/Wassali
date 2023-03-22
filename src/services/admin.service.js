@@ -3,11 +3,11 @@ const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
 const { findByIdAndDelete } = require('../models/admin.model');
-const { User } = require('../models');
+const { User, Traveler } = require('../models');
 
 
 const createAdmin = async (userBody) => {
- 
+
     return Admin.create(userBody)
   };
 
@@ -85,10 +85,81 @@ const createAdmin = async (userBody) => {
                 message:"user found",
                 user
             }
-    
+
         }
-        
+
   }
+
+  const getAllTravelers = async (req,res) => {
+    const travelers=await Traveler.find({role:"traveler"})
+    if(!travelers)
+    {
+      res.status(404).json({
+        message: 'travelers not exist',
+      })
+    }
+    else
+    {
+      res.status(200).json({
+        message: 'travelers exist',
+        travelers
+      })
+    }
+}
+
+const deleteTraveler = async (req,res) => {
+  const traveler=await Traveler.findById(req.params.travelerId)
+  if(!traveler)
+  {
+    res.status(404).json({
+      message: 'traveler not exist',
+    })
+  }
+  else
+  {
+    const deleted= await Traveler.findByIdAndDelete(req.params.travelerId)
+    res.status(200).json({
+      message: 'traveler deleted',
+      deleted
+    })
+  }
+};
+
+const updateTraveler = async (req,res) => {
+  const traveler=await Traveler.findById(req.params.travelerId)
+  if(!traveler)
+  {
+    res.status(404).json({
+      message: 'traveler not exist',
+    })
+  }
+  else
+  {
+    const updated= await Traveler.findByIdAndUpdate(req.params.travelerId,req.body)
+    res.status(200).json({
+      message: 'traveler updated',
+      updated
+    })
+  }
+};
+
+
+const getTraveler = async (req,res) => {
+  const traveler=await Traveler.findById(req.params.travelerId)
+  if(!traveler)
+  {
+    res.status(404).json({
+      message: 'traveler not exist',
+    })
+  }
+  else
+  {
+    res.status(200).json({
+      message: 'traveler exist',
+      traveler
+    })
+  }
+};
 
   module.exports = {
     createAdmin,
@@ -97,5 +168,9 @@ const createAdmin = async (userBody) => {
     deleteUser,
     updateUser,
     getAllUsers,
-    getUser
+    getUser,
+    getAllTravelers,
+    deleteTraveler,
+    updateTraveler,
+    getTraveler
     }

@@ -16,4 +16,10 @@ router.put('/updateUser/:userId', auth(), adminController.updateUser);
 router.get('/getAllUsers', auth(), adminController.getAllUsers);
 router.get('/getUser/:userId', auth(), adminController.getUser);
 
+//Traveler
+router.get('/getAllTravelers', auth(), adminController.getAllTravelers);
+router.delete('/deleteTraveler/:travelerId', auth(), adminController.deleteTraveler);
+router.put('/updateTraveler/:travelerId', auth(), adminController.updateTraveler);
+router.get('/getTraveler/:travelerId', auth(), adminController.getTraveler);
+
 module.exports = router;
