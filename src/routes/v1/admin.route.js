@@ -1,0 +1,19 @@
+const express = require('express');
+const validate = require('../../middlewares/validate');
+const authValidation = require('../../validations/auth.validation');
+const authController = require('../../controllers/auth.controller');
+const auth = require('../../middlewares/auth');
+const userValidation = require('../../validations/user.validation');
+const userController = require('../../controllers/user.controller');
+const adminController = require('../../controllers/admin.controller');
+const adminService = require('../../services/admin.service');
+const router = express.Router();
+
+router.post('/register', validate(authValidation.register), adminController.register);
+router.post('/login', validate(authValidation.login), adminController.login);
+router.delete('/deleteUser/:userId', auth(), adminController.deleteUser);
+router.put('/updateUser/:userId', auth(), adminController.updateUser);
+router.get('/getAllUsers', auth(), adminController.getAllUsers);
+router.get('/getUser/:userId', auth(), adminController.getUser);
+
+module.exports = router;

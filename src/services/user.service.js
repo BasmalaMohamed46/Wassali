@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const {
   User
 } = require('../models');
+const Admin = require('../models/admin.model');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -19,6 +20,8 @@ const createUser = async (userBody) => {
   // console.log(userBody)
   return User.create(userBody);
 };
+
+
 
 /**
  * Query for users
@@ -53,6 +56,7 @@ const getUserByEmail = async (email) => {
     email
   });
 };
+
 
 /**
  * Get user by phoneNumber
@@ -134,5 +138,7 @@ module.exports = {
   deleteUserById,
   getUserByphoneNumber,
   profileImage,
-  getAllUserss
+  getAllUserss,
+
+
 };

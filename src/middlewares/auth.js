@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const Admin = require('../models/admin.model');
 const User = require('../models/user.model')
 const auth = () => {
   return (req, res, next) => {
@@ -22,10 +23,13 @@ const auth = () => {
               })
             }
           } else {
-            res.status(404).json({
-              message: "User Not Exist",
-            })
-          }
+            let adminData = await Admin.findById(decoded.id);
+            if (adminData) {
+         
+                req.admin = adminData;
+                next()
+            
+          }}
         } else {
           res.json({
             message: "invalid token"

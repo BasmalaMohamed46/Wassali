@@ -51,4 +51,5 @@ module.exports = {
   deleteUser,
   profileImage,
   getAllUsers
+
 };
