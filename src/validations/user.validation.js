@@ -8,7 +8,7 @@ const {
 const createUser = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    phoneNumber: Joi.string().custom(phoneNumber).optional().allow(''),
+    phoneNumber: Joi.string().custom(phoneNumber).required(),
     password: Joi.string().custom(password),
     confirmpassword: Joi.string().custom(password),
     name: Joi.string().required(),
@@ -55,7 +55,7 @@ const updateUser = {
   body: Joi.object()
     .keys({
       email: Joi.string().email(),
-      phoneNumber: Joi.string().custom(phoneNumber).optional().allow(''),
+      phoneNumber: Joi.string().custom(phoneNumber).required(),
       password: Joi.string().custom(password),
       name: Joi.string(),
       birthDate: Joi
