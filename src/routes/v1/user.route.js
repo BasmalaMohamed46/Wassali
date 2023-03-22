@@ -10,7 +10,7 @@ const {
 } = require('../../services/multer');
 
 const router = express.Router();
-// router.patch('/profileImage',auth(),validate(userValidation.profileImage),multerFn('User', validationType.image),userController.profileImage);
+router.patch('/profileImage',auth(),validate(userValidation.profileImage),multerFn('User', validationType.image),userController.profileImage);
 
 router
   .route('/')

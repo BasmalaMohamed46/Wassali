@@ -106,28 +106,28 @@ const deleteUserById = async (userId) => {
   await user.remove();
   return user;
 };
-// const profileImage = async (id,req) => {
-//   const user = await User.findById(id);
-//   if (req.fileUploadError) {
-//     return {
-//       message: 'invalid file, accepted files->(png,jpg,jpeg)',
-//     }
-//   }
-//   if(!user){
-//     return {
-//       message: 'user not found',
-//     }
-//   }
-//   else{
-//     let ProfileImage_URL = `${req.protocol}://${req.headers.host}/${req.destination4}/${req.files.ProfileImage[0].filename}`;
-//     // const updated=await User.findByIdAndUpdate(id, {profileImage:ProfileImage_URL}, {new: true});
-//     // return updated;
-//     user.ProfileImage=ProfileImage_URL;
-//     await user.save();
-//     return user;
+const profileImage = async (id,req) => {
+  const user = await User.findById(id);
+  if (req.fileUploadError) {
+    return {
+      message: 'invalid file, accepted files->(png,jpg,jpeg)',
+    }
+  }
+  if(!user){
+    return {
+      message: 'user not found',
+    }
+  }
+  else{
+    let ProfileImage_URL = `${req.protocol}://${req.headers.host}/${req.destination4}/${req.files.ProfileImage[0].filename}`;
+    // const updated=await User.findByIdAndUpdate(id, {profileImage:ProfileImage_URL}, {new: true});
+    // return updated;
+    user.ProfileImage=ProfileImage_URL;
+    await user.save();
+    return user;
   
-//   }
-//   }
+  }
+  }
   const getAllUserss = async () => {
     return User.find();
   };
@@ -140,6 +140,6 @@ module.exports = {
   updateUserById,
   deleteUserById,
   getUserByphoneNumber,
-  // profileImage,
+  profileImage,
   getAllUserss
 };

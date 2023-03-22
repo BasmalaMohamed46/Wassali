@@ -79,14 +79,14 @@ const deleteUser = {
     userId: Joi.string().custom(objectId),
   }),
 };
-// const profileImage = {
-//   body: Joi.object()
-//     .keys({
-//       ProfileImage: Joi.string(),
-//     })
+const profileImage = {
+  body: Joi.object()
+    .keys({
+      ProfileImage: Joi.string(),
+    })
 
 
-// };
+};
 
 
 module.exports = {
@@ -95,5 +95,5 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
-  // profileImage
+  profileImage
 };
