@@ -9,10 +9,10 @@ const createTraveler = {
       }).required(),
       city: Joi.string().required().max(20),
       government: Joi.string().required().max(20),
-      StudentUniversityId: Joi.string(),
-      CollegeEnrollmentStatement: Joi.string(),
-      EmployeeCompanyId: Joi.string(),
-      NationalIdCard: Joi.string().required().messages({
+      StudentUniversityId: Joi.object(),
+      CollegeEnrollmentStatement: Joi.object(),
+      EmployeeCompanyId: Joi.object(),
+      NationalIdCard: Joi.object().required().messages({
         'string.empty': `National Id Card is required.`
       })
     }),
@@ -25,10 +25,10 @@ const updateTraveler = {
   }).required(),
   city: Joi.string().required().max(20),
   government: Joi.string().required().max(20),
-  StudentUniversityId: Joi.string(),
-  CollegeEnrollmentStatement: Joi.string(),
-  EmployeeCompanyId: Joi.string(),
-  NationalIdCard: Joi.string(),
+  StudentUniversityId: Joi.object(),
+  CollegeEnrollmentStatement: Joi.object(),
+  EmployeeCompanyId: Joi.object(),
+  NationalIdCard: Joi.object(),
 };
 
 

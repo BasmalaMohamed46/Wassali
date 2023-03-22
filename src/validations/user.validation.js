@@ -69,7 +69,6 @@ const updateUser = {
       city: Joi.string().optional().allow(''),
       governorate: Joi.string().optional().allow(''),
       address:Joi.string().optional().allow(''),
-      ProfileImage: Joi.string().optional().allow(''),
     })
  
 };
@@ -82,7 +81,7 @@ const deleteUser = {
 const profileImage = {
   body: Joi.object()
     .keys({
-      ProfileImage: Joi.string(),
+      ProfileImage: Joi.object(),
     })
 
 
