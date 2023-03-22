@@ -12,9 +12,7 @@ const createTraveler = {
       StudentUniversityId: Joi.object(),
       CollegeEnrollmentStatement: Joi.object(),
       EmployeeCompanyId: Joi.object(),
-      NationalIdCard: Joi.object().required().messages({
-        'string.empty': `National Id Card is required.`
-      })
+      NationalIdCard: Joi.object()
     }),
 
 };
