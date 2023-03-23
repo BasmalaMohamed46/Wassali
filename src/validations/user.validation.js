@@ -55,7 +55,6 @@ const updateUser = {
   body: Joi.object()
     .keys({
       email: Joi.string().email(),
-      phoneNumber: Joi.string().custom(phoneNumber).required(),
       password: Joi.string().custom(password),
       name: Joi.string(),
       birthDate: Joi

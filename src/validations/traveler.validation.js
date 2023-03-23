@@ -20,7 +20,6 @@ const updateTraveler = {
     .object()
     .keys({
       name: Joi.string().max(128),
-      phoneNumber:Joi.string().regex(/^[0-9]{11}$/).messages({'string.pattern.base': `Phone number must have 11 digits.`}),
       city: Joi.string(),
       governorate: Joi.string(),
       birthDate:Joi

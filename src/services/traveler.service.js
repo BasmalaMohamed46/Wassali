@@ -184,7 +184,6 @@ const updateTraveler = async (id, req) => {
   try {
     // const id = req.user._id;
     const {
-      phoneNumber,
         city,
         governorate,
         name,
@@ -197,7 +196,6 @@ const updateTraveler = async (id, req) => {
     if(travelerExist){
     const updateTraveler = await User.findByIdAndUpdate(
       id, {
-        phoneNumber,
         city,
         governorate,
         name,

@@ -77,9 +77,7 @@ const updateUserById = async (userId, updateBody,req) => {
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
-  if (updateBody.phoneNumber && (await User.isphoneNumberTaken(updateBody.phoneNumber))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'phoneNumber number already taken');
-  }
+ 
 
   Object.assign(user, updateBody);
   await user.save();
