@@ -91,14 +91,14 @@ const updateUserById = async (userId, updateBody,req) => {
  * @param {ObjectId} userId
  * @returns {Promise<User>}
  */
-const deleteUserById = async (userId) => {
-  const user = await getUserById(userId);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  }
-  await user.remove();
-  return user;
-};
+// const deleteUserById = async (userId) => {
+//   const user = await getUserById(userId);
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+//   }
+//   await user.remove();
+//   return user;
+// };
 const profileImage = async (id,req) => {
   const user = await User.findById(id);
   if (req.fileUploadError) {
@@ -118,7 +118,7 @@ const profileImage = async (id,req) => {
     user.ProfileImage=ProfileImage_URL;
     await user.save();
     return user;
-  
+
   }
   }
   const getAllUserss = async () => {
@@ -131,7 +131,7 @@ module.exports = {
   getUserById,
   getUserByEmail,
   updateUserById,
-  deleteUserById,
+  // deleteUserById,
   getUserByphoneNumber,
   profileImage,
   getAllUserss
