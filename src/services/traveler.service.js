@@ -190,17 +190,24 @@ const updateTraveler = async (id, req) => {
     // const id = req.user._id;
     const {
       phoneNumber,
-      city,
-      government
+        city,
+        governorate,
+        name,
+        birthDate,
+        address
     } = req.body;
     const travelerExist = await Traveler.findOne({
       userId: id
     })
-    const updateTraveler = await Traveler.findByIdAndUpdate(
-      travelerExist._id, {
+    if(travelerExist){
+    const updateTraveler = await User.findByIdAndUpdate(
+      id, {
         phoneNumber,
         city,
-        government,
+        governorate,
+        name,
+        birthDate,
+        address
       }, {
         new: true,
       })
@@ -208,6 +215,12 @@ const updateTraveler = async (id, req) => {
       message: 'Traveler updated successfully',
       updateTraveler,
     }
+  }
+  else{
+    return {
+      message: 'Traveler not found',
+    }
+  }
   } catch (error) {
     return {
       message: 'Something went wrong',

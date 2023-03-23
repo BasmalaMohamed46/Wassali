@@ -22,10 +22,7 @@ const travelerSchema = mongoose.Schema({
   NationalId: {
     type: String,
   },
-  city: String,
-  government: {
-    type: String,
-  },
+
   StudentUniversityId: {
     type: String,
   },

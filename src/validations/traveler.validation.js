@@ -18,15 +18,24 @@ const createTraveler = {
 };
 
 const updateTraveler = {
-  NationalId: Joi.string().regex(/^([1-9]{1})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})[0-9]{3}([0-9]{1})[0-9]{1}$/).messages({
-    'string.pattern.base': `National Id must have 14 digits.`
-  }).required(),
-  city: Joi.string().required().max(20),
-  government: Joi.string().required().max(20),
-  StudentUniversityId: Joi.object(),
-  CollegeEnrollmentStatement: Joi.object(),
-  EmployeeCompanyId: Joi.object(),
-  NationalIdCard: Joi.object(),
+  body: Joi
+    .object()
+    .keys({
+      name: Joi.string().max(128),
+      phoneNumber:Joi.string().regex(/^[0-9]{11}$/).messages({'string.pattern.base': `Phone number must have 11 digits.`}),
+      city: Joi.string(),
+      governorate: Joi.string(),
+      birthDate:Joi
+      .date()
+      .max('01-01-2003')
+      .iso()
+      .messages({
+        'date.format': `Date format is YYYY-MM-DD`,
+        'date.max': `Age must be 18+`
+      }),
+      address:Joi.string,
+
+    }),
 };
 
 
