@@ -189,94 +189,24 @@ const updateTraveler = async (id, req) => {
   try {
     // const id = req.user._id;
     const {
-      NationalId,
-      phone,
+      phoneNumber,
       city,
       government
     } = req.body;
     const travelerExist = await Traveler.findOne({
       userId: id
     })
-    if (travelerExist.isTraveler) {
-      if (travelerExist.isStudent) {
-        // console.log(userExist.StudentUniversityId.split('/').pop());
-        const oldStudentUniversityId = travelerExist.StudentUniversityId.split('/').pop();
-        const oldCollegeEnrollmentStatement = travelerExist.CollegeEnrollmentStatement.split('/').pop();
-        const oldNationalIdCard = travelerExist.NationalIdCard.split('/').pop();
-
-        fs.unlink(`./src/uploads/Traveler/StudentUniversityId/${oldStudentUniversityId}`, (err) => {
-          if (err) {
-            // eslint-disable-next-line no-console
-            console.log(err);
-          }
-        });
-        fs.unlink(`./src/uploads/Traveler/CollegeEnrollmentStatement/${oldCollegeEnrollmentStatement}`, (err) => {
-          if (err) {
-            console.log(err);
-          }
-        });
-        fs.unlink(`./src/uploads/Traveler/NationalIdCard/${oldNationalIdCard}`, (err) => {
-          if (err) {
-            console.log(err);
-          }
-        });
-        console.log(req.files);
-        let newStudentUniversityIdURL = `${req.protocol}://${req.headers.host}/${req.destination}/${req.files.StudentUniversityId[0].filename}`
-        let newCollegeEnrollmentStatementURL = `${req.protocol}://${req.headers.host}/${req.destination2}/${req.files.CollegeEnrollmentStatement[0].filename}`
-        let newNationalIdCardURL = `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`
-        const updateTraveler = await Traveler.findByIdAndUpdate(
-          travelerExist._id, {
-            NationalId,
-            phone,
-            city,
-            government,
-            StudentUniversityId: newStudentUniversityIdURL,
-            CollegeEnrollmentStatement: newCollegeEnrollmentStatementURL,
-            NationalIdCard:newNationalIdCardURL,
-          }, {
-            new: true,
-          })
-
-        return {
-          message: 'Traveler updated successfully',
-          updateTraveler,
-        }
-      } else {
-        const oldEmployeeCompanyId = travelerExist.EmployeeCompanyId.split('/').pop();
-        const oldNationalIdCard = travelerExist.NationalIdCard.split('/').pop();
-        fs.unlink(`./src/uploads/Traveler/EmployeeCompanyId/${oldEmployeeCompanyId}`, (err) => {
-          if (err) {
-            console.log(err);
-          }
-        });
-        fs.unlink(`./src/uploads/Traveler/NationalIdCard/${oldNationalIdCard}`, (err) => {
-          if (err) {
-            console.log(err);
-          }
-        });
-
-        let newEmployeeCompanyIdURL = `${req.protocol}://${req.headers.host}/${req.destination3}/${req.files.EmployeeCompanyId[0].filename}`
-        let newNationalIdCardURL = `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`
-        const updateTraveler = await Traveler.findByIdAndUpdate(
-          travelerExist._id, {
-            NationalId,
-            phone,
-            city,
-            government,
-            EmployeeCompanyId: newEmployeeCompanyIdURL,
-            NationalIdCard:newNationalIdCardURL,
-          }, {
-            new: true,
-          })
-        return {
-          message: 'Traveler updated successfully',
-          updateTraveler,
-        }
-      }
-    } else {
-      return {
-        message: 'User is not a traveler',
-      }
+    const updateTraveler = await Traveler.findByIdAndUpdate(
+      travelerExist._id, {
+        phoneNumber,
+        city,
+        government,
+      }, {
+        new: true,
+      })
+    return {
+      message: 'Traveler updated successfully',
+      updateTraveler,
     }
   } catch (error) {
     return {
