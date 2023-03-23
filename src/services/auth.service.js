@@ -143,6 +143,7 @@ const loginUserWithGoogle = async (req, res) => {
       isEmailVerified: req.user.email_verified,
       googleId: req.user.id,
       profilePic: req.user.picture,
+      phoneNumber:null
     })
     // const token = await tokenService.generateAuthTokens(user._id)
     const token = jwt.sign({
