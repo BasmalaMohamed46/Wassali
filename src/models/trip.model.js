@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 
 
 const tripSchema = mongoose.Schema({
-  TripDestination: {
+ from:{
+    type: String,
+    required:true
+ },
+  to:{
     type: String,
     required:true
   },

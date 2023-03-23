@@ -8,9 +8,9 @@ const addTrip = async (id, req) => {
     const userExist = await User.findById(id)
     if (userExist){
     let foundedTraveler = await Traveler.findOne({userId:id});
-    const {TripDestination,TripDate,AvailableWeight,unAcceptablaPackage,TripTime} = req.body;
+    const {from,to,TripDate,AvailableWeight,unAcceptablaPackage,TripTime} = req.body;
     if(foundedTraveler){
-        const trip = await Trip.insertMany({TripDestination,TripDate,AvailableWeight,unAcceptablaPackage,Traveler:foundedTraveler._id,TripTime});
+        const trip = await Trip.insertMany({from,to,TripDate,AvailableWeight,unAcceptablaPackage,Traveler:foundedTraveler._id,TripTime});
         foundedTraveler =  await Traveler.findByIdAndUpdate({_id:foundedTraveler._id},{$push:{Trip:trip[0]._id}},{new:true});
         return {
             message: 'Trip added successfully',
@@ -176,7 +176,8 @@ const updateTrip = async (id, req, res, tripId) => {
         userId: id
       });
       const {
-        TripDestination,
+        from,
+        to,
         TripDate,
         AvailableWeight,
         unAcceptablaPackage,
@@ -187,7 +188,8 @@ const updateTrip = async (id, req, res, tripId) => {
         const trip = await Trip.findByIdAndUpdate({
           _id: tripId
         }, {
-          TripDestination,
+          from,
+          to,
           TripDate,
           AvailableWeight,
           unAcceptablaPackage,

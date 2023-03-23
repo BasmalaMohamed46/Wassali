@@ -4,7 +4,8 @@ const createTrip = {
   body: Joi
     .object()
     .keys({
-      TripDestination: Joi.string().required(),
+      from: Joi.string().required(),
+      to: Joi.string().required(),
       TripDate: Joi.date().greater(Date.now() - 24 * 60 * 60 * 1000).iso().messages({
         'date.format': `Date format is YYYY-MM-DD`,
         'date.min': `Date should not be passed`
@@ -20,7 +21,8 @@ const updateTrip = {
   body: Joi
     .object()
     .keys({
-      TripDestination: Joi.string().required(),
+      from: Joi.string().required(),
+      to: Joi.string().required(),
       TripDate: Joi.date().greater(Date.now() - 24 * 60 * 60 * 1000).iso().messages({
         'date.format': `Date format is YYYY-MM-DD`,
         'date.min': `Date should not be passed`
