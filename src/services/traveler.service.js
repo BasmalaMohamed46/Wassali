@@ -352,6 +352,29 @@ const travelerViewRequestById = async (id, requestId,res) => {
   }
 }
 
+const viewAllTravelers = async (id,res) => {
+  try{
+      const user=await User.findById(id);
+      if(user){
+        const travelers=await Traveler.find();
+        res.status(httpStatus.OK).json({
+          message: 'Travelers found',
+          travelers
+        })
+      }
+      else{
+        res.status(httpStatus.NOT_FOUND).json({
+          message: 'User not found',
+        })
+      }
+  }
+  catch (error) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Something went wrong',
+      err: error.message,
+    })
+}
+}
 module.exports = {
   Student,
   Employee,
@@ -360,5 +383,6 @@ module.exports = {
   // deleteTraveler,
   viewTraveler,
   getTravellerOwnRequests,
-  travelerViewRequestById
+  travelerViewRequestById,
+  viewAllTravelers
 }

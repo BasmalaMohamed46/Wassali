@@ -127,5 +127,10 @@ router.get(
   auth(),
   travelerController.TravelerViewRequestById
 )
+router.get(
+  '/viewAllTravelers',
+  auth(),
+  travelerController.viewAllTravelers
+)
 
 module.exports = router;
