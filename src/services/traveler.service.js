@@ -78,8 +78,7 @@ const createTraveler = async (id, req) => {
     });
     const {
       NationalId,
-      city,
-      government
+   
     } = req.body;
 
     if (req.fileUploadError) {
@@ -112,8 +111,6 @@ const createTraveler = async (id, req) => {
       const updatedUser = await Traveler.findByIdAndUpdate(
         foundedTraveler._id, {
           NationalId,
-          city,
-          government,
           NationalIdCard:NationalIdCard_URL,
           StudentUniversityId: StudentUniversityId_URL,
           CollegeEnrollmentStatement: CollegeEnrollmentStatement_URL,
@@ -151,8 +148,6 @@ const createTraveler = async (id, req) => {
       const updatedUser = await Traveler.findByIdAndUpdate(
         foundedTraveler._id, {
           NationalId,
-          city,
-          government,
           EmployeeCompanyId: EmployeeCompanyId_URL,
           NationalIdCard:NationalIdCard_URL,
           StudentUniversityId: null,
