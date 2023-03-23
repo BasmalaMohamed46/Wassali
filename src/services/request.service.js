@@ -136,39 +136,6 @@ const deleteRequestById = async (id, req) => {
             request
           }
         }
-
-
-        // if (!trip.RequestsList.includes(req.params.requestId)) {
-        //   await Request.findByIdAndDelete(req.params.requestId)
-        //   await User.findByIdAndUpdate(id, {
-        //     $pull: {
-        //       requests: req.params.requestId
-        //     }
-        //   });
-        //   return {
-        //     message: 'Request deleted successfully',
-        //     request
-        //   }
-        // } else {
-        //   const tripId = request.trip;
-        //   const trip = await Trip.findById(tripId)
-        //   // console.log(trip.RequestsList);
-        //   await Request.findByIdAndDelete(req.params.requestId)
-        //   await User.findByIdAndUpdate(id, {
-        //     $pull: {
-        //       requests: req.params.requestId
-        //     }
-        //   });
-        //   await Trip.findByIdAndUpdate(tripId, {
-        //     $pull: {
-        //       RequestsList: req.params.requestId
-        //     }
-        //   })
-        //   return {
-        //     message: 'Request deleted successfully',
-        //     request
-        //   }
-        // }
       }
     } else {
       return {

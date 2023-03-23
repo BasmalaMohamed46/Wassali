@@ -110,11 +110,11 @@ router.get(
   travelerController.getTraveller
 );
 
-router.delete(
-  '/delete',
-  auth(),
-  travelerController.deleteTraveller
-);
+// router.delete(
+//   '/delete',
+//   auth(),
+//   travelerController.deleteTraveller
+// );
 
 router.get(
   '/getTravellerOwnRequests',

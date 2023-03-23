@@ -46,7 +46,7 @@ const Employee = async (id,res) => {
     if (foundedTraveler) {
       if(!foundedTraveler.isStudent){
         res.status(httpStatus.NOT_FOUND).json({
-          message:'User is already an employee' 
+          message:'User is already an employee'
         })
       }else{
         const traveler = await Traveler.findByIdAndUpdate(foundedTraveler._id, {
@@ -122,6 +122,14 @@ const createTraveler = async (id, req) => {
           new: true,
         }
       );
+      await User.findByIdAndUpdate(
+        id, {
+          role: 'traveler',
+        },
+        {
+          new: true,
+        }
+      );
       return {
         message: 'Traveler created successfully',
         updatedUser,
@@ -149,9 +157,18 @@ const createTraveler = async (id, req) => {
           NationalIdCard:NationalIdCard_URL,
           StudentUniversityId: null,
           CollegeEnrollmentStatement: null,
-        }, {
+        },
+        {
           new: true,
 
+        }
+      );
+      await User.findByIdAndUpdate(
+        id, {
+          role: 'traveler',
+        },
+        {
+          new: true,
         }
       );
       return {
@@ -268,33 +285,33 @@ const updateTraveler = async (id, req) => {
     }
   }
 };
-const deleteTraveler = async (id, res) => {
-  try {
-    const foundedTraveler = await Traveler.findOne({
-      userId: id
-    });
-    if (foundedTraveler) {
-      const traveler = await Traveler.findOneAndDelete({
-        userId: id
-      });
-      res.status(httpStatus.OK).json({
-        message: 'Traveler deleted successfully',
-        traveler
-      })
-    } else {
-      res.status(httpStatus.NOT_FOUND).json({
-        message: 'Traveler not found',
-      })
+// const deleteTraveler = async (id, res) => {
+//   try {
+//     const foundedTraveler = await Traveler.findOne({
+//       userId: id
+//     });
+//     if (foundedTraveler) {
+//       const traveler = await Traveler.findOneAndDelete({
+//         userId: id
+//       });
+//       res.status(httpStatus.OK).json({
+//         message: 'Traveler deleted successfully',
+//         traveler
+//       })
+//     } else {
+//       res.status(httpStatus.NOT_FOUND).json({
+//         message: 'Traveler not found',
+//       })
 
-    }
-  } catch (error) {
-    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-      message: 'Something went wrong',
-      err: error.message,
-    })
-  }
+//     }
+//   } catch (error) {
+//     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+//       message: 'Something went wrong',
+//       err: error.message,
+//     })
+//   }
 
-}
+// }
 
 
 const viewTraveler = async (id,res) => {
@@ -404,7 +421,7 @@ module.exports = {
   Employee,
   createTraveler,
   updateTraveler,
-  deleteTraveler,
+  // deleteTraveler,
   viewTraveler,
   getTravellerOwnRequests,
   travelerViewRequestById

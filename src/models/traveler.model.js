@@ -10,11 +10,11 @@ const {
 } = require('../config/roles');
 
 const travelerSchema = mongoose.Schema({
-  role: {
-    type: String,
-    enum: roles,
-    default: 'traveler',
-  },
+  // role: {
+  //   type: String,
+  //   enum: roles,
+  //   default: 'traveler',
+  // },
   isStudent: {
     type: Boolean,
     default: false,
