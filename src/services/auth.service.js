@@ -25,7 +25,9 @@ const loginUserWithEmailAndPassword = async (email, password, res) => {
   }
   const token = jwt.sign({
     id: user._id,
-    user: user,
+    role: user.role,
+    name:user.name,
+    email:user.email,
   },
     process.env.JWT_SECRET)
   // return user;
@@ -128,7 +130,9 @@ const loginUserWithGoogle = async (req, res) => {
     // const token = await tokenService.generateAuthTokens(userExist._id)
     const token = jwt.sign({
       id: userExist._id,
-      user: userExist,
+      role: userExist.role,
+      name:userExist.name,
+      email:user.email,
     }, process.env.JWT_SECRET)
     res.status(200).json({
       message: 'user exist',
