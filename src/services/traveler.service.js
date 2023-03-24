@@ -356,10 +356,11 @@ const viewAllTravelers = async (id,res) => {
   try{
       const user=await User.findById(id);
       if(user){
-        const travelers=await Traveler.find();
+        const travelers=await Traveler.find().populate('userId');
         res.status(httpStatus.OK).json({
           message: 'Travelers found',
-          travelers
+          travelers,
+         
         })
       }
       else{
