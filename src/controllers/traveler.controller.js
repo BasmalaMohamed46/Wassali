@@ -35,7 +35,7 @@ const updateTraveller = catchAsync(async (req, res) => {
 const getTraveller = catchAsync(async (req, res) => {
   const id = req.user._id;
   const traveler = await travelerService.viewTraveler(id,res);
-  res.status(httpStatus.OK).send(traveler);
+  return(traveler)
 
 });
 
@@ -55,7 +55,7 @@ const TravelerViewRequestById = catchAsync(async (req, res) => {
 const viewAllTravelers = catchAsync(async (req, res) => {
   const id = req.user._id;
  const travelers = await travelerService.viewAllTravelers(id,res);
-  res.status(httpStatus.OK).send(travelers);
+  return(travelers)
 
 });
 

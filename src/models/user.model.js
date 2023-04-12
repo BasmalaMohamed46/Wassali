@@ -89,6 +89,9 @@ const userSchema = mongoose.Schema(
   }],
   address:{
     type: String,
+  },
+  qrCode:{
+    type:String,
   }
 }, {
   timestamps: true,

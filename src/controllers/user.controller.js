@@ -43,6 +43,14 @@ const getAllUsers = catchAsync(async (req, res) => {
   const users = await userService.getAllUserss();
   res.send(users);
 });
+
+const qrCode = catchAsync(async (req, res) => {
+  const id = req.user._id;
+  const qrcode = await userService.qrCode(id,req,res);
+  return{
+    qrcode
+  }
+});
 module.exports = {
   createUser,
   getUsers,
@@ -50,5 +58,6 @@ module.exports = {
   updateUser,
   // deleteUser,
   profileImage,
-  getAllUsers
+  getAllUsers,
+  qrCode
 };

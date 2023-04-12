@@ -1,3 +1,4 @@
+var QRCode = require('qrcode')
 const httpStatus = require('http-status');
 const {
   User
@@ -123,6 +124,27 @@ const profileImage = async (id,req) => {
     return User.find();
   };
 
+  const qrCode = async (id,req,res) => {
+      const user=await User.findById(id);
+      if(!user){
+       res.httpStatus(404).send('user not found')
+      }
+      else{
+        QRCode.toDataURL(`${req.protocol}://${req.headers.host}/v1/users/qrCodeScan`, function (err, url) {
+          if(err){
+           res.httpStatus(500).send(err)
+          }
+          else{
+            user.qrCode=url;
+            user.save();
+            res.status(httpStatus.OK).send(user)
+          }
+        })
+      }
+        
+  }
+
+
 module.exports = {
   createUser,
   queryUsers,
@@ -132,5 +154,6 @@ module.exports = {
   // deleteUserById,
   getUserByphoneNumber,
   profileImage,
-  getAllUserss
+  getAllUserss,
+  qrCode
 };

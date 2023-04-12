@@ -85,6 +85,12 @@ const profileImage = {
 
 
 };
+const qrCode = {
+  body: Joi.object()
+    .keys({
+      qrCode: Joi.object(),
+    })
+  }
 
 
 module.exports = {
@@ -93,5 +99,6 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
-  profileImage
+  profileImage,
+  qrCode
 };

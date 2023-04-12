@@ -53,29 +53,28 @@ const updateRequest = {
         .keys({
             state: Joi.string().valid('processing', 'confirmed', 'accepted', 'pickedup', 'onmyway', 'delivered').default('processing'),
             rate: Joi.number(),
-            reward: Joi.number(),
+            reward: Joi.number().optional().allow(''),
             qrCode: Joi.string(),
             userId: Joi.string().custom(objectId),
             // traveler: Joi.string().custom(objectId),
             trip: Joi.string().custom(objectId),
-            to: Joi.string().required(),
-            from: Joi.string().required(),
-            item: Joi.string().required(),
-            weight: Joi.number().required(),
-            location: Joi.string().required(),
+            to: Joi.string().optional().allow(''),
+            from: Joi.string().optional().allow(''),
+            item: Joi.string().optional().allow(''),
+            weight: Joi.number().optional().allow(''),
+            location: Joi.string().optional().allow(''),
             targetLocation: Joi.string().optional().allow(''),
-            anotherPhone:Joi.string().regex(/^[0-9]{11}$/).messages({'string.pattern.base': `Phone number must have 11 digits.`}),
-            category: Joi.string().required(),
-            buyOrdeliver: Joi.string().required().valid('buy', 'deliver').default('deliver'),
+            anotherPhone:Joi.string().regex(/^[0-9]{11}$/).messages({'string.pattern.base': `Phone number must have 11 digits.`}).optional().allow(''),
+            category: Joi.string().optional().allow(''),
             date: Joi.date().greater(Date.now() - 24 * 60 * 60 * 1000).iso().messages({
                 'date.format': `Date format is YYYY-MM-DD`,
                 'date.min': `Date should not be passed`
-              }).required(),
+              }).optional().allow(''),
               storeLocation: Joi.string().optional().allow(''),
         storeName: Joi.string().optional().allow(''),
         price: Joi.number().optional().allow(''),
-        })
-     
+        })
+     
 };
 
 const deleteRequest = {
