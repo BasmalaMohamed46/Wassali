@@ -146,37 +146,33 @@ const profileImage = async (id,req) => {
 
   }
 
-  const updateToDeliveredFromQR =async (id,req,res,userId)=>{
-    const travelerExist = await Traveler.findOne({
-      userId:id
-    });
-    const userExist = await User.findById(userId);
-    if(travelerExist){
-      if(userExist){
-        if(userExist.requests.length>0){
-          const lastRequest=userExist.requests[userExist.requests.length-1];
-          const foundedRequest = await Request.findById(lastRequest);
-          if(foundedRequest.state==='onmyway'){
-            foundedRequest.state='delivered';
-            foundedRequest.save();
-            res.status(httpStatus.OK).send(foundedRequest)
-          }
-          else{
-            res.status(httpStatus.BAD_REQUEST).send('request already delivered')
-          }
-        }
-        else{
-          res.status(httpStatus.BAD_REQUEST).send('no request found')
-        }
-      }
-      else{
-        res.status(httpStatus.BAD_REQUEST).send('user not found')
-      }
+  const updateToDeliveredFromQR = async (id,req,res,userId)=> {
+    const traveler = await Traveler.findOne({ userId: id });
+    const user = await User.findById(userId);
+
+    if (!traveler) {
+      return res.status(httpStatus.BAD_REQUEST).send('Traveler not found');
     }
-    else{
-      res.status(httpStatus.BAD_REQUEST).send('traveler not found')
+
+    if (!user) {
+      return res.status(httpStatus.BAD_REQUEST).send('User not found');
     }
-  }
+
+    if (user.requests.length === 0) {
+      return res.status(httpStatus.BAD_REQUEST).send('No requests found');
+    }
+
+    const lastRequestId = user.requests[user.requests.length - 1];
+    const request = await Request.findById(lastRequestId);
+
+    if (request.state === 'onmyway') {
+      request.state = 'delivered';
+      await request.save();
+      return res.status(httpStatus.OK).send(request);
+    }
+
+    return res.status(httpStatus.BAD_REQUEST).send('Request already delivered');
+  };
 
 module.exports = {
   createUser,
