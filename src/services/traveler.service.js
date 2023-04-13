@@ -4,7 +4,7 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const Traveler = require('../models/traveler.model');
 const Request = require('../models/request.model');
-const Rating = require('../models/request.model');
+const Rating = require('../models/rating.model');
 const Trip = require('../models/trip.model');
 
 const Student = async (id, res) => {
