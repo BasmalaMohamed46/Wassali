@@ -1,9 +1,11 @@
-var QRCode = require('qrcode')
+const QRCode = require('qrcode')
 const httpStatus = require('http-status');
 const {
   User
 } = require('../models');
 const ApiError = require('../utils/ApiError');
+const Request = require('../models/request.model');
+const Traveler = require('../models/traveler.model');
 
 /**
  * Create a user
@@ -78,7 +80,7 @@ const updateUserById = async (userId, updateBody,req) => {
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
- 
+
 
   Object.assign(user, updateBody);
   await user.save();
@@ -130,7 +132,7 @@ const profileImage = async (id,req) => {
        res.httpStatus(404).send('user not found')
       }
       else{
-        QRCode.toDataURL(`${req.protocol}://${req.headers.host}/v1/users/qrCodeScan`, function (err, url) {
+        QRCode.toDataURL(`${req.protocol}://${req.headers.host}/v1/users/qrCodeScan/${id}`, function (err, url) {
           if(err){
            res.httpStatus(500).send(err)
           }
@@ -141,9 +143,40 @@ const profileImage = async (id,req) => {
           }
         })
       }
-        
+
   }
 
+  const updateToDeliveredFromQR =async (id,req,res,userId)=>{
+    const travelerExist = await Traveler.findOne({
+      userId:id
+    });
+    const userExist = await User.findById(userId);
+    if(travelerExist){
+      if(userExist){
+        if(userExist.requests.length>0){
+          const lastRequest=userExist.requests[userExist.requests.length-1];
+          const foundedRequest = await Request.findById(lastRequest);
+          if(foundedRequest.state==='onmyway'){
+            foundedRequest.state='delivered';
+            foundedRequest.save();
+            res.status(httpStatus.OK).send(foundedRequest)
+          }
+          else{
+            res.status(httpStatus.BAD_REQUEST).send('request already delivered')
+          }
+        }
+        else{
+          res.status(httpStatus.BAD_REQUEST).send('no request found')
+        }
+      }
+      else{
+        res.status(httpStatus.BAD_REQUEST).send('user not found')
+      }
+    }
+    else{
+      res.status(httpStatus.BAD_REQUEST).send('traveler not found')
+    }
+  }
 
 module.exports = {
   createUser,
@@ -155,5 +188,6 @@ module.exports = {
   getUserByphoneNumber,
   profileImage,
   getAllUserss,
-  qrCode
+  qrCode,
+  updateToDeliveredFromQR
 };

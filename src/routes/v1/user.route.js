@@ -12,6 +12,7 @@ const {
 const router = express.Router();
 router.patch('/profileImage',auth(),validate(userValidation.profileImage),multerFn('User', validationType.image),userController.profileImage);
 router.get('/qrCode',auth(),userController.qrCode);
+router.get('/qrCodeScan/:userId',auth(),userController.updateToDeliveredFromQR);
 router
   .route('/')
   .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
