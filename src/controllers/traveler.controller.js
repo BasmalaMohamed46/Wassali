@@ -58,6 +58,18 @@ const viewAllTravelers = catchAsync(async (req, res) => {
   return(travelers)
 
 });
+const AddRating = catchAsync(async (req, res) => {
+  const id = req.user._id;
+ const rating = await travelerService.AddRating(id,req,res);
+  return(rating)
+
+});
+const ViewRating = catchAsync(async (req, res) => {
+  const id = req.user._id;
+ const rating = await travelerService.ViewRating(id,req,res);
+  return(rating)
+
+});
 
 module.exports = {
   IsStudent,
@@ -68,6 +80,8 @@ module.exports = {
   getTraveller,
   gettravellerOwnRequests,
   TravelerViewRequestById,
-  viewAllTravelers
+  viewAllTravelers,
+  AddRating,
+  ViewRating
 
 };
