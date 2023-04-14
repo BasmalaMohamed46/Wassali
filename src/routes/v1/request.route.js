@@ -10,6 +10,7 @@ router.get('/userviewrequests',auth(),requestController.userViewRequests)
 router.get('/userviewrequest/:requestId',auth(),requestController.userViewRequest)
 router.get('/viewAllRequests' , auth() ,requestController.viewAllRequest);
 router.post('/TravelerAcceptRequest/:requestId',auth(),requestController.TravelerAcceptRequest)
+router.post('/userAcceptTravelerRequest/:tripId',auth(),requestController.userAcceptTravelerRequest)
 
 
 router
@@ -23,7 +24,7 @@ router
   .patch(validate(requestValidation.updateRequest),auth() ,requestController.updateRequest)
   .delete(validate(requestValidation.deleteRequest),auth(), requestController.deleteRequest);
 
-  
+
 router.post('/sendrequest/:tripId',validate(requestValidation.sendRequest),auth(),requestController.sendRequest)
 
 router.post('/acceptrequest/:requestId', auth(), requestController.acceptRequest)

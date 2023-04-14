@@ -12,6 +12,7 @@ const {
 //   Trip
 // } = require('../models');
 const ApiError = require('../utils/ApiError');
+const Trip = require('../models/trip.model');
 
 /**
  * Create a request
@@ -440,6 +441,67 @@ const TravelerAcceptRequest=async (id,req,res)=>{
   }
 }
 
+const userAcceptTravelerRequest = async (id,req,res)=>{
+  const userExist = await User.findById(id);
+  if(!userExist){
+    res.status(404).json({
+      message:'user not found'
+    })
+  }
+  else{
+    const tripId = req.params.tripId;
+    const tripExist = await Trip.findById(tripId);
+    if(!tripExist){
+      res.status(404).json({
+        message:'trip not found'
+      })
+    }
+    else{
+      const requestId=userExist.requests[userExist.requests.length-1];
+      const request = await Request.findById(requestId);
+      if(request.state === 'accepted'){
+        res.status(404).json({
+          message:'request already accepted'
+        })
+      }
+      if(!tripExist.AcceptedRequests.includes(requestId)){
+        await Trip.findByIdAndUpdate(tripId,{
+          $push:{
+            AcceptedRequests:requestId
+          }
+        })
+      }else{
+        res.status(404).json({
+          message:'request already accepted'
+        })
+      }
+      const tripps=request.TripOfferedPrice;
+      console.log(tripps.trip.length);
+      console.log(tripps.trip[0]);
+      for(let i=0;i<tripps.trip.length;i++){
+        if(tripps.trip[i] == tripId){
+          await Request.findByIdAndUpdate(
+            requestId, {
+              $set: {
+                tripPrice:tripps.price[i],
+                state:'accepted',
+                TripOfferedPrice:{},
+                tripsRequests:[]
+              },
+            }, {
+              new: true
+            }
+          )
+        }
+      }
+      res.status(200).json({
+        message:'request accepted successfully'
+      })
+    }
+  }
+}
+
+
 module.exports = {
   createRequest,
   queryRequests,
@@ -454,5 +516,6 @@ module.exports = {
   declinerequest,
   viewAllRequests,
   DeclineTrip,
-  TravelerAcceptRequest
+  TravelerAcceptRequest,
+  userAcceptTravelerRequest
 };

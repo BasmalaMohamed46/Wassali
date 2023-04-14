@@ -105,6 +105,9 @@ const requestSchema = mongoose.Schema(
       price:{
         type:Number,
       },
+    },
+    tripPrice:{
+      type:Number,
     }
   },
   {
