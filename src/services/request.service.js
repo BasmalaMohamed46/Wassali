@@ -381,7 +381,7 @@ const DeclineTrip=async (id,req,res)=>{
           res.status(200).json({message:'request declined successfully'})
        }
         else{
-          res.status(200).json({message:'this request is not accepted yet'})
+          res.status(200).json({message:'this request is not accepted yet or already on the way'})
         }
       }
       else{
@@ -485,6 +485,7 @@ const userAcceptTravelerRequest = async (id,req,res)=>{
               $set: {
                 tripPrice:tripps.price[i],
                 state:'accepted',
+                trip:tripId,
                 TripOfferedPrice:{},
                 tripsRequests:[]
               },
@@ -529,6 +530,42 @@ const viewTravelersRequests =async (id,req,res)=>{
       })
   }
 }
+const viewRequestAfterAcceptance=async (id,req,res)=>{
+  try{
+    const user=await User.findById(id)
+    if(user){
+      const request=await Request.findById(req.params.requestId)
+      if(request){
+        if (user.requests.includes(req.params.requestId)) {
+          if(request.state === 'accepted'|| request.state === 'onmyway'|| request.state === 'delivered'|| request.state === 'pickedup'){
+            const requestDetails=await Request.findById(req.params.requestId).populate({
+              path:'trip',
+              populate:{
+                path:'Traveler',
+              }
+            })
+            res.status(200).json({message:'request found successfully',requestDetails})
+          }
+          else{
+            res.status(200).json({message:'request is not accepted yet'})
+          }
+        }
+        else{
+          throw new ApiError(httpStatus.NOT_FOUND, 'you are not allowed to view this request');
+        }
+      }
+      else{
+        throw new ApiError(httpStatus.NOT_FOUND, 'request not found');
+      }
+    }
+    else{
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
+  }
+  catch(err){
+    res.status(500).json({message:err.message})
+  }
+}
 
 module.exports = {
   createRequest,
@@ -546,7 +583,8 @@ module.exports = {
   DeclineTrip,
   TravelerAcceptRequest,
   userAcceptTravelerRequest,
-  viewTravelersRequests
+  viewTravelersRequests,
+  viewRequestAfterAcceptance
 };
 
 
