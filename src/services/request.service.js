@@ -411,7 +411,11 @@ const TravelerAcceptRequest=async (id,req,res)=>{
         if(!request.tripsRequests.includes(tripId)){
         await Request.findByIdAndUpdate(req.params.requestId, {
         $push: {
-          tripsRequests: tripId
+          tripsRequests: tripId,
+          TripOfferedPrice:{
+            trip:tripId,
+            price:req.body.price
+          }
         },
       }, {
         new: true

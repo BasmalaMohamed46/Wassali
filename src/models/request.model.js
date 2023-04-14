@@ -95,7 +95,17 @@ const requestSchema = mongoose.Schema(
         type: Schema.Types.ObjectId,
         ref: 'Trip',
       },
-    ]
+    ],
+    TripOfferedPrice:{
+      trip:{
+        type: Schema.Types.ObjectId,
+        ref: 'Trip',
+
+      },
+      price:{
+        type:Number,
+      },
+    }
   },
   {
     timestamps: true,
