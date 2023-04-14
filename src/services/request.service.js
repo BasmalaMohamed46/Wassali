@@ -265,7 +265,6 @@ const acceptrequest = async (id, requestId, req) => {
 
 //accept any request
 const acceptanyrequest = async (id, requestId, req) => {
-  // const userExist = await User.findById(id);
   const TravelerExist = await Traveler.findOne({
     userId: id
   })
@@ -273,6 +272,12 @@ const acceptanyrequest = async (id, requestId, req) => {
     const request = await Request.findById(req.params.requestId);
     if (request) {
       const tripId = TravelerExist.Trip.slice(-1);
+      const trip = await Trip.findById(tripId);
+      if (trip.AcceptedRequests.includes(requestId)) {
+        return {
+          message: 'Request already accepted'
+        }
+      }
       await Trip.findByIdAndUpdate(tripId, {
         $push: {
           AcceptedRequests: requestId
