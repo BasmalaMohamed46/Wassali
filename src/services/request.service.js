@@ -308,6 +308,7 @@ const declinerequest = async (id, requestId, req) => {
   if (TravelerExist) {
     const request = await Request.findById(req.params.requestId)
     const tripId = request.trip;
+    console.log(tripId);
     const trip = await Trip.findById(tripId);
     if (trip) {
       await Trip.findByIdAndUpdate(
@@ -318,7 +319,7 @@ const declinerequest = async (id, requestId, req) => {
         }
       )
       await Request.findByIdAndUpdate(req.params.requestId, {
-        trip: 'null'
+        trip: null
       }, {
         new: true
       })
