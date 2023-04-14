@@ -104,6 +104,14 @@ const viewAllRequest = catchAsync(async (req, res) => {
     return(request)
   })
 
+
+  const viewTravelersRequests =  catchAsync(async (req, res)=>{
+    const id = req.user._id;
+    const request = await requestService.viewTravelersRequests(id,req,res);
+    return(request)
+  });
+
+
 module.exports = {
   createRequest,
   getRequests,
@@ -119,5 +127,6 @@ module.exports = {
   viewAllRequest,
   DeclineTrip,
   TravelerAcceptRequest,
-  userAcceptTravelerRequest
+  userAcceptTravelerRequest,
+  viewTravelersRequests
 };

@@ -11,6 +11,7 @@ router.get('/userviewrequest/:requestId',auth(),requestController.userViewReques
 router.get('/viewAllRequests' , auth() ,requestController.viewAllRequest);
 router.post('/TravelerAcceptRequest/:requestId',auth(),requestController.TravelerAcceptRequest)
 router.post('/userAcceptTravelerRequest/:tripId',auth(),requestController.userAcceptTravelerRequest)
+router.get('/viewTravelersRequests',auth(),requestController.viewTravelersRequests)
 
 
 router

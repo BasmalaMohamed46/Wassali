@@ -501,6 +501,34 @@ const userAcceptTravelerRequest = async (id,req,res)=>{
   }
 }
 
+const viewTravelersRequests =async (id,req,res)=>{
+    const userExist = await User.findById(id);
+    if(!userExist){
+      res.json({
+        message:'user not found'
+      })
+    }
+    else{
+      const requests = await Request.find({},'TripOfferedPrice').populate(
+        {
+          path:'TripOfferedPrice.trip',
+          select:'_id TripName Traveler',
+          populate:{
+            path:'Traveler',
+            select:'userId',
+            populate:{
+              path:'userId',
+              select:'name phoneNumber'
+            }
+          }
+        },
+      )
+      res.status(200).json({
+        message:'requests found successfully',
+        requests
+      })
+  }
+}
 
 module.exports = {
   createRequest,
@@ -517,5 +545,13 @@ module.exports = {
   viewAllRequests,
   DeclineTrip,
   TravelerAcceptRequest,
-  userAcceptTravelerRequest
+  userAcceptTravelerRequest,
+  viewTravelersRequests
 };
+
+
+// const requests = await Request.find({TripOfferedPrice:{$exists:true}});
+// res.status(200).json({
+//   message:'requests found successfully',
+//   requests
+// })
