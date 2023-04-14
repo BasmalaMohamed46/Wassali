@@ -86,6 +86,18 @@ const viewAllRequest = catchAsync(async (req, res) => {
     const request = await requestService.viewAllRequests(req);
     res.status(httpStatus.CREATED).send(request);
   })
+  const DeclineTrip = catchAsync(async (req, res) => {
+    const id = req.user._id;
+    const request = await requestService.DeclineTrip(id,req,res);
+    return(request)
+  })
+  //traveler see a request and accept it and send to user a request that appear in a list of requests
+  const TravelerAcceptRequest = catchAsync(async (req, res) => {
+    const id = req.user._id;
+    const request = await requestService.TravelerAcceptRequest(id,req,res);
+    return(request)
+  })
+
 
 module.exports = {
   createRequest,
@@ -99,5 +111,7 @@ module.exports = {
   acceptRequest,
   acceptAnyRequest,
   declineRequest,
-  viewAllRequest
+  viewAllRequest,
+  DeclineTrip,
+  TravelerAcceptRequest
 };

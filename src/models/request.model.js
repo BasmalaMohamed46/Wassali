@@ -89,7 +89,13 @@ const requestSchema = mongoose.Schema(
     },
     price:{
       type:Number,
-    }
+    },
+    tripsRequests:[
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Trip',
+      },
+    ]
   },
   {
     timestamps: true,

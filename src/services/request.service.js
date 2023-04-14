@@ -8,9 +8,9 @@ const {
 const {
   Traveler
 } = require('../models');
-const {
-  Trip
-} = require('../models');
+// const {
+//   Trip
+// } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -264,50 +264,50 @@ const acceptrequest = async (id, requestId, req) => {
 }
 
 //accept any request
-const acceptanyrequest = async (id, requestId, req) => {
-  const TravelerExist = await Traveler.findOne({
-    userId: id
-  })
-  if (TravelerExist) {
-    const request = await Request.findById(req.params.requestId);
-    if (request) {
-      const tripId = TravelerExist.Trip.slice(-1);
-      const trip = await Trip.findById(tripId);
-      if (trip.AcceptedRequests.includes(requestId)) {
-        return {
-          message: 'Request already accepted'
-        }
-      }
-      await Trip.findByIdAndUpdate(tripId, {
-        $push: {
-          AcceptedRequests: requestId
-        },
+// const acceptanyrequest = async (id, requestId, req) => {
+//   const TravelerExist = await Traveler.findOne({
+//     userId: id
+//   })
+//   if (TravelerExist) {
+//     const request = await Request.findById(req.params.requestId);
+//     if (request) {
+//       const tripId = TravelerExist.Trip.slice(-1);
+//       const trip = await Trip.findById(tripId);
+//       if (trip.AcceptedRequests.includes(requestId)) {
+//         return {
+//           message: 'Request already accepted'
+//         }
+//       }
+//       await Trip.findByIdAndUpdate(tripId, {
+//         $push: {
+//           AcceptedRequests: requestId
+//         },
 
-      }, {
-        new: true
-      })
-      await Request.findByIdAndUpdate(requestId, {
-        $set: {
-          state: 'accepted'
-        },
-        trip: tripId
-      }, {
-        new: true
-      })
-      return {
-        message: 'Request accepted successfully'
-      }
-    } else {
-      return {
-        message: 'Request not found'
-      }
-    }
-  } else {
-    return {
-      message: 'Traveler not found'
-    }
-  }
-}
+//       }, {
+//         new: true
+//       })
+//       await Request.findByIdAndUpdate(requestId, {
+//         $set: {
+//           state: 'accepted'
+//         },
+//         trip: tripId
+//       }, {
+//         new: true
+//       })
+//       return {
+//         message: 'Request accepted successfully'
+//       }
+//     } else {
+//       return {
+//         message: 'Request not found'
+//       }
+//     }
+//   } else {
+//     return {
+//       message: 'Traveler not found'
+//     }
+//   }
+// }
 const declinerequest = async (id, requestId, req) => {
   // let requestId = req.params.requestId;
   const TravelerExist = await Traveler.findOne({
@@ -355,6 +355,86 @@ const viewAllRequests = async (req) => {
     requests
   }
 }
+const DeclineTrip=async (id,req,res)=>{
+  try{
+    const user=await User.findById(id)
+    if(user){
+      if (user.requests.includes(req.params.requestId)) {
+        const request = await Request.findById(req.params.requestId)
+       if(request.state === 'accepted') {
+          request.state='processing';
+          const tripId = request.trip;
+          const trip = await Trip.findById(tripId);
+          if (trip) {
+            await Trip.findByIdAndUpdate(
+              tripId, {
+                $pull: {
+                  AcceptedRequests:req.params.requestId
+                }
+              }
+            )
+          }
+          console.log(req.params.requestId)
+          request.trip=null;
+          await request.save();
+          res.status(200).json({message:'request declined successfully'})
+       }
+        else{
+          res.status(200).json({message:'this request is not accepted yet'})
+        }
+      }
+      else{
+        throw new ApiError(httpStatus.NOT_FOUND, 'you are not allowed to edit this request');
+      }
+    }
+    else{
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
+  }
+  catch(err){
+    res.status(500).json({message:err.message})
+  }
+}
+const TravelerAcceptRequest=async (id,req,res)=>{
+  try{
+    const user=await User.findById(id)
+    if(user){
+      const traveler=await Traveler.find({userId:id})
+      if(traveler){
+        const request = await Request.findById(req.params.requestId)
+        if(request.state === 'accepted') {
+          res.status(200).json({message:'this request is already accepted'})
+        }
+        else{
+        const tripId=traveler[0].Trip.slice(-1)[0];
+        console.log(tripId)
+        if(!request.tripsRequests.includes(tripId)){
+        await Request.findByIdAndUpdate(req.params.requestId, {
+        $push: {
+          tripsRequests: tripId
+        },
+      }, {
+        new: true
+      })
+      res.status(200).json({message:'request added'})
+        }
+        else{
+          res.status(200).json({message:'request already added'})
+        }
+      }
+    }
+      else{
+        throw new ApiError(httpStatus.NOT_FOUND, 'you are not allowed to accept this request');
+      }
+    }
+    else{
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
+  }
+  catch(err){
+    res.status(500).json({message:err.message})
+  }
+}
 
 module.exports = {
   createRequest,
@@ -366,7 +446,9 @@ module.exports = {
   userviewrequests,
   userviewrequest,
   acceptrequest,
-  acceptanyrequest,
+  // acceptanyrequest,
   declinerequest,
-  viewAllRequests
+  viewAllRequests,
+  DeclineTrip,
+  TravelerAcceptRequest
 };

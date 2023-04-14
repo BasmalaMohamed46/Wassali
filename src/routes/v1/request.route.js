@@ -5,10 +5,12 @@ const requestController = require('../../controllers/request.controller');
 const auth = require('../../middlewares/auth');
 
 const router = express.Router();
-
+router.post('/declinetrip/:requestId',auth(),requestController.DeclineTrip)
 router.get('/userviewrequests',auth(),requestController.userViewRequests)
 router.get('/userviewrequest/:requestId',auth(),requestController.userViewRequest)
 router.get('/viewAllRequests' , auth() ,requestController.viewAllRequest);
+router.post('/TravelerAcceptRequest/:requestId',auth(),requestController.TravelerAcceptRequest)
+
 
 router
   .route('/')
