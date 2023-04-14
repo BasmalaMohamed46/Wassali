@@ -43,7 +43,7 @@ const getTraveller = catchAsync(async (req, res) => {
 const gettravellerOwnRequests = catchAsync(async (req, res) => {
   const id = req.user._id;
   const requests = await travelerService.getTravellerOwnRequests(id,res);
-  res.status(httpStatus.OK).send(requests);
+  return(requests);
 });
 
 const TravelerViewRequestById = catchAsync(async (req, res) => {
