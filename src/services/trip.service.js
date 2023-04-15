@@ -226,6 +226,20 @@ const updateTrip = async (id, req, res, tripId) => {
   }
 };
 
+const filterTripsByCity = async (req, res) => {
+  const { city } = req.query;
+  try {
+    const trips = await Trip.find({ from: { $regex: city, $options: 'i' } });
+    if (trips.length === 0) {
+      return res.status(404).json({ message: 'No Trips found for this city' });
+    }
+    res.status(200).json({ trips });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 
 
 module.exports = {
@@ -234,5 +248,6 @@ module.exports = {
   viewtrips,
   viewtravelertrips,
   viewtrip,
-  updateTrip
+  updateTrip,
+  filterTripsByCity
 };
