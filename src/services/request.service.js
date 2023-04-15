@@ -22,6 +22,31 @@ const Trip = require('../models/trip.model');
 const createRequest = async (id, req) => {
   const user = await User.findById(id)
   if (user) {
+    console.log(user.requests)
+    console.log(user.requests[user.requests.length-1])
+    console.log(user.requests.length===0)
+    if(user.requests.length===0){
+         const request = await Request.create({
+      userId: id,
+      ...req.body
+    });
+    await User.findByIdAndUpdate(id, {
+      $push: {
+        requests: request._id
+      }
+    });
+    return {
+      message: 'Request added successfully',
+      request
+    }
+   }
+  else{
+    console.log('hello')
+    const requestt=await Request.findById(user.requests[user.requests.length-1])
+    if(requestt.state !== 'delivered'){
+      throw new ApiError(httpStatus.NOT_FOUND, 'you have a request that is not delivered yet');
+    }
+    else{
     const request = await Request.create({
       userId: id,
       ...req.body
@@ -35,7 +60,10 @@ const createRequest = async (id, req) => {
       message: 'Request added successfully',
       request
     }
-  } else {
+  }
+ 
+
+  } }else {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
@@ -349,7 +377,8 @@ const declinerequest = async (id, requestId, req) => {
 
 
 const viewAllRequests = async (req) => {
-  const requests = await Request.find();
+  
+  const requests = await Request.find({state:'processing'});
 
   return {
     message: 'Requests found successfully',
@@ -407,8 +436,8 @@ const TravelerAcceptRequest=async (id,req,res)=>{
           res.status(200).json({message:'this request is already accepted'})
         }
         else{
-        const tripId=traveler[0].Trip.slice(-1)[0];
-        console.log(tripId)
+        const tripId=traveler[0].Trip[traveler[0].Trip.length-1];
+       
         if(!request.tripsRequests.includes(tripId)){
         await Request.findByIdAndUpdate(req.params.requestId, {
         $push: {
@@ -510,7 +539,7 @@ const viewTravelersRequests =async (id,req,res)=>{
       })
     }
     else{
-      const requests = await Request.find({},'TripOfferedPrice').populate(
+      const requests = await Request.find({userId:id},'TripOfferedPrice').populate(
         {
           path:'TripOfferedPrice.trip',
           select:'_id to from Traveler',
@@ -566,6 +595,27 @@ const viewRequestAfterAcceptance=async (id,req,res)=>{
     res.status(500).json({message:err.message})
   }
 }
+const ViewAllAcceptedRequests=async (id,req,res)=>{
+  try{
+    const user=await User.findById(id)
+    if(user){
+      const requests=await Request.find({state:'accepted',userId:id})
+      if(requests){
+        res.status(200).json({message:'requests found successfully',requests})
+      }
+      else{
+        throw new ApiError(httpStatus.NOT_FOUND, 'requests not found');
+      }
+    }
+    else{
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
+    
+  }
+  catch(err){
+    res.status(500).json({message:err.message})
+  }
+}
 
 module.exports = {
   createRequest,
@@ -584,7 +634,8 @@ module.exports = {
   TravelerAcceptRequest,
   userAcceptTravelerRequest,
   viewTravelersRequests,
-  viewRequestAfterAcceptance
+  viewRequestAfterAcceptance,
+  ViewAllAcceptedRequests
 };
 
 

@@ -13,6 +13,7 @@ router.post('/TravelerAcceptRequest/:requestId',auth(),requestController.Travele
 router.post('/userAcceptTravelerRequest/:tripId',auth(),requestController.userAcceptTravelerRequest)
 router.get('/viewTravelersRequests',auth(),requestController.viewTravelersRequests)
 router.get('/viewRequestAfterAcceptance/:requestId',auth(),requestController.viewRequestAfterAcceptance)
+router.get('/ViewAllAcceptedRequests',auth(),requestController.ViewAllAcceptedRequests)
 
 
 
