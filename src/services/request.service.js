@@ -277,51 +277,6 @@ const acceptrequest = async (id, requestId, req) => {
   }
 };
 
-//accept any request
-// const acceptanyrequest = async (id, requestId, req) => {
-//   const TravelerExist = await Traveler.findOne({
-//     userId: id
-//   })
-//   if (TravelerExist) {
-//     const request = await Request.findById(req.params.requestId);
-//     if (request) {
-//       const tripId = TravelerExist.Trip.slice(-1);
-//       const trip = await Trip.findById(tripId);
-//       if (trip.AcceptedRequests.includes(requestId)) {
-//         return {
-//           message: 'Request already accepted'
-//         }
-//       }
-//       await Trip.findByIdAndUpdate(tripId, {
-//         $push: {
-//           AcceptedRequests: requestId
-//         },
-
-//       }, {
-//         new: true
-//       })
-//       await Request.findByIdAndUpdate(requestId, {
-//         $set: {
-//           state: 'accepted'
-//         },
-//         trip: tripId
-//       }, {
-//         new: true
-//       })
-//       return {
-//         message: 'Request accepted successfully'
-//       }
-//     } else {
-//       return {
-//         message: 'Request not found'
-//       }
-//     }
-//   } else {
-//     return {
-//       message: 'Traveler not found'
-//     }
-//   }
-// }
 const declinerequest = async (id, requestId, req) => {
   // let requestId = req.params.requestId;
   const TravelerExist = await Traveler.findOne({
@@ -387,6 +342,7 @@ const DeclineTrip = async (id, req, res) => {
           }
           console.log(req.params.requestId);
           request.trip = null;
+          request.tripPrice = null;
           await request.save();
           res.status(200).json({ message: 'request declined successfully' });
         } else {
@@ -469,42 +425,40 @@ const userAcceptTravelerRequest = async (id, req, res) => {
           message: 'request already accepted',
         });
       }
-      if (!tripExist.AcceptedRequests.includes(requestId)) {
+      if (tripExist.AcceptedRequests.includes(requestId)) {
+        res.status(404).json({
+          message: 'request already accepted',
+        });
+      } else {
         await Trip.findByIdAndUpdate(tripId, {
           $push: {
             AcceptedRequests: requestId,
           },
         });
-      } else {
-        res.status(404).json({
-          message: 'request already accepted',
+        const tripps = request.TripOfferedPrice;
+        for (let i = 0; i < tripps.length; i++) {
+          if (tripps[i].trip == tripId) {
+            await Request.findByIdAndUpdate(
+              requestId,
+              {
+                $set: {
+                  state: 'accepted',
+                  tripPrice: tripps[i].price,
+                  trip: tripId,
+                  TripOfferedPrice: [],
+                  tripsRequests: [],
+                },
+              },
+              {
+                new: true,
+              }
+            );
+          }
+        }
+        res.status(200).json({
+          message: 'request accepted successfully',
         });
       }
-      const tripps = request.TripOfferedPrice;
-      console.log(tripps.trip.length);
-      console.log(tripps.trip[0]);
-      for (let i = 0; i < tripps.trip.length; i++) {
-        if (tripps.trip[i] == tripId) {
-          await Request.findByIdAndUpdate(
-            requestId,
-            {
-              $set: {
-                tripPrice: tripps.price[i],
-                state: 'accepted',
-                trip: tripId,
-                TripOfferedPrice: [],
-                tripsRequests: [],
-              },
-            },
-            {
-              new: true,
-            }
-          );
-        }
-      }
-      res.status(200).json({
-        message: 'request accepted successfully',
-      });
     }
   }
 };
@@ -516,8 +470,8 @@ const viewTravelersRequests = async (id, req, res) => {
       message: 'user not found',
     });
   } else {
-    const requestId= userExist.requests[userExist.requests.length - 1];
-    const requests=await Request.findById(requestId).populate({
+    const requestId = userExist.requests[userExist.requests.length - 1];
+    const requests = await Request.findById(requestId).populate({
       path: 'TripOfferedPrice.trip',
       select: '_id to from TripDate TripTime Traveler',
       populate: {
@@ -526,8 +480,8 @@ const viewTravelersRequests = async (id, req, res) => {
         populate: {
           path: 'userId',
           select: 'name phoneNumber',
-        }
-      }
+        },
+      },
     });
     // const requests = await Request.find({ userId: id }, 'TripOfferedPrice').populate({
     //   path: 'TripOfferedPrice.trip',
