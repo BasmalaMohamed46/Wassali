@@ -58,12 +58,12 @@ const viewAllTravelers = catchAsync(async (req, res) => {
   return(travelers)
 
 });
-// const TravelerOnHisWay = catchAsync(async (req, res) => {
-//   const id = req.user._id;
-//  const traveler = await travelerService.TravelerOnHisWay(id,res);
-//   return(traveler)
+const TravelerOnHisWay = catchAsync(async (req, res) => {
+  const id = req.user._id;
+ const traveler = await travelerService.TravelerOnHisWay(id,req,res);
+  return(traveler)
 
-// });
+});
 
 module.exports = {
   IsStudent,
@@ -75,6 +75,6 @@ module.exports = {
   gettravellerOwnRequests,
   TravelerViewRequestById,
   viewAllTravelers,
-  // TravelerOnHisWay
+  TravelerOnHisWay
 
 };

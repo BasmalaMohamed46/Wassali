@@ -132,5 +132,9 @@ router.get(
   auth(),
   travelerController.viewAllTravelers
 )
-
+router.post(
+  '/TravelerOnHisWay/:requestId',
+  auth(),
+  travelerController.TravelerOnHisWay
+)
 module.exports = router;

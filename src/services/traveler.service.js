@@ -351,6 +351,58 @@ const viewAllTravelers = async (id, res) => {
     });
   }
 };
+const TravelerOnHisWay=async(id,req,res)=>{
+  try{
+    const user=await User.findById(id);
+    if(user){
+      const traveler=await Traveler.find({userId:id});
+      if(traveler){
+        console.log(traveler)
+        const requestId=req.params.requestId;
+        console.log(traveler[0].Trip)
+        const tripId=traveler[0].Trip[traveler[0].Trip.length-1];
+        const trip=await Trip.findById(tripId);
+        if(trip.AcceptedRequests.includes(requestId)){
+          const request=await Request.findById(requestId);
+          if(request){
+            request.state='onmyway'
+            await request.save();
+            res.status(httpStatus.OK).json({
+              message: 'Request updated successfully',
+              request,
+            });
+          }
+          else{
+            res.status(httpStatus.NOT_FOUND).json({
+              message: 'Request not found',
+            });
+          }
+        }
+        else{
+          res.status(httpStatus.NOT_FOUND).json({
+            message: 'Request not found in accepted requests',
+          });
+        }
+      }
+      else{
+        res.status(httpStatus.NOT_FOUND).json({
+          message: 'Traveler not found',
+        });
+      }
+    }
+    else{
+      res.status(httpStatus.NOT_FOUND).json({
+        message: 'User not found',
+      });
+    }
+  }
+  catch(error){
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Something went wrong',
+      err: error.message,
+    });
+  }
+}
 module.exports = {
   Student,
   Employee,
@@ -361,4 +413,5 @@ module.exports = {
   getTravellerOwnRequests,
   travelerViewRequestById,
   viewAllTravelers,
+  TravelerOnHisWay
 };
