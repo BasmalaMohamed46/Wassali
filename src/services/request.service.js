@@ -520,7 +520,7 @@ const viewTravelersRequests = async (id, req, res) => {
     const requests=await Request.findById(requestId).populate({
       path: 'TripOfferedPrice',
       path: 'TripOfferedPrice.trip',
-      select: '_id to from Traveler',
+      select: '_id to from TripDate TripTime Traveler',
       populate: {
         path: 'Traveler',
         select: 'userId',
