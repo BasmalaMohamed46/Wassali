@@ -413,7 +413,7 @@ const TravelerAcceptRequest = async (id, req, res) => {
           res.status(200).json({ message: 'this request is already accepted' });
         } else {
           const tripId = traveler[0].Trip[traveler[0].Trip.length - 1];
-          if (traveler[0].Trip.length - 1 === 0) {
+          if (traveler[0].Trip.length === 0) {
             res.status(200).json({ message: 'you have no trips' });
           }
           if (!request.tripsRequests.includes(tripId)) {
