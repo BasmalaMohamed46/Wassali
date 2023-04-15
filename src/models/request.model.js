@@ -96,7 +96,7 @@ const requestSchema = mongoose.Schema(
         ref: 'Trip',
       },
     ],
-    TripOfferedPrice:{
+    TripOfferedPrice:[{
       trip:{
         type: Schema.Types.ObjectId,
         ref: 'Trip',
@@ -105,7 +105,7 @@ const requestSchema = mongoose.Schema(
       price:{
         type:Number,
       },
-    },
+    }],
     tripPrice:{
       type:Number,
     }

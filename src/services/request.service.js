@@ -492,7 +492,7 @@ const userAcceptTravelerRequest = async (id, req, res) => {
                 tripPrice: tripps.price[i],
                 state: 'accepted',
                 trip: tripId,
-                TripOfferedPrice: {},
+                TripOfferedPrice: [],
                 tripsRequests: [],
               },
             },
