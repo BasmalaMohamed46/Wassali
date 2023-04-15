@@ -516,7 +516,9 @@ const viewTravelersRequests = async (id, req, res) => {
       message: 'user not found',
     });
   } else {
-    const requests = await Request.find({ userId: id }, 'TripOfferedPrice').populate({
+    const requestId= userExist.requests[userExist.requests.length - 1];
+    const requests=await Request.findById(requestId).populate({
+      path: 'TripOfferedPrice',
       path: 'TripOfferedPrice.trip',
       select: '_id to from Traveler',
       populate: {
@@ -525,9 +527,21 @@ const viewTravelersRequests = async (id, req, res) => {
         populate: {
           path: 'userId',
           select: 'name phoneNumber',
-        },
-      },
+        }
+      }
     });
+    // const requests = await Request.find({ userId: id }, 'TripOfferedPrice').populate({
+    //   path: 'TripOfferedPrice.trip',
+    //   select: '_id to from Traveler',
+    //   populate: {
+    //     path: 'Traveler',
+    //     select: 'userId',
+    //     populate: {
+    //       path: 'userId',
+    //       select: 'name phoneNumber',
+    //     },
+    //   },
+    // });
     res.status(200).json({
       message: 'requests found successfully',
       requests,
