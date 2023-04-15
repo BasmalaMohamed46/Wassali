@@ -122,6 +122,12 @@ const viewAllRequest = catchAsync(async (req, res) => {
     return(requests)
   });
 
+  const filterRequestsByCity = catchAsync(async (req, res)=>{
+    const {city}=req.query;
+    const requestsSearch = await requestService.filterRequestsByCity(req, res);
+    res.status(httpStatus.OK).send(requestsSearch);
+  });
+
 
 module.exports = {
   createRequest,
@@ -141,5 +147,6 @@ module.exports = {
   userAcceptTravelerRequest,
   viewTravelersRequests,
   viewRequestAfterAcceptance,
-  ViewAllAcceptedRequests
+  ViewAllAcceptedRequests,
+  filterRequestsByCity
 };

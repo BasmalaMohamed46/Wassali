@@ -555,6 +555,21 @@ const ViewAllAcceptedRequests = async (id, req, res) => {
   }
 };
 
+const filterRequestsByCity = async (req, res) => {
+  // const { from } = req.body;
+  const { city } = req.query;
+  try {
+    const requests = await Request.find({ from: { $regex: city, $options: 'i' } });
+    if (requests.length === 0) {
+      return res.status(404).json({ message: 'No requests found for this city' });
+    }
+    res.status(200).json({ requests });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   createRequest,
   queryRequests,
@@ -574,6 +589,7 @@ module.exports = {
   viewTravelersRequests,
   viewRequestAfterAcceptance,
   ViewAllAcceptedRequests,
+  filterRequestsByCity
 };
 
 // const requests = await Request.find({TripOfferedPrice:{$exists:true}});
