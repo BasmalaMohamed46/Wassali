@@ -235,8 +235,10 @@ const filterTripsByCity = async (req, res) => {
     }
     res.status(200).json({ trips });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      message: 'Server error',
+      err: err.message,
+    });
   }
 };
 

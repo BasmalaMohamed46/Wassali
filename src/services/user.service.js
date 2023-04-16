@@ -19,7 +19,6 @@ const createUser = async (userBody) => {
   // if (await User.isphoneNumberTaken(userBody.phoneNumber)) {
   //   throw new ApiError(httpStatus.BAD_REQUEST, 'PhoneNumber already registered');
   // }
-  // console.log(userBody)
   return User.create(userBody);
 };
 

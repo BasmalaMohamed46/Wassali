@@ -80,8 +80,6 @@ const createTraveler = async (id, req) => {
         message: 'invalid file, accepted files->(png,jpg,jpeg)',
       };
     }
-    // console.log(req.files.NationalIdCard);
-    // console.log(req.files.NationalIdCard[0].filename);
     if (foundedTraveler.isStudent) {
       if (!req.files.NationalIdCard) {
         return {
@@ -101,7 +99,6 @@ const createTraveler = async (id, req) => {
       let StudentUniversityId_URL = `${req.protocol}://${req.headers.host}/${req.destination}/${req.files.StudentUniversityId[0].filename}`;
       let CollegeEnrollmentStatement_URL = `${req.protocol}://${req.headers.host}/${req.destination2}/${req.files.CollegeEnrollmentStatement[0].filename}`;
       let NationalIdCard_URL = `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`;
-      // console.log(StudentUniversityId_URL);
       const updatedUser = await Traveler.findByIdAndUpdate(
         foundedTraveler._id,
         {
@@ -141,7 +138,6 @@ const createTraveler = async (id, req) => {
       }
       let EmployeeCompanyId_URL = `${req.protocol}://${req.headers.host}/${req.destination3}/${req.files.EmployeeCompanyId[0].filename}`;
       let NationalIdCard_URL = `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`;
-      // console.log(EmployeeCompanyId_URL);
       const updatedUser = await Traveler.findByIdAndUpdate(
         foundedTraveler._id,
         {
@@ -214,33 +210,6 @@ const updateTraveler = async (id, req) => {
     };
   }
 };
-// const deleteTraveler = async (id, res) => {
-//   try {
-//     const foundedTraveler = await Traveler.findOne({
-//       userId: id
-//     });
-//     if (foundedTraveler) {
-//       const traveler = await Traveler.findOneAndDelete({
-//         userId: id
-//       });
-//       res.status(httpStatus.OK).json({
-//         message: 'Traveler deleted successfully',
-//         traveler
-//       })
-//     } else {
-//       res.status(httpStatus.NOT_FOUND).json({
-//         message: 'Traveler not found',
-//       })
-
-//     }
-//   } catch (error) {
-//     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-//       message: 'Something went wrong',
-//       err: error.message,
-//     })
-//   }
-
-// }
 
 const viewTraveler = async (id, res) => {
   try {
@@ -357,9 +326,7 @@ const TravelerOnHisWay=async(id,req,res)=>{
     if(user){
       const traveler=await Traveler.find({userId:id});
       if(traveler){
-        console.log(traveler)
         const requestId=req.params.requestId;
-        console.log(traveler[0].Trip)
         const tripId=traveler[0].Trip[traveler[0].Trip.length-1];
         const trip=await Trip.findById(tripId);
         if(trip.AcceptedRequests.includes(requestId)){
@@ -408,7 +375,6 @@ module.exports = {
   Employee,
   createTraveler,
   updateTraveler,
-  // deleteTraveler,
   viewTraveler,
   getTravellerOwnRequests,
   travelerViewRequestById,

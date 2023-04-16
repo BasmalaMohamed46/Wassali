@@ -27,11 +27,7 @@ const updateTraveller = catchAsync(async (req, res) => {
   const update = await travelerService.updateTraveler(id,req);
   res.status(httpStatus.OK).send(update);
 });
-// const deleteTraveller = catchAsync(async (req, res) => {
-//   const id = req.user._id;
-//   const deleted = await travelerService.deleteTraveler(id,res);
-//   res.status(httpStatus.OK).send(deleted);
-// });
+
 const getTraveller = catchAsync(async (req, res) => {
   const id = req.user._id;
   const traveler = await travelerService.viewTraveler(id,res);
@@ -70,7 +66,6 @@ module.exports = {
   IsEmployee,
   AddTraveler,
   updateTraveller,
-  // deleteTraveller,
   getTraveller,
   gettravellerOwnRequests,
   TravelerViewRequestById,

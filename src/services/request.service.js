@@ -16,9 +16,6 @@ const Trip = require('../models/trip.model');
 const createRequest = async (id, req) => {
   const user = await User.findById(id);
   if (user) {
-    console.log(user.requests);
-    console.log(user.requests[user.requests.length - 1]);
-    console.log(user.requests.length === 0);
     if (user.requests.length === 0) {
       const request = await Request.create({
         userId: id,
@@ -34,7 +31,6 @@ const createRequest = async (id, req) => {
         request,
       };
     } else {
-      console.log('hello');
       const requestt = await Request.findById(user.requests[user.requests.length - 1]);
       if (requestt.state !== 'delivered') {
         throw new ApiError(httpStatus.NOT_FOUND, 'you have a request that is not delivered yet');
@@ -129,7 +125,6 @@ const deleteRequestById = async (id, req) => {
       } else {
         if (request.trip) {
           const tripId = request.trip;
-          // console.log(trip.RequestsList);
           await Request.findByIdAndDelete(req.params.requestId);
           await User.findByIdAndUpdate(id, {
             $pull: {
@@ -243,7 +238,6 @@ const acceptrequest = async (id, requestId, req) => {
   if (TravelerExist) {
     const request = await Request.findById(req.params.requestId);
     const tripId = request.trip;
-    console.log(tripId);
     const trip = await Trip.findById(tripId);
     if (trip) {
       if (trip.AcceptedRequests.includes(requestId)) {
@@ -285,7 +279,6 @@ const declinerequest = async (id, requestId, req) => {
   if (TravelerExist) {
     const request = await Request.findById(req.params.requestId);
     const tripId = request.trip;
-    console.log(tripId);
     const trip = await Trip.findById(tripId);
     if (trip) {
       await Trip.findByIdAndUpdate(tripId, {
@@ -340,7 +333,6 @@ const DeclineTrip = async (id, req, res) => {
               },
             });
           }
-          console.log(req.params.requestId);
           request.trip = null;
           request.tripPrice = null;
           await request.save();
@@ -565,8 +557,10 @@ const filterRequestsByCity = async (req, res) => {
     }
     res.status(200).json({ requests });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({
+      message: 'Server error',
+      error: err.message
+  });
   }
 };
 
