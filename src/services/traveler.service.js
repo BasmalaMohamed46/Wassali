@@ -68,112 +68,78 @@ const Employee = async (id, res) => {
 
 const createTraveler = async (id, req) => {
   try {
-    // const id = req.user._id;
-
-    const foundedTraveler = await Traveler.findOne({
-      userId: id,
-    });
+    const foundedTraveler = await Traveler.findOne({ userId: id });
     const { NationalId } = req.body;
 
     if (req.fileUploadError) {
-      return {
-        message: 'invalid file, accepted files->(png,jpg,jpeg)',
-      };
+      return { message: 'Invalid file, accepted files->(png, jpg, jpeg)' };
     }
-    // console.log(req.files.NationalIdCard);
-    // console.log(req.files.NationalIdCard[0].filename);
+
     if (foundedTraveler.isStudent) {
-      if (!req.files.NationalIdCard) {
-        return {
-          message: 'NationalIdCard is required',
-        };
+      const requiredFields = ['NationalIdCard', 'StudentUniversityId', 'CollegeEnrollmentStatement'];
+      for (const field of requiredFields) {
+        if (!req.files[field]) {
+          return { message: `${field} is required` };
+        }
       }
-      if (!req.files.StudentUniversityId) {
-        return {
-          message: 'StudentUniversityId is required',
-        };
-      }
-      if (!req.files.CollegeEnrollmentStatement) {
-        return {
-          message: 'CollegeEnrollmentStatement is required',
-        };
-      }
-      let StudentUniversityId_URL = `${req.protocol}://${req.headers.host}/${req.destination}/${req.files.StudentUniversityId[0].filename}`;
-      let CollegeEnrollmentStatement_URL = `${req.protocol}://${req.headers.host}/${req.destination2}/${req.files.CollegeEnrollmentStatement[0].filename}`;
-      let NationalIdCard_URL = `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`;
-      // console.log(StudentUniversityId_URL);
+
+      const urls = {
+        StudentUniversityId: `${req.protocol}://${req.headers.host}/${req.destination}/${req.files.StudentUniversityId[0].filename}`,
+        CollegeEnrollmentStatement: `${req.protocol}://${req.headers.host}/${req.destination2}/${req.files.CollegeEnrollmentStatement[0].filename}`,
+        NationalIdCard: `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`
+      };
+
       const updatedUser = await Traveler.findByIdAndUpdate(
         foundedTraveler._id,
         {
           NationalId,
-          NationalIdCard: NationalIdCard_URL,
-          StudentUniversityId: StudentUniversityId_URL,
-          CollegeEnrollmentStatement: CollegeEnrollmentStatement_URL,
           EmployeeCompanyId: null,
+          ...urls
         },
-        {
-          new: true,
-        }
+        { new: true }
       );
+
       await User.findByIdAndUpdate(
         id,
-        {
-          role: 'traveler',
-        },
-        {
-          new: true,
-        }
+        { role: 'traveler' },
+        { new: true }
       );
-      return {
-        message: 'Traveler created successfully',
-        updatedUser,
-      };
+
+      return { message: 'Traveler created successfully', updatedUser };
     } else {
-      if (!req.files.NationalIdCard) {
-        return {
-          message: 'NationalIdCard is required',
-        };
+      const requiredFields = ['NationalIdCard', 'EmployeeCompanyId'];
+      for (const field of requiredFields) {
+        if (!req.files[field]) {
+          return { message: `${field} is required` };
+        }
       }
-      if (!req.files.EmployeeCompanyId) {
-        return {
-          message: 'EmployeeCompanyId is required',
-        };
-      }
-      let EmployeeCompanyId_URL = `${req.protocol}://${req.headers.host}/${req.destination3}/${req.files.EmployeeCompanyId[0].filename}`;
-      let NationalIdCard_URL = `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`;
-      // console.log(EmployeeCompanyId_URL);
+
+      const urls = {
+        EmployeeCompanyId: `${req.protocol}://${req.headers.host}/${req.destination3}/${req.files.EmployeeCompanyId[0].filename}`,
+        NationalIdCard: `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`
+      };
+
       const updatedUser = await Traveler.findByIdAndUpdate(
         foundedTraveler._id,
         {
           NationalId,
-          EmployeeCompanyId: EmployeeCompanyId_URL,
-          NationalIdCard: NationalIdCard_URL,
           StudentUniversityId: null,
           CollegeEnrollmentStatement: null,
+          ...urls
         },
-        {
-          new: true,
-        }
+        { new: true }
       );
+
       await User.findByIdAndUpdate(
         id,
-        {
-          role: 'traveler',
-        },
-        {
-          new: true,
-        }
+        { role: 'traveler' },
+        { new: true }
       );
-      return {
-        message: 'Traveler created successfully',
-        updatedUser,
-      };
+
+      return { message: 'Traveler created successfully', updatedUser };
     }
   } catch (error) {
-    return {
-      message: 'Something went wrong',
-      err: error.message,
-    };
+    return { message: 'Something went wrong', err: error.message };
   }
 };
 
