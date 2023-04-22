@@ -15,9 +15,9 @@ const jwt=require('jsonwebtoken')
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
-  const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:'1d'})
-  const URL=`${req.protocol}://${req.headers.host}/v1/auth/confirmEmail/${token}`
-  await sendEmail(req.body.email,`<a href='${URL}'>please click here to confirm your email</a>`)
+  // const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:'1d'})
+  // const URL=`${req.protocol}://${req.headers.host}/v1/auth/confirmEmail/${token}`
+  // await sendEmail(req.body.email,`<a href='${URL}'>please click here to confirm your email</a>`)
   res.status(httpStatus.CREATED).send(user);
 });
 
@@ -26,14 +26,14 @@ const login = catchAsync(async (req, res) => {
     email,
     password
   } = req.body;
-  const foundedUser=await User.findOne({email:email})
-  if(foundedUser.isEmailVerified){
+  // const foundedUser=await User.findOne({email:email})
+  // if(foundedUser.isEmailVerified){
   const user = await authService.loginUserWithEmailAndPassword(email, password, res);
   res.send(user);
-  }
-  else{
-    res.status(httpStatus.UNAUTHORIZED).send({message:'please confirm your email'})
-  }
+  // }
+  // else{
+  //   res.status(httpStatus.UNAUTHORIZED).send({message:'please confirm your email'})
+  // }
 });
 
 const logout = catchAsync(async (req, res) => {
@@ -84,34 +84,34 @@ const logoutGoogle = catchAsync(async (req, res) => {
     res.redirect('/');
   });
 })
-const confirmEmail=catchAsync(async(req,res)=>{
-const {token}=req.params
-if(token==undefined || token==null || !token){
-  res.status(400).send({message:'token is required'})
-}else{
-const decoded=jwt.verify(token,process.env.JWT_SECRET)
-if(decoded){
-  const {id}=decoded
-  const foundedUser= await User.findById(id)
-  if(foundedUser){
-   if(foundedUser.isEmailVerified){
-    res.status(200).send({message:'user already verified'})
-   }
-    else{
-      foundedUser.isEmailVerified=true
-      await foundedUser.save()
-      res.status(200).send({message:'user verified successfully'})
-    }
-  }
-  else{
-    res.status(400).send({message:'invalid email'})
-  }
-}
-else{
-  res.status(400).send({message:'invalid token'})
-}
-}
-})
+// const confirmEmail=catchAsync(async(req,res)=>{
+// const {token}=req.params
+// if(token==undefined || token==null || !token){
+//   res.status(400).send({message:'token is required'})
+// }else{
+// const decoded=jwt.verify(token,process.env.JWT_SECRET)
+// if(decoded){
+//   const {id}=decoded
+//   const foundedUser= await User.findById(id)
+//   if(foundedUser){
+//    if(foundedUser.isEmailVerified){
+//     res.status(200).send({message:'user already verified'})
+//    }
+//     else{
+//       foundedUser.isEmailVerified=true
+//       await foundedUser.save()
+//       res.status(200).send({message:'user verified successfully'})
+//     }
+//   }
+//   else{
+//     res.status(400).send({message:'invalid email'})
+//   }
+// }
+// else{
+//   res.status(400).send({message:'invalid token'})
+// }
+// }
+// })
 module.exports = {
   register,
   login,
@@ -124,5 +124,5 @@ module.exports = {
   googleLogin,
   failureGoogle,
   logoutGoogle,
-  confirmEmail
+  // confirmEmail
 };

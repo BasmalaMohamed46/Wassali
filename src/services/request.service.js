@@ -16,9 +16,6 @@ const Trip = require('../models/trip.model');
 const createRequest = async (id, req) => {
   const user = await User.findById(id);
   if (user) {
-    console.log(user.requests);
-    console.log(user.requests[user.requests.length - 1]);
-    console.log(user.requests.length === 0);
     if (user.requests.length === 0) {
       const request = await Request.create({
         userId: id,
@@ -34,7 +31,6 @@ const createRequest = async (id, req) => {
         request,
       };
     } else {
-      console.log('hello');
       const requestt = await Request.findById(user.requests[user.requests.length - 1]);
       if (requestt.state !== 'delivered') {
         throw new ApiError(httpStatus.NOT_FOUND, 'you have a request that is not delivered yet');
@@ -172,6 +168,7 @@ const deleteRequestById = async (id, req) => {
 const sendrequest = async (id, tripId, req) => {
   const user = await User.findById(id);
   if (user) {
+    if (user.requests.length === 0) {
     const trip = await Trip.findById(req.params.tripId);
     if (trip) {
       const request = await Request.create({
@@ -197,6 +194,38 @@ const sendrequest = async (id, tripId, req) => {
       return {
         message: 'Trip not found',
       };
+    }} else {
+      const requestt = await Request.findById(user.requests[user.requests.length - 1]);
+      if (requestt.state !== 'delivered') {
+        throw new ApiError(httpStatus.NOT_FOUND, 'you have a request that is not delivered yet');
+      } else{
+        const trip = await Trip.findById(req.params.tripId);
+    if (trip) {
+      const request = await Request.create({
+        userId: id,
+        trip: tripId,
+        ...req.body,
+      });
+      await User.findByIdAndUpdate(id, {
+        $push: {
+          requests: request._id,
+        },
+      });
+      await Trip.findByIdAndUpdate(tripId, {
+        $push: {
+          RequestsList: request._id,
+        },
+      });
+      return {
+        message: 'Request added successfully',
+        request,
+      };
+    } else {
+      return {
+        message: 'Trip not found',
+      };
+    }
+      }
     }
   } else {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -370,7 +399,7 @@ const TravelerAcceptRequest = async (id, req, res) => {
         } else {
           const tripId = traveler[0].Trip[traveler[0].Trip.length - 1];
           if (traveler[0].Trip.length === 0) {
-            res.status(200).json({ message: 'you have no trips' });
+            res.status(404).json({ message: 'you have no trips' });
           }
           if (!request.tripsRequests.includes(tripId)) {
             await Request.findByIdAndUpdate(
