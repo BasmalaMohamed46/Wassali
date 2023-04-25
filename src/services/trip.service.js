@@ -48,23 +48,23 @@ const deleteTrip = async (id,res,tripId) => {
                     trip
                 }
                 )}else{
-                  res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                  res.status(404).json({
                     message: 'You can not delete this trip because there are accepted requests',
                 })
                 }
               }
             else{
-                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                res.status(404).json({
                     message: 'You are not allowed to delete this trip',
                 })
             }}
         else{
-            res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            res.status(404).json({
                 message: 'Trip not found',
             })
         }}
     else{
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        res.status(404).json({
             message: 'Traveler not found',
         })
     }}
