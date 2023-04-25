@@ -400,26 +400,27 @@ const TravelerAcceptRequest = async (id, req, res) => {
           const tripId = traveler[0].Trip[traveler[0].Trip.length - 1];
           if (traveler[0].Trip.length === 0) {
             res.status(404).json({ message: 'you have no trips' });
-          }
-          if (!request.tripsRequests.includes(tripId)) {
-            await Request.findByIdAndUpdate(
-              req.params.requestId,
-              {
-                $push: {
-                  tripsRequests: tripId,
-                  TripOfferedPrice: {
-                    trip: tripId,
-                    price: req.body.price,
+          }else{
+            if (!request.tripsRequests.includes(tripId)) {
+              await Request.findByIdAndUpdate(
+                req.params.requestId,
+                {
+                  $push: {
+                    tripsRequests: tripId,
+                    TripOfferedPrice: {
+                      trip: tripId,
+                      price: req.body.price,
+                    },
                   },
                 },
-              },
-              {
-                new: true,
-              }
-            );
-            res.status(200).json({ message: 'request added' });
-          } else {
-            res.status(200).json({ message: 'request already added' });
+                {
+                  new: true,
+                }
+              );
+              res.status(200).json({ message: 'request added' });
+            } else {
+              res.status(200).json({ message: 'request already added' });
+            }
           }
         }
       } else {
