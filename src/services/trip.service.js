@@ -103,7 +103,7 @@ const viewtrips = async (id, req,res) => {
   catch(err){
     return {
       message: 'Something went wrong',
-      err: error.message,
+      err: err.message,
     }
 
   }
@@ -135,7 +135,7 @@ const viewtravelertrips = async (id, req,res) => {
   catch(err){
     return {
       message: 'Something went wrong',
-      err: error.message,
+      err: err.message,
     }
 
   }
@@ -169,7 +169,7 @@ const viewtrip = async (id, req,res,tripId) => {
   catch(err){
     return {
       message: 'Something went wrong',
-      err: error.message,
+      err: err.message,
     }
 
   }
