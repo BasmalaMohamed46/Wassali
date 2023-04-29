@@ -605,7 +605,7 @@ const checkout = async(id, req, res) => {
     ],
     mode: 'payment',
     //transfer to rating page
-    success_url: `http://localhost:3000/v1/requests/create-checkout-session?success=true`,
+    success_url: `http://localhost:3000/home`,
     //transfer to home page
     cancel_url: `http://localhost:3000/v1/requests/create-checkout-session?canceled=true`,
   });
@@ -633,7 +633,7 @@ const checkoutWithPrice = async(id, req, res) => {
     ],
     mode: 'payment',
     //transfer to rating page
-    success_url: `http://localhost:3000/v1/requests/create-checkout-session?success=true`,
+    success_url: `http://localhost:3000/home`,
     //transfer to home page
     cancel_url: `http://localhost:3000/v1/requests/create-checkout-session?canceled=true`,
   });
