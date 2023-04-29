@@ -3,7 +3,7 @@ const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
 const { findByIdAndDelete } = require('../models/admin.model');
-const { User, Traveler } = require('../models');
+const { User, Traveler , Request} = require('../models');
 
 
 const createAdmin = async (userBody) => {
@@ -160,7 +160,95 @@ const getTraveler = async (req,res) => {
     })
   }
 };
-
+const getRequest= async (req,res) => {
+  try{
+    const request=await Request.findById(req.params.requestId)
+    if(!request)
+    {
+      res.status(404).json({
+        message: 'request not exist',
+      })
+    }
+    else
+    {
+      res.status(200).json({
+        message: 'request exist',
+        request
+      })
+    }
+  }
+  catch(err){
+    res.status(500).json({
+      message: 'server error',
+      err
+    })
+  }
+}
+const getRequests= async (req,res) => {
+  try{
+    const requests=await Request.find({})
+    if(!requests)
+    {
+      res.status(404).json({
+        message: 'requests not exist',
+      })
+    }
+    else
+    {
+      res.status(200).json({
+        message: 'requests exist',
+        requests
+      })
+    }
+  }
+  catch(err){
+    res.status(500).json({
+      message: 'server error',
+      err
+    })
+  }
+}
+const deleteRequest= async (req,res) => {
+  try{
+    const request=await Request.findById(req.params.requestId)
+    if(!request)
+    {
+      res.status(404).json({
+        message: 'requests not exist',
+      })
+    }
+    else{
+       if(request.buyOrdeliver == 'deliver'){
+        const deletedRequest=await Request.findByIdAndDelete(req.params.requestId)
+        res.status(200).json({
+          message: 'request deleted',
+          deletedRequest
+        })
+       }
+       else{
+        if(request.price >5000){
+          const deletedRequest=await Request.findByIdAndDelete(req.params.requestId)
+        res.status(200).json({
+          message: 'request deleted',
+          deletedRequest
+        })
+        } else{
+          res.status(200).json({
+            message: 'request not deleted because its less than 5000',
+          })
+        }
+       }
+       
+       
+    }
+  }
+  catch(err){
+    res.status(500).json({
+      message: 'server error',
+      err
+    })
+  }
+}
   module.exports = {
     createAdmin,
     loginUserWithEmailAndPasswordAdmin,
@@ -172,5 +260,8 @@ const getTraveler = async (req,res) => {
     getAllTravelers,
     deleteTraveler,
     updateTraveler,
-    getTraveler
+    getTraveler,
+    getRequest,
+    getRequests,
+    deleteRequest
     }

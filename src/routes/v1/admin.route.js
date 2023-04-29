@@ -22,4 +22,9 @@ router.delete('/deleteTraveler/:travelerId', auth(), adminController.deleteTrave
 router.put('/updateTraveler/:travelerId', auth(), adminController.updateTraveler);
 router.get('/getTraveler/:travelerId', auth(), adminController.getTraveler);
 
+//request
+router.get('/getRequest/:requestId', auth(), adminController.getRequest);
+router.get('/getRequests', auth(), adminController.getRequests);
+router.delete('/deleteRequest/:requestId', auth(), adminController.deleteRequest);
+
 module.exports = router;
