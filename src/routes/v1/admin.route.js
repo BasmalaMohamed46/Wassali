@@ -27,4 +27,9 @@ router.get('/getRequest/:requestId', auth(), adminController.getRequest);
 router.get('/getRequests', auth(), adminController.getRequests);
 router.delete('/deleteRequest/:requestId', auth(), adminController.deleteRequest);
 
+//trip
+router.get('/getTrip/:tripId', auth(), adminController.getTrip);
+router.get('/getTrips', auth(), adminController.getAllTrips);
+router.delete('/deleteTrip/:tripId', auth(), adminController.deleteTrip);
+
 module.exports = router;

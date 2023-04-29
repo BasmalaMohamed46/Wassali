@@ -79,6 +79,22 @@ const register = catchAsync(async (req, res) => {
       return(deleteRequest)
     });
 
+    //trips
+    const getTrip = catchAsync(async (req, res) => {
+      const getTrip = await adminService.getTrip(req,res);
+      return(getTrip)
+    });
+
+    const getAllTrips = catchAsync(async (req, res) => {
+      const getAllTrips = await adminService.getAllTrips(req,res);
+      return(getAllTrips)
+    });
+
+  const deleteTrip = catchAsync(async (req, res) => {
+      const deleteTrip = await adminService.deleteTrip(req,res);
+      return(deleteTrip)
+    });
+
   module.exports = {
     register,
     login,
@@ -92,6 +108,8 @@ const register = catchAsync(async (req, res) => {
     getTraveler,
     getRequest,
     getRequests,
-    deleteRequest
-
+    deleteRequest,
+    getTrip,
+    getAllTrips,
+    deleteTrip
 }
