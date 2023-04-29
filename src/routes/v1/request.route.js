@@ -15,7 +15,8 @@ router.get('/viewTravelersRequests',auth(),requestController.viewTravelersReques
 router.get('/viewRequestAfterAcceptance/:requestId',auth(),requestController.viewRequestAfterAcceptance)
 router.get('/ViewAllAcceptedRequests',auth(),requestController.ViewAllAcceptedRequests)
 
-
+router.post('/createCheckoutSession',auth(),requestController.checkoutSession)
+router.post('/createCheckoutSessionWithPrice',auth(),requestController.checkoutSessionWithPrice)
 
 
 router
