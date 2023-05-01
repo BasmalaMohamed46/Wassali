@@ -1,0 +1,11 @@
+email,name,password,confirmpassword,phoneNumber,emailLogin,passwordLogin
+test1@test.com,John Doe,Test1234,Test1234,'01114621092',test1@test.com,Test1234
+test2@test.com,John Doe,Test1234,Test1234,'01114621092',test2@test.com,Test1234
+test3@test.com,John Doe,Test1234,Test1234,'01114621092',test3@test.com,Test1234
+test4@test.com,John Doe,Test1234,Test1234,'01114621092',test4@test.com,Test1234
+test5@test.com,John Doe,Test1234,Test1234,'01114621092',test5@test.com,Test1234
+test6@test.com,John Doe,Test1234,Test1234,'01114621092',test6@test.com,Test1234
+test7@test.com,John Doe,Test1234,Test1234,'01114621092',test7@test.com,Test1234
+test8@test.com,John Doe,Test1234,Test1234,'01114621092',test8@test.com,Test1234
+test9@test.com,John Doe,Test1234,Test1234,'01114621092',test9@test.com,Test1234
+test10@test.com,John Doe,Test1234,Test1234,'01114621092',test10@test.com,Test1234
