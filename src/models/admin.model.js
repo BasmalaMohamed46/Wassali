@@ -81,6 +81,8 @@ adminSchema.pre('save', async function (next) {
     //   throw new Error('Confirm password not match');
     // }
     admin.password = await bcrypt.hash(admin.password, 8);
+    admin.confirmpassword = await bcrypt.hash(admin.confirmpassword, 8);
+    
   }
   next();
 });

@@ -140,6 +140,7 @@ userSchema.pre('save', async function (next) {
     //   throw new Error('Confirm password not match');
     // }
     user.password = await bcrypt.hash(user.password, 8);
+    user.confirmpassword = await bcrypt.hash(user.confirmpassword, 8);
   }
   next();
 });
