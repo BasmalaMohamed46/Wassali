@@ -1,0 +1,47 @@
+config:
+  target: "http://localhost:3000"
+  capture:
+    - request
+    - response
+  phases:
+    - duration: 10
+      arrivalRate: 1
+      name: "testing"
+
+  payload:
+    path: ./data.csv
+    order: sequence
+    loadAll: true
+    skipHeader: true
+    delimiter: ','
+    skipEmptyLines: true
+    fields:
+      - "email"
+      - "name"
+      - "password"
+      - "confirmpassword"
+      - "phoneNumber"
+      - "emailLogin"
+      - "passwordLogin"
+
+scenarios:
+  - name: "Register Flow"
+    flow:
+      - post:
+          url: "/v1/auth/register"
+          json:
+            email: "{{ email }}"
+            name: "{{ name }}"
+            password: "{{ password }}"
+            confirmpassword: "{{ confirmpassword }}"
+            phoneNumber: "{{ phoneNumber }}"
+
+
+      - post:
+          url: "/v1/auth/login"
+          json:
+            email: "{{ emailLogin }}"
+            password: "{{ passwordLogin }}"
+          headers:
+            Content-Type: "application/json"
+

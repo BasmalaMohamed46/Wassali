@@ -29,7 +29,6 @@ const userSchema = mongoose.Schema(
           throw new Error('Invalid email');
         }
       },
-
     },
     phoneNumber: {
       type: String,
