@@ -42,6 +42,6 @@ scenarios:
           json:
             email: "{{ emailLogin }}"
             password: "{{ passwordLogin }}"
-          headers:
-            Content-Type: "application/json"
-
+          capture:
+            json: "$.token"
+            as: "token"
