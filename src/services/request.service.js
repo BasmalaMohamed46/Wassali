@@ -572,7 +572,11 @@ const ViewAllAcceptedRequests = async (id, req, res) => {
   try {
     const user = await User.findById(id);
     if (user) {
-      const requests = await Request.find({ state: 'accepted', userId: id });
+      const requests = await Request.find({ $or: [
+        { 'state': 'accepted' },
+        { 'state': 'onmyway' },
+        { 'state': 'delivered' },
+      ], userId: id });
       if (requests) {
         res.status(200).json({ message: 'requests found successfully', requests });
       } else {

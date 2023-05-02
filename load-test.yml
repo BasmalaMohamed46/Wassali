@@ -4,7 +4,7 @@ config:
     - request
     - response
   phases:
-    - duration: 1
+    - duration: 10
       arrivalRate: 1
       name: 'testing'
 
@@ -34,6 +34,7 @@ config:
       - 'buyOrdeliver'
       - 'price'
       - 'date'
+      - 'toupdate'
 scenarios:
   - name: 'Register Flow'
     flow:
@@ -55,30 +56,6 @@ scenarios:
             json: '$.token'
             as: 'token'
 
-      - put:
-          headers:
-            Authorization: 'Bearer {{ token }}'
-          url: '/v1/travelers/student'
-
-      # - patch:
-      #     headers:
-      #       Authorization: 'Bearer {{ token }}'
-      #       Content-Type: "multipart/form-data"
-      #     url: '/v1/travelers/create'
-
-      #     files:
-      #     - path: "./images/1.jpg"
-      #       fieldName: "1"
-      #       mimeType: "image/jpeg"
-      #     - path: "./images/1.jpg"
-      #       fieldName: "1"
-      #       mimeType: "image/jpeg"
-      #     - path: "./images/1.jpg"
-      #       fieldName: "1"
-      #       mimeType: "image/jpeg"
-
-      #     json:
-      #       NationalId: '12005800015146'
       - post:
           headers:
             Authorization: 'Bearer {{ token }}'
@@ -94,3 +71,22 @@ scenarios:
             buyOrdeliver: "{{ buyOrdeliver }}"
             price: "{{ price }}"
             date: "{{ date }}"
+          capture:
+            json: '$.request.id'
+            as: 'id'
+        
+      - patch:
+          headers:
+            Authorization: 'Bearer {{ token }}'
+          url: '/v1/requests/{{ id }}'
+          json:
+            to: "{{ toupdate }}"
+
+      - delete:
+          headers:
+            Authorization: 'Bearer {{ token }}'
+          url: '/v1/requests/{{ id }}'
+         
+
+      
+           
