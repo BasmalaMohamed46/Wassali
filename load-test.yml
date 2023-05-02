@@ -4,7 +4,7 @@ config:
     - request
     - response
   phases:
-    - duration: 1
+    - duration: 10
       arrivalRate: 1
       name: 'testing'
 
@@ -72,13 +72,21 @@ scenarios:
             price: "{{ price }}"
             date: "{{ date }}"
           capture:
-            json: '$._id'
+            json: '$.request.id'
             as: 'id'
         
-      # - patch:
-      #     headers:
-      #       Authorization: 'Bearer {{ token }}'
-      #     url: '/v1/requests/{{ id }}'
-      #     json:
-      #       to: "{{ toupdate }}"
+      - patch:
+          headers:
+            Authorization: 'Bearer {{ token }}'
+          url: '/v1/requests/{{ id }}'
+          json:
+            to: "{{ toupdate }}"
+
+      - delete:
+          headers:
+            Authorization: 'Bearer {{ token }}'
+          url: '/v1/requests/{{ id }}'
+         
+
+      
            
