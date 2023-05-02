@@ -607,7 +607,7 @@ const checkout = async(id, req, res) => {
     //transfer to rating page
     success_url: `http://localhost:3000/home`,
     //transfer to home page
-    cancel_url: `http://localhost:3000/v1/requests/create-checkout-session?canceled=true`,
+    cancel_url: `http://localhost:3000/v1/`,
   });
 
   res.status(200).json({ message: 'Checkout Successfully' });
@@ -635,7 +635,7 @@ const checkoutWithPrice = async(id, req, res) => {
     //transfer to rating page
     success_url: `http://localhost:3000/home`,
     //transfer to home page
-    cancel_url: `http://localhost:3000/v1/requests/create-checkout-session?canceled=true`,
+    cancel_url: `http://localhost:3000/v1/`,
   });
 
   res.status(200).json({ message: 'Checkout Successfully' });
