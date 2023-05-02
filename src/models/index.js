@@ -3,3 +3,4 @@ module.exports.User = require('./user.model');
 module.exports.Traveler = require('./traveler.model');
 module.exports.Trip = require('./trip.model');
 module.exports.Request = require('./request.model');
+module.exports.Rating= require('./rating.model');

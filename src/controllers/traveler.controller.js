@@ -58,10 +58,23 @@ const viewAllTravelers = catchAsync(async (req, res) => {
   return(travelers)
 
 });
+
+const AddRating = catchAsync(async (req, res) => {
+  const id = req.user._id;
+ const rating = await travelerService.AddRating(id,req,res);
+  return(rating)
+
+});
+const ViewRating = catchAsync(async (req, res) => {
+  const id = req.user._id;
+ const rating = await travelerService.ViewRating(id,req,res);
+  return(rating)
+
 const TravelerOnHisWay = catchAsync(async (req, res) => {
   const id = req.user._id;
  const traveler = await travelerService.TravelerOnHisWay(id,req,res);
   return(traveler)
+
 
 });
 
@@ -75,6 +88,11 @@ module.exports = {
   gettravellerOwnRequests,
   TravelerViewRequestById,
   viewAllTravelers,
+
+  AddRating,
+  ViewRating
+
   TravelerOnHisWay
+
 
 };
