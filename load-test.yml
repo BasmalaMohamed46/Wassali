@@ -1,12 +1,12 @@
 config:
-  target: "http://localhost:3000"
+  target: 'http://localhost:3000'
   capture:
     - request
     - response
   phases:
-    - duration: 10
+    - duration: 1
       arrivalRate: 1
-      name: "testing"
+      name: 'testing'
 
   payload:
     path: ./data.csv
@@ -16,32 +16,81 @@ config:
     delimiter: ','
     skipEmptyLines: true
     fields:
-      - "email"
-      - "name"
-      - "password"
-      - "confirmpassword"
-      - "phoneNumber"
-      - "emailLogin"
-      - "passwordLogin"
-
+      - 'email'
+      - 'name'
+      - 'password'
+      - 'confirmpassword'
+      - 'phoneNumber'
+      - 'emailLogin'
+      - 'passwordLogin'
+      - 'NationalId'
+      - 'to'
+      - 'from'
+      - 'item'
+      - 'weight'
+      - 'location'
+      - 'targetLocation'
+      - 'category'
+      - 'buyOrdeliver'
+      - 'price'
+      - 'date'
 scenarios:
-  - name: "Register Flow"
+  - name: 'Register Flow'
     flow:
       - post:
-          url: "/v1/auth/register"
+          url: '/v1/auth/register'
           json:
-            email: "{{ email }}"
-            name: "{{ name }}"
-            password: "{{ password }}"
-            confirmpassword: "{{ confirmpassword }}"
-            phoneNumber: "{{ phoneNumber }}"
-
+            email: '{{ email }}'
+            name: '{{ name }}'
+            password: '{{ password }}'
+            confirmpassword: '{{ confirmpassword }}'
+            phoneNumber: '{{ phoneNumber }}'
 
       - post:
-          url: "/v1/auth/login"
+          url: '/v1/auth/login'
           json:
-            email: "{{ emailLogin }}"
-            password: "{{ passwordLogin }}"
+            email: '{{ emailLogin }}'
+            password: '{{ passwordLogin }}'
           capture:
-            json: "$.token"
-            as: "token"
+            json: '$.token'
+            as: 'token'
+
+      - put:
+          headers:
+            Authorization: 'Bearer {{ token }}'
+          url: '/v1/travelers/student'
+
+      # - patch:
+      #     headers:
+      #       Authorization: 'Bearer {{ token }}'
+      #       Content-Type: "multipart/form-data"
+      #     url: '/v1/travelers/create'
+
+      #     files:
+      #     - path: "./images/1.jpg"
+      #       fieldName: "1"
+      #       mimeType: "image/jpeg"
+      #     - path: "./images/1.jpg"
+      #       fieldName: "1"
+      #       mimeType: "image/jpeg"
+      #     - path: "./images/1.jpg"
+      #       fieldName: "1"
+      #       mimeType: "image/jpeg"
+
+      #     json:
+      #       NationalId: '12005800015146'
+      - post:
+          headers:
+            Authorization: 'Bearer {{ token }}'
+          url: "/v1/requests/"
+          json:
+            to: "{{ to }}"
+            from: "{{ from }}"
+            item: "{{ item }}"
+            weight: "{{ weight }}"
+            location: "{{ location }}"
+            targetLocation: "{{ targetLocation }}"
+            category: "{{ category }}"
+            buyOrdeliver: "{{ buyOrdeliver }}"
+            price: "{{ price }}"
+            date: "{{ date }}"

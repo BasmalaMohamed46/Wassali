@@ -168,7 +168,8 @@ const profileImage = async (id,req) => {
     if (request.state === 'onmyway') {
       request.state = 'delivered';
       await request.save();
-      return res.status(httpStatus.OK).send(request);
+    const updatedRequest= await Request.findById(lastRequestId).populate('trip')
+      return res.status(httpStatus.OK).send(updatedRequest);
     }
 
     return res.status(httpStatus.BAD_REQUEST).send('Request already delivered');
