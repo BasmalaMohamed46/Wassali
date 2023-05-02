@@ -8,6 +8,9 @@ const { Traveler } = require('../models');
 const ApiError = require('../utils/ApiError');
 const Trip = require('../models/trip.model');
 
+const conversationService = require('./conversation.service');
+const Conversation = require('../models/Conversation');
+
 /**
  * Create a request
  * @param {Object} requestBody
@@ -26,6 +29,7 @@ const createRequest = async (id, req) => {
           requests: request._id,
         },
       });
+      await conversationService.createConversation(request._id, req);
       return {
         message: 'Request added successfully',
         request,
@@ -44,6 +48,7 @@ const createRequest = async (id, req) => {
             requests: request._id,
           },
         });
+        await conversationService.createConversation(request._id, req);
         return {
           message: 'Request added successfully',
           request,
@@ -169,62 +174,65 @@ const sendrequest = async (id, tripId, req) => {
   const user = await User.findById(id);
   if (user) {
     if (user.requests.length === 0) {
-    const trip = await Trip.findById(req.params.tripId);
-    if (trip) {
-      const request = await Request.create({
-        userId: id,
-        trip: tripId,
-        ...req.body,
-      });
-      await User.findByIdAndUpdate(id, {
-        $push: {
-          requests: request._id,
-        },
-      });
-      await Trip.findByIdAndUpdate(tripId, {
-        $push: {
-          RequestsList: request._id,
-        },
-      });
-      return {
-        message: 'Request added successfully',
-        request,
-      };
+      const trip = await Trip.findById(req.params.tripId);
+      if (trip) {
+        const request = await Request.create({
+          userId: id,
+          trip: tripId,
+          ...req.body,
+        });
+        await User.findByIdAndUpdate(id, {
+          $push: {
+            requests: request._id,
+          },
+        });
+        await Trip.findByIdAndUpdate(tripId, {
+          $push: {
+            RequestsList: request._id,
+          },
+        });
+        await conversationService.createConversation(request._id, req);
+        return {
+          message: 'Request added successfully',
+          request,
+        };
+      } else {
+        return {
+          message: 'Trip not found',
+        };
+      }
     } else {
-      return {
-        message: 'Trip not found',
-      };
-    }} else {
       const requestt = await Request.findById(user.requests[user.requests.length - 1]);
       if (requestt.state !== 'delivered') {
         throw new ApiError(httpStatus.NOT_FOUND, 'you have a request that is not delivered yet');
-      } else{
+      } else {
         const trip = await Trip.findById(req.params.tripId);
-    if (trip) {
-      const request = await Request.create({
-        userId: id,
-        trip: tripId,
-        ...req.body,
-      });
-      await User.findByIdAndUpdate(id, {
-        $push: {
-          requests: request._id,
-        },
-      });
-      await Trip.findByIdAndUpdate(tripId, {
-        $push: {
-          RequestsList: request._id,
-        },
-      });
-      return {
-        message: 'Request added successfully',
-        request,
-      };
-    } else {
-      return {
-        message: 'Trip not found',
-      };
-    }
+        if (trip) {
+          const request = await Request.create({
+            userId: id,
+            trip: tripId,
+            ...req.body,
+          });
+          await User.findByIdAndUpdate(id, {
+            $push: {
+              requests: request._id,
+            },
+          });
+          await Trip.findByIdAndUpdate(tripId, {
+            $push: {
+              RequestsList: request._id,
+            },
+          });
+          await conversationService.createConversation(request._id, req);
+          return {
+            message: 'Request added successfully',
+            request,
+          };
+        } else {
+          return {
+            message: 'Trip not found',
+          };
+        }
       }
     }
   } else {
@@ -272,7 +280,6 @@ const acceptrequest = async (id, requestId, req) => {
   if (TravelerExist) {
     const request = await Request.findById(req.params.requestId);
     const tripId = request.trip;
-    console.log(tripId);
     const trip = await Trip.findById(tripId);
     if (trip) {
       if (trip.AcceptedRequests.includes(requestId)) {
@@ -288,11 +295,20 @@ const acceptrequest = async (id, requestId, req) => {
           RequestsList: requestId,
         },
       });
-      await Request.findByIdAndUpdate(requestId, {
-        $set: {
-          state: 'accepted',
-        },
-      });
+      
+        await Request.findByIdAndUpdate(requestId, {
+          $set: {
+            state: 'accepted',
+          },
+        });
+
+        const conversationId = request.conversation;
+        const travelerId = await Traveler.find(trip.Traveler);
+        await Conversation.findByIdAndUpdate(conversationId, {
+          $push: {
+            members: travelerId[0]._id,
+          },
+        })
       return {
         message: 'Request accepted successfully',
       };
@@ -400,7 +416,7 @@ const TravelerAcceptRequest = async (id, req, res) => {
           const tripId = traveler[0].Trip[traveler[0].Trip.length - 1];
           if (traveler[0].Trip.length === 0) {
             res.status(404).json({ message: 'you have no trips' });
-          }else{
+          } else {
             if (!request.tripsRequests.includes(tripId)) {
               await Request.findByIdAndUpdate(
                 req.params.requestId,
@@ -417,7 +433,7 @@ const TravelerAcceptRequest = async (id, req, res) => {
                   new: true,
                 }
               );
-              res.status(200).json({ message: 'request added' });
+                res.status(200).json({ message: 'request added' });
             } else {
               res.status(200).json({ message: 'request already added' });
             }
@@ -436,6 +452,7 @@ const TravelerAcceptRequest = async (id, req, res) => {
 
 const userAcceptTravelerRequest = async (id, req, res) => {
   const userExist = await User.findById(id);
+  
   if (!userExist) {
     res.status(404).json({
       message: 'user not found',
@@ -485,6 +502,13 @@ const userAcceptTravelerRequest = async (id, req, res) => {
             );
           }
         }
+        const travelerId = await Traveler.find( tripExist.Traveler );
+        const conversationId = request.conversation;
+        await Conversation.findByIdAndUpdate(conversationId, {
+          $push: {
+            members: travelerId[0]._id,
+          },
+        });
         res.status(200).json({
           message: 'request accepted successfully',
         });

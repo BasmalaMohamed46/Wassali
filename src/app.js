@@ -18,8 +18,8 @@ const {
 } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 
-const conversationRoute = require('./routes/v1/conversations');
-const messageRoute = require('./routes/v1/messages');
+const conversationRoute = require('./routes/v1/conversation.route');
+const messageRoute = require('./routes/v1/message.route');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 
@@ -71,8 +71,6 @@ if (config.env === 'production') {
 
 // v1 api routes
 app.use('/v1', routes);
-app.use('/v1/conversations', conversationRoute);
-app.use('/v1/messages', messageRoute);
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

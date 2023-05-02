@@ -5,11 +5,14 @@ const docsRoute = require('./docs.route');
 const requestRoutes = require('./request.route');
 const travelerRoute = require('./traveler.route');
 const tripRoute = require('./trip.route');
+const  conversationRoute = require('./conversation.route');
+const  messageRoute = require('./message.route');
 
 
 const config = require('../../config/config');
 
 const router = express.Router();
+
 
 const defaultRoutes = [{
     path: '/auth',
@@ -30,6 +33,14 @@ const defaultRoutes = [{
   {
     path: '/trips',
     route: tripRoute,
+  },
+  {
+    path: '/conversations',
+    route: conversationRoute,
+  },
+  {
+    path: '/messages',
+    route: messageRoute,
   },
 ];
 
