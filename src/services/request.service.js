@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const stripe = require('stripe')('sk_test_51Lw5pDCxmiDIHzo9pw3RmUcikOZyISs8JZZN1F2zodSOabqIOC85NaEoPvy6dgXTZUhq3a7IiqzV14Ej2fBVUpwp00iaPZyU6g');
 const { Request } = require('../models');
 const { User } = require('../models');
 const { Traveler } = require('../models');
@@ -585,6 +586,61 @@ const ViewAllAcceptedRequests = async (id, req, res) => {
   }
 };
 
+// checkout with tripPrice
+const checkout = async(id, req, res) => {
+  const request = await userviewrequests(id);
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        price_data: {
+          currency: "egp",
+          unit_amount: (request.requests[request.requests.length-1].tripPrice) * 100,
+          product_data: {
+            name: 'Delivery Fees',
+           // description: '',
+          }
+        },
+        quantity: 1,
+      },
+    ],
+    mode: 'payment',
+    //transfer to rating page
+    success_url: `http://localhost:3000/home`,
+    //transfer to home page
+    cancel_url: `http://localhost:3000/v1/`,
+  });
+
+  res.status(200).json({ message: 'Checkout Successfully' });
+}
+
+//checkout with tripPrice + Price of the item
+const checkoutWithPrice = async(id, req, res) => {
+  const request = await userviewrequests(id);
+  const totalPrice = request.requests[request.requests.length-1].tripPrice + request.requests[request.requests.length-1].price
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        price_data: {
+          currency: "egp",
+          unit_amount: totalPrice*100,
+          product_data: {
+            name: 'Delivery Fees',
+            description: 'Item Price + Delivery Fees',
+          }
+        },
+        quantity: 1,
+      },
+    ],
+    mode: 'payment',
+    //transfer to rating page
+    success_url: `http://localhost:3000/home`,
+    //transfer to home page
+    cancel_url: `http://localhost:3000/v1/`,
+  });
+
+  res.status(200).json({ message: 'Checkout Successfully' });
+}
+
 module.exports = {
   createRequest,
   queryRequests,
@@ -604,6 +660,8 @@ module.exports = {
   viewTravelersRequests,
   viewRequestAfterAcceptance,
   ViewAllAcceptedRequests,
+  checkout,
+  checkoutWithPrice
 };
 
 // const requests = await Request.find({TripOfferedPrice:{$exists:true}});

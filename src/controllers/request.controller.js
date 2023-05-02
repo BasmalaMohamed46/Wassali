@@ -122,6 +122,17 @@ const viewAllRequest = catchAsync(async (req, res) => {
     return(requests)
   });
 
+  const checkoutSession = catchAsync(async (req, res)=>{
+    const id = req.user._id;
+    const session = await requestService.checkout(id, req, res);
+    return session;
+  }) 
+
+  const checkoutSessionWithPrice = catchAsync(async (req, res)=>{
+    const id = req.user._id;
+    const session = await requestService.checkoutWithPrice(id, req, res);
+    return session;
+  }) 
 
 module.exports = {
   createRequest,
@@ -141,5 +152,7 @@ module.exports = {
   userAcceptTravelerRequest,
   viewTravelersRequests,
   viewRequestAfterAcceptance,
-  ViewAllAcceptedRequests
+  ViewAllAcceptedRequests,
+  checkoutSession,
+  checkoutSessionWithPrice
 };
