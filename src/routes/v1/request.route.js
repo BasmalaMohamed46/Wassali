@@ -5,6 +5,8 @@ const requestController = require('../../controllers/request.controller');
 const auth = require('../../middlewares/auth');
 
 const router = express.Router();
+router.get('/SearchByCity',auth(), requestController.filterRequestsByCity);
+router.get('/getAceeptedRequest',auth(), requestController.getAceeptedRequests);
 router.post('/declinetrip/:requestId',auth(),requestController.DeclineTrip)
 router.get('/userviewrequests',auth(),requestController.userViewRequests)
 router.get('/userviewrequest/:requestId',auth(),requestController.userViewRequest)
@@ -37,7 +39,4 @@ router.post('/sendrequest/:tripId',validate(requestValidation.sendRequest),auth(
 router.post('/acceptrequest/:requestId', auth(), requestController.acceptRequest)
 router.post('/acceptanyrequest/:requestId', auth(), requestController.acceptAnyRequest)
 router.post('/declinerequest/:requestId', auth(), requestController.declineRequest)
-router.get('/SearchByCity',auth(), requestController.filterRequestsByCity);
-
-router.get('/getAceeptedRequest',auth(), requestController.getAceeptedRequests);
 module.exports = router;
