@@ -438,3 +438,9 @@ Contributions are more than welcome! Please check out the [contributing guide](C
 ## License
 
 [MIT](LICENSE)
+
+## Load Test
+to run load test:
+```bash
+artillery run load-test.yml --output json -o output.json
+```
