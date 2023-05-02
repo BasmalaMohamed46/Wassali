@@ -5,3 +5,4 @@ module.exports.Trip = require('./trip.model');
 module.exports.Request = require('./request.model');
 module.exports.Conversation = require('./Conversation');
 module.exports.Message = require('./Message');
+module.exports.Rating= require('./rating.model');

@@ -60,7 +60,13 @@ const updateToDeliveredFromQR = catchAsync(async (req, res) => {
     qrcode
   }
 });
-
+const redirectAfterDelivery = catchAsync(async (req, res) => {
+  const id = req.user._id;
+  const request = await userService.redirectAfterDelivery(id,req,res);
+  return{
+    request
+  }
+});
 module.exports = {
   createUser,
   getUsers,
@@ -70,5 +76,6 @@ module.exports = {
   profileImage,
   getAllUsers,
   qrCode,
-  updateToDeliveredFromQR
+  updateToDeliveredFromQR,
+  redirectAfterDelivery
 };

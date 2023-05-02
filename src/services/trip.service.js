@@ -182,14 +182,7 @@ const updateTrip = async (id, req, res, tripId) => {
       let foundedTraveler = await Traveler.findOne({
         userId: id
       });
-      const {
-        from,
-        to,
-        TripDate,
-        AvailableWeight,
-        unAcceptablaPackage,
-        TripTime
-      } = req.body;
+      
       if (foundedTraveler) {
         if(foundedTraveler.Trip.includes(tripId)){
         const trip = await Trip.findByIdAndUpdate({
@@ -224,7 +217,6 @@ const updateTrip = async (id, req, res, tripId) => {
     })
   }
 };
-
 
 
 module.exports = {

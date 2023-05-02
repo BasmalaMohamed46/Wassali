@@ -4,6 +4,7 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const Traveler = require('../models/traveler.model');
 const Request = require('../models/request.model');
+const Rating = require('../models/rating.model');
 const Trip = require('../models/trip.model');
 
 const Student = async (id, res) => {
@@ -146,34 +147,27 @@ const createTraveler = async (id, req) => {
 const updateTraveler = async (id, req) => {
   try {
     // const id = req.user._id;
-    const { city, governorate, name, birthDate, address } = req.body;
+
+   
     const travelerExist = await Traveler.findOne({
-      userId: id,
-    });
-    if (travelerExist) {
-      const updateTraveler = await User.findByIdAndUpdate(
-        id,
-        {
-          city,
-          governorate,
-          name,
-          birthDate,
-          address,
-        },
-        {
-          new: true,
-        }
-      );
-      return {
-        message: 'Traveler updated successfully',
-        updateTraveler,
-      };
-    } else {
-      return {
-        message: 'Traveler not found',
-      };
+      userId: id
+    })
+    if(travelerExist){
+    const updateTraveler = await User.findByIdAndUpdate(
+      id, req.body, {
+        new: true,
+      })
+    return {
+      message: 'Traveler updated successfully',
+      updateTraveler,
     }
-  } catch (error) {
+  }
+  else{
+    return {
+      message: 'Traveler not found',
+
+    }
+  } }catch (error) {
     return {
       message: 'Something went wrong',
       err: error.message,
@@ -369,6 +363,67 @@ const TravelerOnHisWay=async(id,req,res)=>{
     });
   }
 }
+const AddRating=async (id,req,res)=>{
+  try{
+     const user=await User.findById(id);
+     console.log(user)
+     if(user){
+      const traveler=req.params.travelerId
+      const { rating } = req.body;
+      
+      const foundedTraveler=await Traveler.findOne({userId:id});
+      console.log(foundedTraveler)
+     if(foundedTraveler){
+       if(foundedTraveler._id != traveler){
+      const newRating = new Rating({
+       traveler,
+       rating,
+      });
+
+      await newRating.save();
+
+      res.json(newRating);
+     }else{
+      res.status(httpStatus.NOT_FOUND).json({
+        message: 'You can not rate yourself',
+      })
+     }
+    }
+  else{
+    const newRating = new Rating({
+      traveler,
+      rating,
+    });
+  
+    await newRating.save();
+    res.json(newRating);
+  }}
+     else{
+      res.status(httpStatus.NOT_FOUND).json({
+        message: 'User not found',
+      })
+     }
+  }
+  catch(error){
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Something went wrong',
+      err: error.message,
+    })
+  }
+}
+
+const ViewRating=async (id,req,res)=>{
+  try{
+    const ratings = await Rating.find({ traveler: req.params.travelerId });
+    res.json(ratings);
+  }
+  catch(error){
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Something went wrong',
+      err: error.message,
+    })
+  }
+}
 module.exports = {
   Student,
   Employee,
@@ -379,5 +434,11 @@ module.exports = {
   getTravellerOwnRequests,
   travelerViewRequestById,
   viewAllTravelers,
+
+  AddRating,
+  ViewRating,
+
+
   TravelerOnHisWay
 };
+

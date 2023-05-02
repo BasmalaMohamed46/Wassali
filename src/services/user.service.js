@@ -132,7 +132,7 @@ const profileImage = async (id,req) => {
        res.httpStatus(404).send('user not found')
       }
       else{
-        QRCode.toDataURL(`${req.protocol}://${req.headers.host}/v1/users/qrCodeScan/${id}`, function (err, url) {
+        QRCode.toDataURL(`${req.protocol}://localhost:3001/qr/${id}`, function (err, url) {
           if(err){
            res.httpStatus(500).send(err)
           }
@@ -168,12 +168,29 @@ const profileImage = async (id,req) => {
     if (request.state === 'onmyway') {
       request.state = 'delivered';
       await request.save();
-      return res.status(httpStatus.OK).send(request);
+    const updatedRequest= await Request.findById(lastRequestId).populate('trip')
+      return res.status(httpStatus.OK).send(updatedRequest);
     }
 
     return res.status(httpStatus.BAD_REQUEST).send('Request already delivered');
   };
-
+const redirectAfterDelivery=async (id,req,res)=>{
+  try{
+    const user=await User.findById(id)
+    if(!user){
+       res.status(httpStatus.NOT_FOUND).send('user not found')
+    }
+    else{
+      const lastRequestId = user.requests[user.requests.length - 1];
+    const request = await Request.findById(lastRequestId).populate('trip');
+    res.status(httpStatus.OK).send(request)
+    
+    }
+  }
+  catch(err){
+    res.status(500).send(err)
+  }
+}
 module.exports = {
   createUser,
   queryUsers,
@@ -185,5 +202,6 @@ module.exports = {
   profileImage,
   getAllUserss,
   qrCode,
-  updateToDeliveredFromQR
+  updateToDeliveredFromQR,
+  redirectAfterDelivery
 };
