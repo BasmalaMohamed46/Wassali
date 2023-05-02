@@ -41,6 +41,10 @@ const requestSchema = mongoose.Schema(
       // required: true,
       ref: 'Trip',
     },
+    conversation: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Conversation',
+    }],
     to:{
       type: String,
       required: true,
