@@ -296,7 +296,7 @@ const acceptrequest = async (id, requestId, req) => {
           RequestsList: requestId,
         },
       });
-      
+
         await Request.findByIdAndUpdate(requestId, {
           $set: {
             state: 'accepted',
@@ -453,7 +453,7 @@ const TravelerAcceptRequest = async (id, req, res) => {
 
 const userAcceptTravelerRequest = async (id, req, res) => {
   const userExist = await User.findById(id);
-  
+
   if (!userExist) {
     res.status(404).json({
       message: 'user not found',
@@ -669,6 +669,50 @@ const checkoutWithPrice = async(id, req, res) => {
   res.status(200).json({ message: 'Checkout Successfully' });
 }
 
+const filterRequestsByCity = async (req, res) => {
+  const { from } = req.body;
+  try {
+    const requests = await Request.find({ from: { $regex: from, $options: 'i' } });
+    if (requests.length === 0) {
+      return res.status(404).json({ message: 'No requests found for this city' });
+    }
+    res.status(200).json({ requests });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const getAceeptedRequests = async (req, res) => {
+    const id = req.user._id;
+    const foundedUser= await User.findById(id);
+    console.log(foundedUser);
+    if(foundedUser.role === 'traveler'){
+      const traveler = await Traveler.findOne({
+        userId: id,
+      })
+      const trip = await Trip.findOne({
+        Traveler: traveler._id,
+      }).sort({ createdAt: -1 });
+      const requests = await Request.find({
+        trip: trip._id,
+        state: 'accepted',
+      }).populate({
+        path: 'userId',
+        select: 'name phoneNumber',
+      });
+      res.status(200).json({
+        message: 'requests found successfully',
+        requests,
+      });
+    }
+    else{
+      return{
+        message: 'You are not a traveler'
+      }
+    }
+};
+
 module.exports = {
   createRequest,
   queryRequests,
@@ -689,11 +733,7 @@ module.exports = {
   viewRequestAfterAcceptance,
   ViewAllAcceptedRequests,
   checkout,
-  checkoutWithPrice
+  checkoutWithPrice,
+  filterRequestsByCity,
+  getAceeptedRequests
 };
-
-// const requests = await Request.find({TripOfferedPrice:{$exists:true}});
-// res.status(200).json({
-//   message:'requests found successfully',
-//   requests
-// })
