@@ -133,8 +133,20 @@ router.get(
   travelerController.viewAllTravelers
 )
 router.post(
+
+  '/AddRating/:travelerId',
+  auth(),
+  travelerController.AddRating
+)
+router.get(
+  '/ViewRating/:travelerId',
+  auth(),
+  travelerController.ViewRating
+)
+
   '/TravelerOnHisWay/:requestId',
   auth(),
   travelerController.TravelerOnHisWay
 )
+
 module.exports = router;
