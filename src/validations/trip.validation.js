@@ -22,6 +22,7 @@ const updateTrip = {
     .object()
     .keys({
       from: Joi.string().optional().allow(''),
+
       to: Joi.string().optional().allow(''),
       TripDate: Joi.date().greater(Date.now() - 24 * 60 * 60 * 1000).iso().messages({
         'date.format': `Date format is YYYY-MM-DD`,
@@ -32,6 +33,8 @@ const updateTrip = {
       unAcceptablaPackage: Joi.string().optional().allow(''),
       Traveler: Joi.string(),
     })
+
+
 };
 
 

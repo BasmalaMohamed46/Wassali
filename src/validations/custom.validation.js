@@ -16,10 +16,12 @@ const password = (value, helpers) => {
 };
 
 const phoneNumber = (value, helpers) => {
-  if (!value.match(/^(010|011|012|015)[0-9]{8}$/)) {
+  const phoneNumberRegex = /^(010|011|012|015)[0-9]{8}$/;
+  const trimmedValue = String(value).trim().replace(/'/g, '');
+  if (!trimmedValue.match(phoneNumberRegex)) {
     return helpers.message('Invalid PhoneNumber number');
   }
-  return value;
+  return trimmedValue;
 };
 
 module.exports = {

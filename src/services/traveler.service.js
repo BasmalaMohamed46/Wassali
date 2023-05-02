@@ -1,4 +1,4 @@
-const User = require('../models/user.model')
+const User = require('../models/user.model');
 const fs = require('fs');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
@@ -9,27 +9,27 @@ const Trip = require('../models/trip.model');
 
 const Student = async (id, res) => {
   // const id = req.user._id;
-  const userExist = await User.findById(id)
+  const userExist = await User.findById(id);
   if (userExist) {
     const foundedTraveler = await Traveler.findOne({
-      userId: id
-    })
+      userId: id,
+    });
     if (foundedTraveler) {
-      if(foundedTraveler.isStudent){
+      if (foundedTraveler.isStudent) {
         res.status(httpStatus.NOT_FOUND).json({
-          message:'User is already a student'
-        })
-      }else{
+          message: 'User is already a student',
+        });
+      } else {
         const traveler = await Traveler.findByIdAndUpdate(foundedTraveler._id, {
           isStudent: true,
-        })
+        });
         res.status(httpStatus.CREATED).send(traveler);
       }
     } else {
       const traveler = await Traveler.create({
         isStudent: true,
-        userId: id
-      })
+        userId: id,
+      });
       res.status(httpStatus.CREATED).send(traveler);
     }
   } else {
@@ -37,153 +37,117 @@ const Student = async (id, res) => {
   }
 };
 
-const Employee = async (id,res) => {
+const Employee = async (id, res) => {
   // const id = req.user._id;
-  const userExist = await User.findById(id)
+  const userExist = await User.findById(id);
   if (userExist) {
     const foundedTraveler = await Traveler.findOne({
-      userId: id
-    })
+      userId: id,
+    });
     if (foundedTraveler) {
-      if(!foundedTraveler.isStudent){
+      if (!foundedTraveler.isStudent) {
         res.status(httpStatus.NOT_FOUND).json({
-          message:'User is already an employee'
-        })
-      }else{
+          message: 'User is already an employee',
+        });
+      } else {
         const traveler = await Traveler.findByIdAndUpdate(foundedTraveler._id, {
           isStudent: false,
-        })
+        });
         res.status(httpStatus.CREATED).send(traveler);
       }
     } else {
       const traveler = await Traveler.create({
         isStudent: false,
-        userId: id
-      })
+        userId: id,
+      });
       res.status(httpStatus.CREATED).send(traveler);
     }
   } else {
     res.status(httpStatus.NOT_FOUND).send('User not found');
   }
-}
-
-
-;
+};
 
 const createTraveler = async (id, req) => {
   try {
-    // const id = req.user._id;
-
-    const foundedTraveler = await Traveler.findOne({
-      userId: id
-    });
-    const {
-      NationalId,
-   
-    } = req.body;
+    const foundedTraveler = await Traveler.findOne({ userId: id });
+    const { NationalId } = req.body;
 
     if (req.fileUploadError) {
-      return {
-        message: 'invalid file, accepted files->(png,jpg,jpeg)',
-      }
+      return { message: 'Invalid file, accepted files->(png, jpg, jpeg)' };
     }
-    // console.log(req.files.NationalIdCard);
-    // console.log(req.files.NationalIdCard[0].filename);
+
     if (foundedTraveler.isStudent) {
-      if(!req.files.NationalIdCard){
-        return {
-          message: 'NationalIdCard is required',
+      const requiredFields = ['NationalIdCard', 'StudentUniversityId', 'CollegeEnrollmentStatement'];
+      for (const field of requiredFields) {
+        if (!req.files[field]) {
+          return { message: `${field} is required` };
         }
       }
-      if(!req.files.StudentUniversityId){
-        return {
-          message: 'StudentUniversityId is required',
-        }
-      }
-      if(!req.files.CollegeEnrollmentStatement){
-        return {
-          message: 'CollegeEnrollmentStatement is required',
-        }
-      }
-      let StudentUniversityId_URL = `${req.protocol}://${req.headers.host}/${req.destination}/${req.files.StudentUniversityId[0].filename}`;
-      let CollegeEnrollmentStatement_URL = `${req.protocol}://${req.headers.host}/${req.destination2}/${req.files.CollegeEnrollmentStatement[0].filename}`;
-      let NationalIdCard_URL = `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`;
-      // console.log(StudentUniversityId_URL);
+
+      const urls = {
+        StudentUniversityId: `${req.protocol}://${req.headers.host}/${req.destination}/${req.files.StudentUniversityId[0].filename}`,
+        CollegeEnrollmentStatement: `${req.protocol}://${req.headers.host}/${req.destination2}/${req.files.CollegeEnrollmentStatement[0].filename}`,
+        NationalIdCard: `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`
+      };
+
       const updatedUser = await Traveler.findByIdAndUpdate(
-        foundedTraveler._id, {
-          NationalId,
-          NationalIdCard:NationalIdCard_URL,
-          StudentUniversityId: StudentUniversityId_URL,
-          CollegeEnrollmentStatement: CollegeEnrollmentStatement_URL,
-          EmployeeCompanyId: null,
-        }, {
-          new: true,
-        }
-      );
-      await User.findByIdAndUpdate(
-        id, {
-          role: 'traveler',
-        },
+        foundedTraveler._id,
         {
-          new: true,
-        }
-      );
-      return {
-        message: 'Traveler created successfully',
-        updatedUser,
-      }
-    } else {
-      if(!req.files.NationalIdCard){
-        return {
-          message: 'NationalIdCard is required',
-        }
-      }
-      if(!req.files.EmployeeCompanyId){
-        return {
-          message: 'EmployeeCompanyId is required',
-        }
-      }
-      let EmployeeCompanyId_URL = `${req.protocol}://${req.headers.host}/${req.destination3}/${req.files.EmployeeCompanyId[0].filename}`;
-      let NationalIdCard_URL = `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`;
-      // console.log(EmployeeCompanyId_URL);
-      const updatedUser = await Traveler.findByIdAndUpdate(
-        foundedTraveler._id, {
           NationalId,
-          EmployeeCompanyId: EmployeeCompanyId_URL,
-          NationalIdCard:NationalIdCard_URL,
+          EmployeeCompanyId: null,
+          ...urls
+        },
+        { new: true }
+      );
+
+      await User.findByIdAndUpdate(
+        id,
+        { role: 'traveler' },
+        { new: true }
+      );
+
+      return { message: 'Traveler created successfully', updatedUser };
+    } else {
+      const requiredFields = ['NationalIdCard', 'EmployeeCompanyId'];
+      for (const field of requiredFields) {
+        if (!req.files[field]) {
+          return { message: `${field} is required` };
+        }
+      }
+
+      const urls = {
+        EmployeeCompanyId: `${req.protocol}://${req.headers.host}/${req.destination3}/${req.files.EmployeeCompanyId[0].filename}`,
+        NationalIdCard: `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`
+      };
+
+      const updatedUser = await Traveler.findByIdAndUpdate(
+        foundedTraveler._id,
+        {
+          NationalId,
           StudentUniversityId: null,
           CollegeEnrollmentStatement: null,
+          ...urls
         },
-        {
-          new: true,
-
-        }
+        { new: true }
       );
+
       await User.findByIdAndUpdate(
-        id, {
-          role: 'traveler',
-        },
-        {
-          new: true,
-        }
+        id,
+        { role: 'traveler' },
+        { new: true }
       );
-      return {
-        message: 'Traveler created successfully',
-        updatedUser,
-      }
-    }
 
-  } catch (error) {
-    return {
-      message: 'Something went wrong',
-      err: error.message,
+      return { message: 'Traveler created successfully', updatedUser };
     }
+  } catch (error) {
+    return { message: 'Something went wrong', err: error.message };
   }
 };
 
 const updateTraveler = async (id, req) => {
   try {
     // const id = req.user._id;
+
    
     const travelerExist = await Traveler.findOne({
       userId: id
@@ -201,13 +165,13 @@ const updateTraveler = async (id, req) => {
   else{
     return {
       message: 'Traveler not found',
+
     }
-  }
   } catch (error) {
     return {
       message: 'Something went wrong',
       err: error.message,
-    }
+    };
   }
 };
 // const deleteTraveler = async (id, res) => {
@@ -238,132 +202,166 @@ const updateTraveler = async (id, req) => {
 
 // }
 
-
-const viewTraveler = async (id,res) => {
-  try{
-    const user=await User.findById(id);
-     const traveler=await Traveler.findOne({userId:id});
-      if(traveler){
-        res.status(httpStatus.OK).json({
-          message: 'Traveler found',
-          traveler,
-          user
-        })
-      }
-      else{
-        res.status(httpStatus.NOT_FOUND).json({
-          message: 'Traveler not found',
-        })
-      }
-
-
-  }
-  catch (error) {
+const viewTraveler = async (id, res) => {
+  try {
+    const user = await User.findById(id);
+    const traveler = await Traveler.findOne({ userId: id });
+    if (traveler) {
+      res.status(httpStatus.OK).json({
+        message: 'Traveler found',
+        traveler,
+        user,
+      });
+    } else {
+      res.status(httpStatus.NOT_FOUND).json({
+        message: 'Traveler not found',
+      });
+    }
+  } catch (error) {
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Something went wrong',
       err: error.message,
-    })
-}
-}
+    });
+  }
+};
 
 const getTravellerOwnRequests = async (id, res) => {
   try {
     const traveler = await Traveler.findOne({
-      userId: id
+      userId: id,
     });
     if (traveler) {
       const trips = await Trip.find({
-        Traveler: traveler._id
-
+        Traveler: traveler._id,
       }).populate('RequestsList');
-
 
       res.status(httpStatus.OK).json({
         message: 'Requests',
-        trips
-      })
+        trips,
+      });
     } else {
       res.status(httpStatus.NOT_FOUND).json({
         message: 'No requests',
-      })
+      });
     }
   } catch (error) {
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Something went wrong',
       err: error.message,
-    })
+    });
   }
-}
+};
 
-
-const travelerViewRequestById = async (id, requestId,res) => {
+const travelerViewRequestById = async (id, requestId, res) => {
   try {
     const traveler = await Traveler.findOne({
-      userId: id
+      userId: id,
     });
     if (traveler) {
       const trips = await Trip.find({
-        Traveler: traveler._id
+        Traveler: traveler._id,
       }).populate('RequestsList');
 
-   const requ =   trips.map(
-        (trip) => trip.RequestsList.map(
-          (request) => {
-            if(request._id == requestId){
-              res.status(
-                httpStatus.OK
-              ).json({
-                message: 'Request found',
-                request
-              }
-              )}
+      const requ = trips.map((trip) =>
+        trip.RequestsList.map((request) => {
+          if (request._id == requestId) {
+            res.status(httpStatus.OK).json({
+              message: 'Request found',
+              request,
+            });
           }
-
-        )
-      )
-
+        })
+      );
 
       res.status(httpStatus.OK).json({
         message: 'Requests',
-        requ
-      })
-    }
-    else {
+        requ,
+      });
+    } else {
       res.status(httpStatus.NOT_FOUND).json({
         message: 'Traveler not found',
-      })
+      });
     }
   } catch (error) {
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Something went wrong',
       err: error.message,
-    })
+    });
   }
-}
+};
 
-const viewAllTravelers = async (id,res) => {
-  try{
-      const user=await User.findById(id);
-      if(user){
-        const travelers=await Traveler.find().populate('userId');
-        res.status(httpStatus.OK).json({
-          message: 'Travelers found',
-          travelers,
-         
-        })
-      }
-      else{
-        res.status(httpStatus.NOT_FOUND).json({
-          message: 'User not found',
-        })
-      }
-  }
-  catch (error) {
+const viewAllTravelers = async (id, res) => {
+  try {
+    const user = await User.findById(id);
+    if (user) {
+      const travelers = await Traveler.find().populate('userId');
+      res.status(httpStatus.OK).json({
+        message: 'Travelers found',
+        travelers,
+      });
+    } else {
+      res.status(httpStatus.NOT_FOUND).json({
+        message: 'User not found',
+      });
+    }
+  } catch (error) {
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Something went wrong',
       err: error.message,
-    })
-}
+    });
+  }
+};
+const TravelerOnHisWay=async(id,req,res)=>{
+  try{
+    const user=await User.findById(id);
+    if(user){
+      const traveler=await Traveler.find({userId:id});
+      if(traveler){
+        console.log(traveler)
+        const requestId=req.params.requestId;
+        console.log(traveler[0].Trip)
+        const tripId=traveler[0].Trip[traveler[0].Trip.length-1];
+        const trip=await Trip.findById(tripId);
+        if(trip.AcceptedRequests.includes(requestId)){
+          const request=await Request.findById(requestId);
+          if(request){
+            request.state='onmyway'
+            await request.save();
+            res.status(httpStatus.OK).json({
+              message: 'Request updated successfully',
+              request,
+            });
+          }
+          else{
+            res.status(httpStatus.NOT_FOUND).json({
+              message: 'Request not found',
+            });
+          }
+        }
+        else{
+          res.status(httpStatus.NOT_FOUND).json({
+            message: 'Request not found in accepted requests',
+          });
+        }
+      }
+      else{
+        res.status(httpStatus.NOT_FOUND).json({
+          message: 'Traveler not found',
+        });
+      }
+    }
+    else{
+      res.status(httpStatus.NOT_FOUND).json({
+        message: 'User not found',
+      });
+    }
+  }
+  catch(error){
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+      message: 'Something went wrong',
+      err: error.message,
+    });
+  }
 }
 const AddRating=async (id,req,res)=>{
   try{
@@ -417,6 +415,11 @@ module.exports = {
   getTravellerOwnRequests,
   travelerViewRequestById,
   viewAllTravelers,
+
   AddRating,
   ViewRating
 }
+
+  TravelerOnHisWay
+};
+

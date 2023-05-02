@@ -5,10 +5,18 @@ const requestController = require('../../controllers/request.controller');
 const auth = require('../../middlewares/auth');
 
 const router = express.Router();
-
+router.post('/declinetrip/:requestId',auth(),requestController.DeclineTrip)
 router.get('/userviewrequests',auth(),requestController.userViewRequests)
 router.get('/userviewrequest/:requestId',auth(),requestController.userViewRequest)
 router.get('/viewAllRequests' , auth() ,requestController.viewAllRequest);
+router.post('/TravelerAcceptRequest/:requestId',auth(),requestController.TravelerAcceptRequest)
+router.post('/userAcceptTravelerRequest/:tripId',auth(),requestController.userAcceptTravelerRequest)
+router.get('/viewTravelersRequests',auth(),requestController.viewTravelersRequests)
+router.get('/viewRequestAfterAcceptance/:requestId',auth(),requestController.viewRequestAfterAcceptance)
+router.get('/ViewAllAcceptedRequests',auth(),requestController.ViewAllAcceptedRequests)
+
+
+
 
 router
   .route('/')
@@ -21,7 +29,7 @@ router
   .patch(validate(requestValidation.updateRequest),auth() ,requestController.updateRequest)
   .delete(validate(requestValidation.deleteRequest),auth(), requestController.deleteRequest);
 
-  
+
 router.post('/sendrequest/:tripId',validate(requestValidation.sendRequest),auth(),requestController.sendRequest)
 
 router.post('/acceptrequest/:requestId', auth(), requestController.acceptRequest)

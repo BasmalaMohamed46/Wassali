@@ -23,6 +23,7 @@ const loginUserWithEmailAndPassword = async (email, password, res) => {
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
+  // console.log(user.role);
   const token = jwt.sign({
     id: user._id,
     role: user.role,

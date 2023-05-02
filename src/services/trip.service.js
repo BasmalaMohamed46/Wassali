@@ -40,24 +40,31 @@ const deleteTrip = async (id,res,tripId) => {
         const foundedTrip = await Trip.findById(tripId);
         if(foundedTrip){
             if(foundedTrip.Traveler.toString() == foundedTraveler._id.toString()){
+              if(foundedTrip.AcceptedRequests.length==0){
                const trip=await Trip.findByIdAndDelete(tripId);
                 foundedTraveler =  await Traveler.findByIdAndUpdate({_id:foundedTraveler._id},{$pull:{Trip:trip._id}},{new:true});
                 res.status(httpStatus.OK).json({
                     message: 'Trip deleted successfully',
                     trip
-                })}
+                }
+                )}else{
+                  res.status(404).json({
+                    message: 'You can not delete this trip because there are accepted requests',
+                })
+                }
+              }
             else{
-                res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+                res.status(404).json({
                     message: 'You are not allowed to delete this trip',
                 })
             }}
         else{
-            res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            res.status(404).json({
                 message: 'Trip not found',
             })
         }}
     else{
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+        res.status(404).json({
             message: 'Traveler not found',
         })
     }}
@@ -96,7 +103,7 @@ const viewtrips = async (id, req,res) => {
   catch(err){
     return {
       message: 'Something went wrong',
-      err: error.message,
+      err: err.message,
     }
 
   }
@@ -128,7 +135,7 @@ const viewtravelertrips = async (id, req,res) => {
   catch(err){
     return {
       message: 'Something went wrong',
-      err: error.message,
+      err: err.message,
     }
 
   }
@@ -162,7 +169,7 @@ const viewtrip = async (id, req,res,tripId) => {
   catch(err){
     return {
       message: 'Something went wrong',
-      err: error.message,
+      err: err.message,
     }
 
   }

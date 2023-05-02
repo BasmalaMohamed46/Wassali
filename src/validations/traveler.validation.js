@@ -4,7 +4,7 @@ const createTraveler = {
   body: Joi
     .object()
     .keys({
-      NationalId: Joi.string().regex(/^([1-9]{1})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})[0-9]{3}([0-9]{1})[0-9]{1}$/).messages({
+      NationalId: Joi.string().trim().replace(/'/g, '').regex(/^([1-9]{1})([0-9]{2})([0-9]{2})([0-9]{2})([0-9]{2})[0-9]{3}([0-9]{1})[0-9]{1}$/).messages({
         'string.pattern.base': `National Id must have 14 digits.`
       }).required(),
       StudentUniversityId: Joi.object(),
