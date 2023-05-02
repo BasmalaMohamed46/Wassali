@@ -174,7 +174,23 @@ const profileImage = async (id,req) => {
 
     return res.status(httpStatus.BAD_REQUEST).send('Request already delivered');
   };
-
+const redirectAfterDelivery=async (id,req,res)=>{
+  try{
+    const user=await User.findById(id)
+    if(!user){
+       res.status(httpStatus.NOT_FOUND).send('user not found')
+    }
+    else{
+      const lastRequestId = user.requests[user.requests.length - 1];
+    const request = await Request.findById(lastRequestId).populate('trip');
+    res.status(httpStatus.OK).send(request)
+    
+    }
+  }
+  catch(err){
+    res.status(500).send(err)
+  }
+}
 module.exports = {
   createUser,
   queryUsers,
@@ -186,5 +202,6 @@ module.exports = {
   profileImage,
   getAllUserss,
   qrCode,
-  updateToDeliveredFromQR
+  updateToDeliveredFromQR,
+  redirectAfterDelivery
 };
