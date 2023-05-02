@@ -37,6 +37,6 @@ router.post('/sendrequest/:tripId',validate(requestValidation.sendRequest),auth(
 router.post('/acceptrequest/:requestId', auth(), requestController.acceptRequest)
 router.post('/acceptanyrequest/:requestId', auth(), requestController.acceptAnyRequest)
 router.post('/declinerequest/:requestId', auth(), requestController.declineRequest)
-
+router.get('/SearchByCity',auth(), requestController.filterRequestsByCity);
 
 module.exports = router;

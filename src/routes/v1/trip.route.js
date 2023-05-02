@@ -46,5 +46,6 @@ router.put(
   validate(tripValidation.updateTrip),
   tripController.updateTrip
 );
+router.get('/TripSearchByCity',auth(), tripController.filterTripsByCity);
 
 module.exports = router;

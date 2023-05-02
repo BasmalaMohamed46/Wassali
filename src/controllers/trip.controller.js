@@ -45,11 +45,17 @@ const updateTrip = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(updateTrip);
 });
 
+const filterTripsByCity = catchAsync(async (req, res)=>{
+  const tripSearch = await tripService.filterTripsByCity(req , res , city);
+  res.status(httpStatus.OK).send(tripSearch);
+});
+
 module.exports = {
   CreateTrip,
   deleteTrip,
   ViewTrips,
   ViewTravelerTrips,
   ViewTrip,
-  updateTrip
+  updateTrip,
+  filterTripsByCity
 };

@@ -128,13 +128,19 @@ const viewAllRequest = catchAsync(async (req, res) => {
     const id = req.user._id;
     const session = await requestService.checkout(id, req, res);
     return session;
-  }) 
+  })
 
   const checkoutSessionWithPrice = catchAsync(async (req, res)=>{
     const id = req.user._id;
     const session = await requestService.checkoutWithPrice(id, req, res);
     return session;
-  }) 
+  })
+
+  const filterRequestsByCity = catchAsync(async (req, res)=>{
+    const requestsSearch = await requestService.filterRequestsByCity(req, res);
+    res.status(httpStatus.OK).send(requestsSearch);
+  });
+
 
 module.exports = {
   createRequest,
@@ -156,5 +162,6 @@ module.exports = {
   viewRequestAfterAcceptance,
   ViewAllAcceptedRequests,
   checkoutSession,
-  checkoutSessionWithPrice
+  checkoutSessionWithPrice,
+  filterRequestsByCity
 };
