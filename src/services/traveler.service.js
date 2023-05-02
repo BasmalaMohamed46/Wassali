@@ -167,7 +167,7 @@ const updateTraveler = async (id, req) => {
       message: 'Traveler not found',
 
     }
-  } catch (error) {
+  } }catch (error) {
     return {
       message: 'Something went wrong',
       err: error.message,
@@ -366,19 +366,38 @@ const TravelerOnHisWay=async(id,req,res)=>{
 const AddRating=async (id,req,res)=>{
   try{
      const user=await User.findById(id);
+     console.log(user)
      if(user){
       const traveler=req.params.travelerId
       const { rating } = req.body;
+      
+      const foundedTraveler=await Traveler.findOne({userId:id});
+      console.log(foundedTraveler)
+     if(foundedTraveler){
+       if(foundedTraveler._id != traveler){
+      const newRating = new Rating({
+       traveler,
+       rating,
+      });
 
-  const newRating = new Rating({
-    traveler,
-    rating,
-  });
+      await newRating.save();
 
-  await newRating.save();
-
-  res.json(newRating);
+      res.json(newRating);
+     }else{
+      res.status(httpStatus.NOT_FOUND).json({
+        message: 'You can not rate yourself',
+      })
      }
+    }
+  else{
+    const newRating = new Rating({
+      traveler,
+      rating,
+    });
+  
+    await newRating.save();
+    res.json(newRating);
+  }}
      else{
       res.status(httpStatus.NOT_FOUND).json({
         message: 'User not found',
@@ -417,8 +436,8 @@ module.exports = {
   viewAllTravelers,
 
   AddRating,
-  ViewRating
-}
+  ViewRating,
+
 
   TravelerOnHisWay
 };

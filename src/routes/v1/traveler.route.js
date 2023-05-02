@@ -143,7 +143,7 @@ router.get(
   auth(),
   travelerController.ViewRating
 )
-
+router.post(
   '/TravelerOnHisWay/:requestId',
   auth(),
   travelerController.TravelerOnHisWay
