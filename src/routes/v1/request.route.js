@@ -39,4 +39,5 @@ router.post('/acceptanyrequest/:requestId', auth(), requestController.acceptAnyR
 router.post('/declinerequest/:requestId', auth(), requestController.declineRequest)
 router.get('/SearchByCity',auth(), requestController.filterRequestsByCity);
 
+router.get('/getAceeptedRequest',auth(), requestController.getAceeptedRequests);
 module.exports = router;

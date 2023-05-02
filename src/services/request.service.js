@@ -683,6 +683,36 @@ const filterRequestsByCity = async (req, res) => {
   }
 };
 
+const getAceeptedRequests = async (req, res) => {
+    const id = req.user._id;
+    const foundedUser= await User.findById(id);
+    console.log(foundedUser);
+    if(foundedUser.role === 'traveler'){
+      const traveler = await Traveler.findOne({
+        userId: id,
+      })
+      const trip = await Trip.findOne({
+        Traveler: traveler._id,
+      }).sort({ createdAt: -1 });
+      const requests = await Request.find({
+        trip: trip._id,
+        state: 'accepted',
+      }).populate({
+        path: 'userId',
+        select: 'name phoneNumber',
+      });
+      res.status(200).json({
+        message: 'requests found successfully',
+        requests,
+      });
+    }
+    else{
+      return{
+        message: 'You are not a traveler'
+      }
+    }
+};
+
 module.exports = {
   createRequest,
   queryRequests,
@@ -704,5 +734,6 @@ module.exports = {
   ViewAllAcceptedRequests,
   checkout,
   checkoutWithPrice,
-  filterRequestsByCity
+  filterRequestsByCity,
+  getAceeptedRequests
 };

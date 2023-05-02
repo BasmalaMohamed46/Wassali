@@ -141,6 +141,10 @@ const viewAllRequest = catchAsync(async (req, res) => {
     res.status(httpStatus.OK).send(requestsSearch);
   });
 
+  const getAceeptedRequests = catchAsync(async (req, res)=>{
+    const getAceeptedRequests = await requestService.getAceeptedRequests(req, res);
+    res.status(httpStatus.OK).send(getAceeptedRequests);
+  });
 
 module.exports = {
   createRequest,
@@ -163,5 +167,6 @@ module.exports = {
   ViewAllAcceptedRequests,
   checkoutSession,
   checkoutSessionWithPrice,
-  filterRequestsByCity
+  filterRequestsByCity,
+  getAceeptedRequests
 };
