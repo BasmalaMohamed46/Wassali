@@ -132,7 +132,7 @@ const profileImage = async (id,req) => {
        res.httpStatus(404).send('user not found')
       }
       else{
-        QRCode.toDataURL(`${req.protocol}://${req.headers.host}/v1/users/qrCodeScan/${id}`, function (err, url) {
+        QRCode.toDataURL(`${req.protocol}://localhost:3001/qr/${id}`, function (err, url) {
           if(err){
            res.httpStatus(500).send(err)
           }
