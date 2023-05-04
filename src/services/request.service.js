@@ -632,13 +632,13 @@ const checkout = async(id, req, res) => {
       },
     ],
     mode: 'payment',
-    //transfer to rating page
-    success_url: `http://localhost:3000/home`,
     //transfer to home page
-    cancel_url: `http://localhost:3000/v1/`,
+    success_url: `http://localhost:3001/home`,
+    //transfer to home page
+    cancel_url: `http://localhost:3001/v1/`,
   });
 
-  res.status(200).json({ message: 'Checkout Successfully' });
+  res.status(200).json({ message: 'Checkout Successfully' ,session:session.url });
 }
 
 //checkout with tripPrice + Price of the item
@@ -660,13 +660,13 @@ const checkoutWithPrice = async(id, req, res) => {
       },
     ],
     mode: 'payment',
-    //transfer to rating page
-    success_url: `http://localhost:3000/home`,
     //transfer to home page
-    cancel_url: `http://localhost:3000/v1/`,
+    success_url: `http://localhost:3001/home`,
+    //transfer to home page
+    cancel_url: `http://localhost:3001/v1/`,
   });
 
-  res.status(200).json({ message: 'Checkout Successfully' });
+  res.status(200).json({ message: 'Checkout Successfully' ,session:session.url });
 }
 
 const filterRequestsByCity = async (req, res) => {
