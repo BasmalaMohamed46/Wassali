@@ -111,6 +111,7 @@ const sendRequest = {
           storeLocation: Joi.string().optional().allow(''),
         storeName: Joi.string().optional().allow(''),
         price: Joi.number().optional().allow(''),
+        tripPrice: Joi.number().optional().allow(''),
 
     }),
 
