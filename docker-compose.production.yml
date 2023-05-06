@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  node-app:
+    image: omar1gad/wassali
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.app
+    depends_on:
+      - mongodb
+    networks:
+      - node-network
+
+  mongodb:
+    image: mongo:4.2.1-bionic
+    ports:
+      - '27017:27017'
+    env_file:
+      - .env.db
+    volumes:
+      - dbdata:/data/db
+    networks:
+      - node-network
+
+networks:
+  node-network:
+    driver: bridge
+
+volumes:
+  dbdata:
