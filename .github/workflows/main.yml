@@ -54,4 +54,4 @@ jobs:
           cd ~/wassali && cp ~/env/.env* ./
           docker compose -f docker-compose.production.yml pull
           docker compose -f docker-compose.production.yml up -d --remove-orphans
-          docker image prune
+          docker image prune -f
