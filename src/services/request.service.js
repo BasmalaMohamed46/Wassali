@@ -503,12 +503,11 @@ const userAcceptTravelerRequest = async (id, req, res) => {
             );
           }
         }
-        const travelerId = await Traveler.find( tripExist.Traveler );
+        const travelerId = await Traveler.findOne( tripExist.Traveler );
+        console.log(travelerId);
         const conversationId = request.conversation;
         await Conversation.findByIdAndUpdate(conversationId, {
-          $push: {
-            members: travelerId[0]._id,
-          },
+          travelerId:travelerId._id
         });
         res.status(200).json({
           message: 'request accepted successfully',

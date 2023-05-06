@@ -11,7 +11,9 @@ const createMessage = async (req) => {
       const savedMessage = await newMessage.save();
       return savedMessage;
     } catch (err) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'please type a message', err);
+      return {
+        message: "please enter a message"
+      };
     }
   };
 
@@ -22,11 +24,13 @@ const createMessage = async (req) => {
         conversationId: req.params.conversationId,
       });
       if(messages.length ==0) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'No messages found in this conversation');
+        return {
+          message: "no messages found"
+        };
       }
       return messages;
     } catch (err) {
-        throw new ApiError(err);
+      console.log(err);
     }
   };
 
