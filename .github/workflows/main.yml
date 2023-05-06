@@ -24,7 +24,7 @@ jobs:
         with:
           file: ./production.Dockerfile
           push: true
-          tags: wassali:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/wassali:latest
 
   deploy:
     needs: build
