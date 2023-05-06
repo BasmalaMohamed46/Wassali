@@ -39,7 +39,7 @@ jobs:
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        password : ${{ secrets.SERVER_USER_PASSWORD }}
         source: "docker-compose.production.yml"
         target: "/home/${{ secrets.SERVER_USERNAME }}/wassali/docker-compose.production.yml"
 
@@ -49,7 +49,7 @@ jobs:
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        password: ${{ secrets.SERVER_USER_PASSWORD }}
         script: |
           cd ~/wassali && cp ~/env/.env* ./
           docker compose -f docker-compose.production.yml pull
