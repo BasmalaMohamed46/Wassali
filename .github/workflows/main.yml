@@ -41,7 +41,7 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         password : ${{ secrets.SERVER_USER_PASSWORD }}
         source: "docker-compose.production.yml"
-        target: "/home/${{ secrets.SERVER_USERNAME }}/wassali/docker-compose.production.yml"
+        target: "/home/${{ secrets.SERVER_USERNAME }}/wassali/"
 
 
     - name: Deploy to server
