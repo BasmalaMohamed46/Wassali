@@ -28,6 +28,33 @@ const createConversation = async (requestId, req) => {
   }
 };
 
+
+const findConversationById = async (req) => {
+  try {
+
+    // const conversationId = mongoose.Types.ObjectId(req.params.conversationId);
+
+    const conversation = await Conversation.findById(req.params.conversationId)
+      .populate('userId', 'name ProfileImage')
+      .populate({
+        path: 'travelerId',
+        select: 'name ProfileImage',
+        populate: {
+          path: 'userId',
+          select: 'name ProfileImage',
+        },
+      });
+    if (!conversation) {
+      return {
+        message: 'Conversation not found',
+      };
+    }
+    return conversation;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const findConversationByUserId = async (req) => {
   try {
     const conversation = await Conversation.find({
@@ -98,4 +125,5 @@ module.exports = {
   findConversationByUserId,
   findConversationByTravelerId,
   findConversationByTwoUserId,
+  findConversationById
 };

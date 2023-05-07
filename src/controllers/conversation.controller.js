@@ -22,8 +22,14 @@ const findConversationByTwoUserId = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(conversation);
 });
 
+const findConversationById = catchAsync(async (req, res) => {
+  const conversation = await conversationService.findConversationById(req);
+  res.status(httpStatus.OK).send(conversation);
+});
+
 module.exports = {
   findConversationByUserId,
   findConversationByTravelerId,
   findConversationByTwoUserId,
+  findConversationById
 };
