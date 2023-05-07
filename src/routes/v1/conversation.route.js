@@ -16,4 +16,7 @@ router.get('/traveler/:travelerId', conversationController.findConversationByTra
 // get conversation includes two userId
 router.get('/find/:firstUserId/:secondUserId', conversationController.findConversationByTwoUserId);
 
+//get conversation by id
+router.get('/find/:conversationId', conversationController.findConversationById);
+
 module.exports = router;
