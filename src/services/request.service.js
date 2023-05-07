@@ -304,11 +304,9 @@ const acceptrequest = async (id, requestId, req) => {
         });
 
         const conversationId = request.conversation;
-        const travelerId = await Traveler.find(trip.Traveler);
+        const travelerId = await Traveler.findOne(trip.Traveler);
         await Conversation.findByIdAndUpdate(conversationId, {
-          $push: {
-            members: travelerId[0]._id,
-          },
+          travelerId:travelerId._id
         })
       return {
         message: 'Request accepted successfully',
