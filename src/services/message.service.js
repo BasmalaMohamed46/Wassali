@@ -1,5 +1,6 @@
 const Message = require('../models/Message');
-
+const ApiError = require('../utils/ApiError');
+const httpStatus = require('http-status');
 const createMessage = async (req) => {
     const newMessage = new Message(req.body);
   
@@ -20,9 +21,10 @@ const createMessage = async (req) => {
         conversationId: req.params.conversationId,
       });
       if(messages.length ==0) {
-        return {
-          message: "no messages found"
-        };
+       
+      throw new ApiError(httpStatus.NOT_FOUND, 'no messages found');
+         
+        
       }
       return messages;
     } catch (err) {
