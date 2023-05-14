@@ -1,6 +1,6 @@
 const io = require('socket.io')(8900, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:3001',
   },
 });
 
@@ -23,7 +23,6 @@ io.on('connection', (socket) => {
   // when connect
   // eslint-disable-next-line no-console
   console.log('a user connected.');
-
   // take userId and socketId from user
   socket.on('addUser', (userId) => {
     addUser(userId, socket.id);
@@ -33,6 +32,10 @@ io.on('connection', (socket) => {
   // send and get message
   socket.on('sendMessage', ({ senderId, receiverId, text }) => {
     const user = getUser(receiverId);
+    console.log(user);
+    console.log('senderId',senderId)
+    console.log('receiverId',receiverId)
+    console.log(text)
     io.to(user.socketId).emit('getMessage', {
       senderId,
       text,

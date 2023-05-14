@@ -12,7 +12,7 @@ const ObjectID = require('mongodb').ObjectID;
 const createConversation = async (requestId, req) => {
   if (requestId) {
     const conversation = await Conversation.create({
-      userId: req.user._id,
+      members: [req.user._id],
     });
     await Request.findByIdAndUpdate(requestId, {
       $push: {
@@ -27,103 +27,47 @@ const createConversation = async (requestId, req) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
   }
 };
-
-
-const findConversationById = async (req) => {
-  try {
-
-    // const conversationId = mongoose.Types.ObjectId(req.params.conversationId);
-
-    const conversation = await Conversation.findById(req.params.conversationId)
-      .populate('userId', 'name ProfileImage')
-      .populate({
-        path: 'travelerId',
-        select: 'name ProfileImage',
-        populate: {
-          path: 'userId',
-          select: 'name ProfileImage',
-        },
-      });
-    if (!conversation) {
-      return {
-        message: 'Conversation not found',
-      };
-    }
-    return conversation;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 const findConversationByUserId = async (req) => {
   try {
     const conversation = await Conversation.find({
-      userId: new ObjectID(req.params.userId),
-    }).populate('userId', 'name ProfileImage');
-    if (!conversation) {
-      return {
-        message: 'Conversation not found',
-      };
-    }
-    return conversation;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-const findConversationByTravelerId = async (req) => {
-  try {
-    const conversation = await Conversation.find({
-      travelerId: new ObjectID(req.params.travelerId),
-    }).populate({
-      path: 'travelerId',
-      select: 'name ProfileImage',
-      populate: {
-        path: 'userId',
-        select: 'name ProfileImage',
-      },
+      members: { $in: [new ObjectID(req.params.userId)] },
     });
     if (!conversation) {
-      return {
-        message: 'Conversation not found',
-      };
+      throw new ApiError(httpStatus.NOT_FOUND, 'Conversation not found');
     }
     return conversation;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
 const findConversationByTwoUserId = async (req) => {
   try {
     const conversation = await Conversation.findOne({
-      userId: new ObjectID(req.params.firstUserId),
-      travelerId: new ObjectID(req.params.secondUserId),
-    })
-      .populate('userId', 'name ProfileImage')
-      .populate({
-        path: 'travelerId',
-        select: 'name ProfileImage',
-        populate: {
-          path: 'userId',
-          select: 'name ProfileImage',
-        },
-      });
+      members: { $all: [new ObjectID(req.params.firstUserId), new ObjectID(req.params.secondUserId)] },
+    });
     if (!conversation) {
-      return {
-        message: 'Conversation not found',
-      };
+      throw new ApiError(httpStatus.NOT_FOUND, 'Conversation not found');
     }
     return conversation;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
+
+
+const findConversationById = async(req, res, next) => {
+  const conversation = await Conversation.findById(req.params.id);
+  if (!conversation) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Conversation not found');
+    }
+    return conversation;
+    };
+
 
 module.exports = {
   createConversation,
   findConversationByUserId,
-  findConversationByTravelerId,
   findConversationByTwoUserId,
   findConversationById
 };

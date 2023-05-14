@@ -304,9 +304,11 @@ const acceptrequest = async (id, requestId, req) => {
         });
 
         const conversationId = request.conversation;
-        const travelerId = await Traveler.findOne(trip.Traveler);
+        const travelerId = await Traveler.find(trip.Traveler);
         await Conversation.findByIdAndUpdate(conversationId, {
-          travelerId:travelerId._id
+          $push: {
+            members: travelerId[0]._id,
+          },
         })
       return {
         message: 'Request accepted successfully',
@@ -501,11 +503,12 @@ const userAcceptTravelerRequest = async (id, req, res) => {
             );
           }
         }
-        const travelerId = await Traveler.findOne( tripExist.Traveler );
-        console.log(travelerId);
+        const travelerId = await Traveler.find( tripExist.Traveler );
         const conversationId = request.conversation;
         await Conversation.findByIdAndUpdate(conversationId, {
-          travelerId:travelerId._id
+          $push: {
+            members: travelerId[0]._id,
+          },
         });
         res.status(200).json({
           message: 'request accepted successfully',
@@ -535,18 +538,7 @@ const viewTravelersRequests = async (id, req, res) => {
         },
       },
     });
-    // const requests = await Request.find({ userId: id }, 'TripOfferedPrice').populate({
-    //   path: 'TripOfferedPrice.trip',
-    //   select: '_id to from Traveler',
-    //   populate: {
-    //     path: 'Traveler',
-    //     select: 'userId',
-    //     populate: {
-    //       path: 'userId',
-    //       select: 'name phoneNumber',
-    //     },
-    //   },
-    // });
+
     res.status(200).json({
       message: 'requests found successfully',
       requests,
