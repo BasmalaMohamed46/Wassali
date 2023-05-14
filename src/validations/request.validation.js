@@ -90,7 +90,6 @@ const sendRequest = {
     body: Joi.object().keys({
         state: Joi.string().valid('processing', 'confirmed', 'accepted', 'pickedup', 'onmyway', 'delivered').default('processing'),
         rate: Joi.number(),
-        reward: Joi.number(),
         qrCode: Joi.string(),
         userId: Joi.string().custom(objectId),
         // traveler: Joi.string().custom(objectId),

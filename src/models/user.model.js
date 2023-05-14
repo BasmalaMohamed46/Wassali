@@ -91,6 +91,9 @@ const userSchema = mongoose.Schema(
   },
   qrCode:{
     type:String,
+  },
+  token:{
+    type:String,
   }
 }, {
   timestamps: true,
