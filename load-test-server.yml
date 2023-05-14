@@ -1,5 +1,5 @@
 config:
-  target: 'http://localhost:3000'
+  target: 'http://api.wasally.me'
   capture:
     - request
     - response
@@ -9,6 +9,7 @@ config:
       name: 'testing'
   payload:
     path: ./data.csv
+    cast: false
     order: sequence
     loadAll: true
     skipHeader: true
