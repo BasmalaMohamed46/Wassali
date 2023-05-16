@@ -5,11 +5,11 @@ config:
     - response
   phases:
     - duration: 1
-      arrivalRate: 5
+      arrivalRate: 50
       name: 'testing'
   payload:
     path: ./data.csv
-    order: sequence
+    order: random
     loadAll: true
     skipHeader: true
     delimiter: ','
