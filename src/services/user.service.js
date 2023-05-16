@@ -172,7 +172,7 @@ const profileImage = async (id,req) => {
       return res.status(httpStatus.OK).send(updatedRequest);
     }
 
-    return res.status(httpStatus.BAD_REQUEST).send('Request already delivered');
+   
   };
 const redirectAfterDelivery=async (id,req,res)=>{
   try{
