@@ -622,9 +622,9 @@ const checkout = async(id, req, res) => {
     ],
     mode: 'payment',
     //transfer to home page
-    success_url: `http://localhost:3001/home`,
+    success_url: `http://wasally.me`,
     //transfer to home page
-    cancel_url: `http://localhost:3001/v1/`,
+    cancel_url: `http://wasally.me`,
   });
 
   res.status(200).json({ message: 'Checkout Successfully' ,session:session.url });
@@ -650,9 +650,9 @@ const checkoutWithPrice = async(id, req, res) => {
     ],
     mode: 'payment',
     //transfer to home page
-    success_url: `http://localhost:3001/home`,
+    success_url: `http://wasally.me`,
     //transfer to home page
-    cancel_url: `http://localhost:3001/v1/`,
+    cancel_url: `http://wasally.me`,
   });
 
   res.status(200).json({ message: 'Checkout Successfully' ,session:session.url });
