@@ -197,9 +197,10 @@ const forgotPassword = async (req, res) => {
       </html>
     `;
     sendEmail(email, message)
-    return{
-      message: 'Email sent successfully. Please check your email.'
-    }
+    return res.status(200).json({
+      message: 'Email sent successfully. Please check your email.',
+    });
+  
   } catch (error) {
     res.status(500).json({
       message: 'Server Error',
