@@ -182,7 +182,7 @@ const forgotPassword = async (req, res) => {
     }
     const token = crypto.randomBytes(20).toString('hex');
     await User.findByIdAndUpdate(user._id, { token }, { new: true });
-    const URL = `${req.protocol}://${req.headers.host}/v1/auth/reset-password?token=${token}`;
+    const URL = `${req.protocol}://localhost:3001/resetPassword/${token}`;
     const message = `
       <html>
         <body style="font-family: Arial, sans-serif;">
@@ -210,7 +210,8 @@ const forgotPassword = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   try {
-    const { token } = req.query;
+    const { token } = req.params;
+    
     const user = await User.findOne({ token });
     if (!user) {
       res.status(404).json({
