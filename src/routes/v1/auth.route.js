@@ -17,7 +17,7 @@ router.post('/forgot-password', validate(authValidation.forgotPassword), authCon
 router.post('/reset-password/:token', validate(authValidation.resetPassword), authController.resetPassword);
 router.post('/send-verification-email', auth(), authController.sendVerificationEmail);
 router.post('/verify-email', validate(authValidation.verifyEmail), authController.verifyEmail);
-// router.get('/confirmEmail/:token', authController.confirmEmail)
+router.get('/confirmEmail/:token', authController.confirmEmail)
 
 
 function isLoggedIn(req, res, next) {
