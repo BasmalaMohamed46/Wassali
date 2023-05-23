@@ -16,7 +16,7 @@ const jwt=require('jsonwebtoken')
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
   const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:'1d'})
-  const URL=`${req.protocol}://localhost:3001/confirmEmail/${token}`
+  const URL=`${req.protocol}://wasally.me/confirmEmail/${token}`
   await sendEmail(req.body.email,`<a href='${URL}'>please click here to confirm your email</a>`)
   res.status(httpStatus.CREATED).send(user);
 });
