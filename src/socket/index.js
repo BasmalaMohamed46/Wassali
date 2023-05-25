@@ -1,8 +1,8 @@
-const io = require('socket.io')(8900, {
-  cors: {
-    origin: 'http://wasally.me',
-  },
-});
+// const io = require('socket.io')(8900, {
+//   cors: {
+//     origin: 'http://wasally.me',
+//   },
+// });
 
 let users = [];
 
@@ -19,34 +19,41 @@ const getUser = (userId) => {
   return users.find((user) => user.userId === userId);
 };
 
-io.on('connection', (socket) => {
-  // when connect
-  // eslint-disable-next-line no-console
-  console.log('a user connected.');
-  // take userId and socketId from user
-  socket.on('addUser', (userId) => {
-    addUser(userId, socket.id);
-    io.emit('getUsers', users);
-  });
+module.exports ={
+  users,
+  addUser,
+  removeUser,
+  getUser
+}
 
-  // send and get message
-  socket.on('sendMessage', ({ senderId, receiverId, text }) => {
-    const user = getUser(receiverId);
-    console.log(user);
-    console.log('senderId',senderId)
-    console.log('receiverId',receiverId)
-    console.log(text)
-    io.to(user.socketId).emit('getMessage', {
-      senderId,
-      text,
-    });
-  });
+// io.on('connection', (socket) => {
+//   // when connect
+//   // eslint-disable-next-line no-console
+//   console.log('a user connected.');
+//   // take userId and socketId from user
+//   socket.on('addUser', (userId) => {
+//     addUser(userId, socket.id);
+//     io.emit('getUsers', users);
+//   });
 
-  // when disconnect
-  socket.on('disconnect', () => {
-    // eslint-disable-next-line no-console
-    console.log('a user disconnected!');
-    removeUser(socket.id);
-    io.emit('getUsers', users);
-  });
-});
+//   // send and get message
+//   socket.on('sendMessage', ({ senderId, receiverId, text }) => {
+//     const user = getUser(receiverId);
+//     console.log(user);
+//     console.log('senderId',senderId)
+//     console.log('receiverId',receiverId)
+//     console.log(text)
+//     io.to(user.socketId).emit('getMessage', {
+//       senderId,
+//       text,
+//     });
+//   });
+
+//   // when disconnect
+//   socket.on('disconnect', () => {
+//     // eslint-disable-next-line no-console
+//     console.log('a user disconnected!');
+//     removeUser(socket.id);
+//     io.emit('getUsers', users);
+//   });
+// });
