@@ -12,11 +12,17 @@ const session = require('express-session')
 const User = require('../models/user.model');
 const sendEmail = require('../services/sendEmail');
 const jwt=require('jsonwebtoken')
-
+var redirectUrl
+if(process.env.RUN_STATUS === 'local'){
+  redirectUrl = 'localhost:3001'
+}
+else{
+  redirectUrl = 'wasally.me'
+}
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
   const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:'1d'})
-  const URL=`${req.protocol}://wasally.me/confirmEmail/${token}`
+  const URL=`${req.protocol}://${redirectUrl}/confirmEmail/${token}`
   await sendEmail(req.body.email,`<a href='${URL}'>please click here to confirm your email</a>`)
   res.status(httpStatus.CREATED).send(user);
 });

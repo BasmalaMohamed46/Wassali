@@ -17,6 +17,12 @@ const Conversation = require('../models/Conversation');
  * @param {Object} requestBody
  * @returns {Promise<Request>}
  */
+if(process.env.RUN_STATUS === 'local'){
+  redirectUrl = 'localhost:3001/home'
+}
+else{
+  redirectUrl = 'wasally.me'
+}
 const createRequest = async (id, req) => {
   const user = await User.findById(id);
   if (user) {
@@ -622,9 +628,9 @@ const checkout = async(id, req, res) => {
     ],
     mode: 'payment',
     //transfer to home page
-    success_url: `http://wasally.me`,
+    success_url: `http://${redirectUrl}`,
     //transfer to home page
-    cancel_url: `http://wasally.me`,
+    cancel_url: `http://${redirectUrl}`,
   });
 
   res.status(200).json({ message: 'Checkout Successfully' ,session:session.url });
@@ -650,9 +656,9 @@ const checkoutWithPrice = async(id, req, res) => {
     ],
     mode: 'payment',
     //transfer to home page
-    success_url: `http://wasally.me`,
+    success_url: `http://${redirectUrl}`,
     //transfer to home page
-    cancel_url: `http://wasally.me`,
+    cancel_url: `http://${redirectUrl}`,
   });
 
   res.status(200).json({ message: 'Checkout Successfully' ,session:session.url });
