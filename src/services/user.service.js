@@ -12,6 +12,13 @@ const Traveler = require('../models/traveler.model');
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
+var redirectUrl
+if(process.env.RUN_STATUS === 'local'){
+  redirectUrl = 'localhost:3001'
+}
+else{
+  redirectUrl = 'wasally.me'
+}
 const createUser = async (userBody) => {
   if (await User.isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
@@ -132,7 +139,7 @@ const profileImage = async (id,req) => {
        res.httpStatus(404).send('user not found')
       }
       else{
-        QRCode.toDataURL(`${req.protocol}://wasally.me/qr/${id}`, function (err, url) {
+        QRCode.toDataURL(`${req.protocol}://${redirectUrl}/qr/${id}`, function (err, url) {
           if(err){
            res.httpStatus(500).send(err)
           }
