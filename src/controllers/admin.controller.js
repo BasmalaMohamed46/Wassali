@@ -85,6 +85,11 @@ const deleteTrip = catchAsync(async (req, res) => {
   return deleteTrip;
 });
 
+const verifyDocuments = catchAsync(async (req, res) => {
+  const verifyDocuments = await adminService.verifyDocuments(req, res);
+  return verifyDocuments;
+});
+
 module.exports = {
   register,
   login,
@@ -102,4 +107,5 @@ module.exports = {
   getTrip,
   getAllTrips,
   deleteTrip,
+  verifyDocuments
 };

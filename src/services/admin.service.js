@@ -4,6 +4,7 @@ const httpStatus = require('http-status');
 const jwt = require('jsonwebtoken');
 const { User, Traveler, Request } = require('../models');
 const Trip = require('../models/trip.model');
+const sendEmail = require('./sendEmail');
 
 const createAdmin = async (userBody) => {
   return Admin.create(userBody);
@@ -276,6 +277,42 @@ const deleteTrip = async (req, res) => {
   }
 };
 
+const verifyDocuments = async (req, res) => {
+  try {
+    const traveler = await Traveler.findById(req.params.travelerId);
+    console.log(traveler);
+    if (!traveler) {
+      return res.status(404).json({
+        message: 'traveler not found',
+      });
+    }
+    const updated = await Traveler.findByIdAndUpdate(req.params.travelerId, { isAdminVerificationPending: true });
+    const user = await User.findById(traveler.userId);
+    const message = `
+    <html>
+      <body>
+        <h2>Dear ${user.name},</h2>
+        <h3>Congratulations! Your Documents Have Been Verified</h3>
+        <p>Thank you for joining our platform as a traveler. We are delighted to inform you that your documents have been verified successfully.</p>
+        <p>You are now a registered traveler and can start exploring and planning your trips. We hope you have an amazing experience using our services.</p>
+        <p>If you have any questions or need further assistance, please feel free to contact our support team.</p>
+        <p>Best regards,</p>
+        <p>Your Platform Team</p>
+      </body>
+    </html>`;
+    sendEmail(user.email, message);
+    return res.status(200).json({
+      message: 'traveler verified',
+      updated,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: 'Server error',
+      err: err.message,
+    });
+  }
+};
+
 module.exports = {
   createAdmin,
   loginUserWithEmailAndPasswordAdmin,
@@ -294,4 +331,5 @@ module.exports = {
   getTrip,
   getAllTrips,
   deleteTrip,
+  verifyDocuments,
 };

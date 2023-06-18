@@ -32,4 +32,7 @@ router.get('/getTrip/:tripId', auth(), adminController.getTrip);
 router.get('/getTrips', auth(), adminController.getAllTrips);
 router.delete('/deleteTrip/:tripId', auth(), adminController.deleteTrip);
 
+//verify documents
+router.patch('/verifyDocuments/:travelerId', auth(), adminController.verifyDocuments);
+
 module.exports = router;
