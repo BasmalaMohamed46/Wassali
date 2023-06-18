@@ -6,6 +6,7 @@ const Traveler = require('../models/traveler.model');
 const Request = require('../models/request.model');
 const Rating = require('../models/rating.model');
 const Trip = require('../models/trip.model');
+const sendEmail = require('./sendEmail');
 
 const Student = async (id, res) => {
   // const id = req.user._id;
@@ -67,7 +68,7 @@ const Employee = async (id, res) => {
   }
 };
 
-const createTraveler = async (id, req) => {
+const createTraveler = async (id, req, res) => {
   try {
     const foundedTraveler = await Traveler.findOne({ userId: id });
     const { NationalId } = req.body;
@@ -87,7 +88,7 @@ const createTraveler = async (id, req) => {
       const urls = {
         StudentUniversityId: `${req.protocol}://${req.headers.host}/${req.destination}/${req.files.StudentUniversityId[0].filename}`,
         CollegeEnrollmentStatement: `${req.protocol}://${req.headers.host}/${req.destination2}/${req.files.CollegeEnrollmentStatement[0].filename}`,
-        NationalIdCard: `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`
+        NationalIdCard: `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`,
       };
 
       const updatedUser = await Traveler.findByIdAndUpdate(
@@ -95,18 +96,30 @@ const createTraveler = async (id, req) => {
         {
           NationalId,
           EmployeeCompanyId: null,
-          ...urls
+          ...urls,
         },
         { new: true }
       );
 
-      await User.findByIdAndUpdate(
-        id,
-        { role: 'traveler' },
-        { new: true }
-      );
-
-      return { message: 'Traveler created successfully', updatedUser };
+      await User.findByIdAndUpdate(id, { role: 'traveler' }, { new: true });
+      const user = await User.findById(id);
+      const message = `
+      <html>
+        <body>
+          <h2>Dear ${user.name},</h2>
+          <h3>Your Document Review Notification</h3>
+          <p>Thank you for joining our platform as a traveler. We would like to inform you that your document has been received and is currently under review by our admin team. We will notify you as soon as the review process is completed.</p>
+          <p>If you have any questions or need further assistance, please feel free to contact our support team.</p>
+          <p>Best regards,</p>
+          <p>Your Platform Team</p>
+        </body>
+      </html>
+      `;
+      sendEmail(user.email, message);
+      return res.status(200).json({
+        message: 'Traveler created successfully',
+        updatedUser,
+      });
     } else {
       const requiredFields = ['NationalIdCard', 'EmployeeCompanyId'];
       for (const field of requiredFields) {
@@ -117,7 +130,7 @@ const createTraveler = async (id, req) => {
 
       const urls = {
         EmployeeCompanyId: `${req.protocol}://${req.headers.host}/${req.destination3}/${req.files.EmployeeCompanyId[0].filename}`,
-        NationalIdCard: `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`
+        NationalIdCard: `${req.protocol}://${req.headers.host}/${req.destination5}/${req.files.NationalIdCard[0].filename}`,
       };
 
       const updatedUser = await Traveler.findByIdAndUpdate(
@@ -126,48 +139,56 @@ const createTraveler = async (id, req) => {
           NationalId,
           StudentUniversityId: null,
           CollegeEnrollmentStatement: null,
-          ...urls
+          ...urls,
         },
         { new: true }
       );
 
-      await User.findByIdAndUpdate(
-        id,
-        { role: 'traveler' },
-        { new: true }
-      );
-
-      return { message: 'Traveler created successfully', updatedUser };
+      await User.findByIdAndUpdate(id, { role: 'traveler' }, { new: true });
+      const user = await User.findById(id);
+      const message = `
+      <html>
+        <body>
+          <h2>Dear ${user.name},</h2>
+          <h3>Your Document Review Notification</h3>
+          <p>Thank you for joining our platform as a traveler. We would like to inform you that your document has been received and is currently under review by our admin team. We will notify you as soon as the review process is completed.</p>
+          <p>If you have any questions or need further assistance, please feel free to contact our support team.</p>
+          <p>Best regards,</p>
+          <p>Your Platform Team</p>
+        </body>
+      </html>
+      `;
+      sendEmail(user.email, message);
+      return res.status(200).json({
+        message: 'Traveler created successfully',
+        updatedUser,
+      });
     }
   } catch (error) {
     return { message: 'Something went wrong', err: error.message };
   }
 };
-
 const updateTraveler = async (id, req) => {
   try {
     // const id = req.user._id;
 
-   
     const travelerExist = await Traveler.findOne({
-      userId: id
-    })
-    if(travelerExist){
-    const updateTraveler = await User.findByIdAndUpdate(
-      id, req.body, {
+      userId: id,
+    });
+    if (travelerExist) {
+      const updateTraveler = await User.findByIdAndUpdate(id, req.body, {
         new: true,
-      })
-    return {
-      message: 'Traveler updated successfully',
-      updateTraveler,
+      });
+      return {
+        message: 'Traveler updated successfully',
+        updateTraveler,
+      };
+    } else {
+      return {
+        message: 'Traveler not found',
+      };
     }
-  }
-  else{
-    return {
-      message: 'Traveler not found',
-
-    }
-  } }catch (error) {
+  } catch (error) {
     return {
       message: 'Something went wrong',
       err: error.message,
@@ -311,119 +332,111 @@ const viewAllTravelers = async (id, res) => {
     });
   }
 };
-const TravelerOnHisWay=async(id,req,res)=>{
-  try{
-    const user=await User.findById(id);
-    if(user){
-      const traveler=await Traveler.find({userId:id});
-      if(traveler){
-        console.log(traveler)
-        const requestId=req.params.requestId;
-        console.log(traveler[0].Trip)
-        const tripId=traveler[0].Trip[traveler[0].Trip.length-1];
-        const trip=await Trip.findById(tripId);
-        if(trip.AcceptedRequests.includes(requestId)){
-          const request=await Request.findById(requestId);
-          if(request){
-            request.state='onmyway'
+const TravelerOnHisWay = async (id, req, res) => {
+  try {
+    const user = await User.findById(id);
+    if (user) {
+      const traveler = await Traveler.find({ userId: id });
+      if (traveler) {
+        console.log(traveler);
+        const requestId = req.params.requestId;
+        console.log(traveler[0].Trip);
+        const tripId = traveler[0].Trip[traveler[0].Trip.length - 1];
+        const trip = await Trip.findById(tripId);
+        if (trip.AcceptedRequests.includes(requestId)) {
+          const request = await Request.findById(requestId);
+          if (request) {
+            request.state = 'onmyway';
             await request.save();
             res.status(httpStatus.OK).json({
               message: 'Request updated successfully',
               request,
             });
-          }
-          else{
+          } else {
             res.status(httpStatus.NOT_FOUND).json({
               message: 'Request not found',
             });
           }
-        }
-        else{
+        } else {
           res.status(httpStatus.NOT_FOUND).json({
             message: 'Request not found in accepted requests',
           });
         }
-      }
-      else{
+      } else {
         res.status(httpStatus.NOT_FOUND).json({
           message: 'Traveler not found',
         });
       }
-    }
-    else{
+    } else {
       res.status(httpStatus.NOT_FOUND).json({
         message: 'User not found',
       });
     }
-  }
-  catch(error){
+  } catch (error) {
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Something went wrong',
       err: error.message,
     });
   }
-}
-const AddRating=async (id,req,res)=>{
-  try{
-     const user=await User.findById(id);
-     console.log(user)
-     if(user){
-      const traveler=req.params.travelerId
+};
+const AddRating = async (id, req, res) => {
+  try {
+    const user = await User.findById(id);
+    console.log(user);
+    if (user) {
+      const traveler = req.params.travelerId;
       const { rating } = req.body;
-      
-      const foundedTraveler=await Traveler.findOne({userId:id});
-      console.log(foundedTraveler)
-     if(foundedTraveler){
-       if(foundedTraveler._id != traveler){
-      const newRating = new Rating({
-       traveler,
-       rating,
-      });
 
-      await newRating.save();
+      const foundedTraveler = await Traveler.findOne({ userId: id });
+      console.log(foundedTraveler);
+      if (foundedTraveler) {
+        if (foundedTraveler._id != traveler) {
+          const newRating = new Rating({
+            traveler,
+            rating,
+          });
 
-      res.json(newRating);
-     }else{
-      res.status(httpStatus.NOT_FOUND).json({
-        message: 'You can not rate yourself',
-      })
-     }
-    }
-  else{
-    const newRating = new Rating({
-      traveler,
-      rating,
-    });
-  
-    await newRating.save();
-    res.json(newRating);
-  }}
-     else{
+          await newRating.save();
+
+          res.json(newRating);
+        } else {
+          res.status(httpStatus.NOT_FOUND).json({
+            message: 'You can not rate yourself',
+          });
+        }
+      } else {
+        const newRating = new Rating({
+          traveler,
+          rating,
+        });
+
+        await newRating.save();
+        res.json(newRating);
+      }
+    } else {
       res.status(httpStatus.NOT_FOUND).json({
         message: 'User not found',
-      })
-     }
-  }
-  catch(error){
+      });
+    }
+  } catch (error) {
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Something went wrong',
       err: error.message,
-    })
+    });
   }
-}
+};
 
-const ViewRating=async (id,req,res)=>{
-  try{
+const ViewRating = async (id, req, res) => {
+  try {
     const ratings = await Rating.find({ traveler: req.params.travelerId });
     res.json(ratings);
-  }
-  catch(error){
+  } catch (error) {
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
       message: 'Something went wrong',
       err: error.message,
-    })
+    });
   }
-}
+};
 module.exports = {
   Student,
   Employee,
@@ -438,7 +451,5 @@ module.exports = {
   AddRating,
   ViewRating,
 
-
-  TravelerOnHisWay
+  TravelerOnHisWay,
 };
-
