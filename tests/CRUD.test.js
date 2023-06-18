@@ -309,154 +309,154 @@ describe('Trip service', () => {
 
 // //Request Test
 
-// const userPayloadd={
-//     email:'basmalazain22@gmail.com',
-//     password:'test12D34',
-//   }
+const userPayloadd={
+    email:'basmalazain22@gmail.com',
+    password:'test12D34',
+  }
 
-// beforeAll(async () => {
-//   await Request.deleteMany({});
-// });
+beforeAll(async () => {
+  await Request.deleteMany({});
+});
 
-// describe('Request service', () => {
-//   describe('Send request', () => {
-//     it('Should Send Request', async () => {
-//       const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
-//       const token = res.body.token;
-//       const user = await User.findOne({ email: travelerPayload2.email });
-//       const traveler = await Traveler.findOne({ userId: user._id });
-//       const trip = await Trip.findOne({ Traveler: traveler._id });
+describe('Request service', () => {
+  describe('Send request', () => {
+    it('Should Send Request', async () => {
+      const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
+      const token = res.body.token;
+      const user = await User.findOne({ email: travelerPayload2.email });
+      const traveler = await Traveler.findOne({ userId: user._id });
+      const trip = await Trip.findOne({ Traveler: traveler._id });
 
-//       await request(app)
-//         .post(`/v1/requests/sendrequest/${trip._id}`)
-//         .set('Authorization', `Bearer ${token}`)
-//         .send({
-//           to: 'Alexandria',
-//           from: 'Cairo',
-//           item: 'bag',
-//           weight: '19',
-//           location: 'gggg',
-//           targetLocation: 'jdjdjd',
-//           category: 'bags',
-//           buyOrdeliver: 'deliver',
-//           date: '2024-03-30',
-//           price:'500',
-//           tripPrice:'3'
-//         })
-//         .expect(201);
-//     });
-//   });
-// });
+      await request(app)
+        .post(`/v1/requests/sendrequest/${trip._id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          to: 'Alexandria',
+          from: 'Cairo',
+          item: 'bag',
+          weight: '19',
+          location: 'gggg',
+          targetLocation: 'jdjdjd',
+          category: 'bags',
+          buyOrdeliver: 'deliver',
+          date: '2024-03-30',
+          price:'500',
+          tripPrice:'3'
+        })
+        .expect(201);
+    });
+  });
+});
 
-// describe('Request service', () => {
-//   describe('Accept specific request', () => {
-//     it('Should accept specific request', async () => {
-//       const user = await User.findOne({ email: userPayloadd.email });
-//       const requests = await Request.findOne({ userId: user._id });
-//       const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
-//       const token = res.body.token;
-//       await request(app)
-//         .post(`/v1/requests/acceptrequest/${requests._id}`)
-//         .set('Authorization', `Bearer ${token}`)
-//         .expect(200);
-//     });
-//   });
-// });
+describe('Request service', () => {
+  describe('Accept specific request', () => {
+    it('Should accept specific request', async () => {
+      const user = await User.findOne({ email: userPayloadd.email });
+      const requests = await Request.findOne({ userId: user._id });
+      const res = await request(app).post('/v1/auth/login').send(travelerPayload2).expect(200);
+      const token = res.body.token;
+      await request(app)
+        .post(`/v1/requests/acceptrequest/${requests._id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+    });
+  });
+});
 
-// describe('Request service', () => {
-//   describe('Create request', () => {
-//     it('Should create a new request', async () => {
-//       const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
-//       const token = res.body.token;
-//       await request(app)
-//         .post('/v1/requests/')
-//         .set('Authorization', `Bearer ${token}`)
-//         .send({
-//           to: 'cairo',
-//           from: 'alex',
-//           item: 'fff',
-//           weight: '33',
-//           location: 'gggg',
-//           targetLocation: 'jdjdjd',
-//           category: 'bags',
-//           buyOrdeliver: 'deliver',
-//           date: '2024-03-22',
-//         })
-//         .expect(201);
-//     });
-//   });
-// });
+describe('Request service', () => {
+  describe('Create request', () => {
+    it('Should create a new request', async () => {
+      const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
+      const token = res.body.token;
+      await request(app)
+        .post('/v1/requests/')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          to: 'cairo',
+          from: 'alex',
+          item: 'fff',
+          weight: '33',
+          location: 'gggg',
+          targetLocation: 'jdjdjd',
+          category: 'bags',
+          buyOrdeliver: 'deliver',
+          date: '2024-03-22',
+        })
+        .expect(201);
+    });
+  });
+});
 
-// describe('Request service', () => {
-//   describe('Update request', () => {
-//     it('Should update request', async () => {
-//       const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
-//       const token = res.body.token;
-//       const user = await User.findOne({ email: userPayloadd.email });
-//       const requests = await Request.findOne({ userId: user._id });
-//       await request(app)
-//         .patch(`/v1/requests/${requests._id}`)
-//         .set('Authorization', `Bearer ${token}`)
-//         .send({
-//           to: 'kafr el-sheikh',
-//           from: 'Cairo',
-//           item: 'bag',
-//           weight: '19',
-//           location: 'gggg',
-//           targetLocation: 'jdjdjd',
-//           category: 'bags',
-//           buyOrdeliver: 'deliver',
-//           date: '2024-03-30',
-//         })
-//         .expect(200);
-//     });
-//   });
-// });
+describe('Request service', () => {
+  describe('Update request', () => {
+    it('Should update request', async () => {
+      const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
+      const token = res.body.token;
+      const user = await User.findOne({ email: userPayloadd.email });
+      const requests = await Request.findOne({ userId: user._id });
+      await request(app)
+        .patch(`/v1/requests/${requests._id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          to: 'kafr el-sheikh',
+          from: 'Cairo',
+          item: 'bag',
+          weight: '19',
+          location: 'gggg',
+          targetLocation: 'jdjdjd',
+          category: 'bags',
+          buyOrdeliver: 'deliver',
+          date: '2024-03-30',
+        })
+        .expect(200);
+    });
+  });
+});
 
-// describe('Request service', () => {
-//   describe('Accept any request', () => {
-//     it('Should accept any request', async () => {
-//       const user = await User.findOne({ email: userPayloadd.email });
-//       const requests = await Request.find({ userId: user._id });
-//       const lastRequest = requests.slice(-1);
-//       const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
-//       const token = res.body.token;
-//       await request(app)
-//         .post(`/v1/requests/acceptanyrequest/${lastRequest[0]._id}`)
-//         .set('Authorization', `Bearer ${token}`)
-//         .expect(200);
-//     });
-//   });
-// });
+describe('Request service', () => {
+  describe('Accept any request', () => {
+    it('Should accept any request', async () => {
+      const user = await User.findOne({ email: userPayloadd.email });
+      const requests = await Request.find({ userId: user._id });
+      const lastRequest = requests.slice(-1);
+      const res = await request(app).post('/v1/auth/login').send(travelerPayload2).expect(200);
+      const token = res.body.token;
+      await request(app)
+        .post(`/v1/requests/acceptanyrequest/${lastRequest[0]._id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+    });
+  });
+});
 
-// describe('Request service', () => {
-//   describe('View Request', () => {
-//     it('Should view Request', async () => {
-//       const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
-//       const token = res.body.token;
-//       await request(app).get(`/v1/requests/viewAllRequests`).set('Authorization', `Bearer ${token}`).expect(200);
-//     });
-//   });
-// });
+describe('Request service', () => {
+  describe('View Request', () => {
+    it('Should view Request', async () => {
+      const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
+      const token = res.body.token;
+      await request(app).get(`/v1/requests/viewAllRequests`).set('Authorization', `Bearer ${token}`).expect(200);
+    });
+  });
+});
 
-// describe('Request service', () => {
-//   describe('View user Requests', () => {
-//     it('Should view user Requests', async () => {
-//       const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
-//       const token = res.body.token;
-//       await request(app).get(`/v1/requests/userviewrequests`).set('Authorization', `Bearer ${token}`).expect(200);
-//     });
-//   });
-// });
+describe('Request service', () => {
+  describe('View user Requests', () => {
+    it('Should view user Requests', async () => {
+      const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
+      const token = res.body.token;
+      await request(app).get(`/v1/requests/userviewrequests`).set('Authorization', `Bearer ${token}`).expect(200);
+    });
+  });
+});
 
-// describe('Request service', () => {
-//   describe('View user Request', () => {
-//     it('Should view user Request', async () => {
-//       const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
-//       const token = res.body.token;
-//       const user = await User.findOne({ email: userPayloadd.email });
-//       const requests = await Request.findOne({ userId: user._id });
-//       await request(app).get(`/v1/requests/userviewrequest/${requests._id}`).set('Authorization', `Bearer ${token}`).expect(200);
-//     });
-//   });
-// });
+describe('Request service', () => {
+  describe('View user Request', () => {
+    it('Should view user Request', async () => {
+      const res = await request(app).post('/v1/auth/login').send(userPayloadd).expect(200);
+      const token = res.body.token;
+      const user = await User.findOne({ email: userPayloadd.email });
+      const requests = await Request.findOne({ userId: user._id });
+      await request(app).get(`/v1/requests/userviewrequest/${requests._id}`).set('Authorization', `Bearer ${token}`).expect(200);
+    });
+  });
+});
