@@ -12,7 +12,13 @@ const User = require('../models/user.model');
 const sendEmail = require('./sendEmail');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-
+var redirectUrl
+if(process.env.RUN_STATUS === 'local'){
+  redirectUrl = 'localhost:3001'
+}
+else{
+  redirectUrl = 'wasally.me'
+}
 /**
  * Login with username and password
  * @param {string} email
@@ -182,7 +188,7 @@ const forgotPassword = async (req, res) => {
     }
     const token = crypto.randomBytes(20).toString('hex');
     await User.findByIdAndUpdate(user._id, { token }, { new: true });
-    const URL = `${req.protocol}://localhost:3001/resetPassword/${token}`;
+    const URL = `${req.protocol}://${redirectUrl}/resetPassword/${token}`;
     const message = `
       <html>
         <body style="font-family: Arial, sans-serif;">
