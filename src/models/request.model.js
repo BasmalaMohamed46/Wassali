@@ -9,7 +9,6 @@ const requestSchema = mongoose.Schema(
     state: {
       type: String,
       enum: ['processing', 'accepted', 'pickedup', 'onmyway', 'delivered'],
-      // required: true,
       default: 'processing',
     },
     rate: {
