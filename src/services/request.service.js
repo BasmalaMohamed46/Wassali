@@ -1,5 +1,7 @@
 const httpStatus = require('http-status');
-const stripe = require('stripe')('sk_test_51Lw5pDCxmiDIHzo9pw3RmUcikOZyISs8JZZN1F2zodSOabqIOC85NaEoPvy6dgXTZUhq3a7IiqzV14Ej2fBVUpwp00iaPZyU6g');
+const stripe = require('stripe')(
+  'sk_test_51Lw5pDCxmiDIHzo9pw3RmUcikOZyISs8JZZN1F2zodSOabqIOC85NaEoPvy6dgXTZUhq3a7IiqzV14Ej2fBVUpwp00iaPZyU6g'
+);
 const { Request } = require('../models');
 const { User } = require('../models');
 const { Traveler } = require('../models');
@@ -17,11 +19,10 @@ const Conversation = require('../models/Conversation');
  * @param {Object} requestBody
  * @returns {Promise<Request>}
  */
-if(process.env.RUN_STATUS === 'local'){
-  redirectUrl = 'localhost:3001/home'
-}
-else{
-  redirectUrl = 'wasally.me'
+if (process.env.RUN_STATUS === 'local') {
+  redirectUrl = 'localhost:3001/home';
+} else {
+  redirectUrl = 'wasally.me';
 }
 const createRequest = async (id, req) => {
   const user = await User.findById(id);
@@ -303,19 +304,19 @@ const acceptrequest = async (id, requestId, req) => {
         },
       });
 
-        await Request.findByIdAndUpdate(requestId, {
-          $set: {
-            state: 'accepted',
-          },
-        });
+      await Request.findByIdAndUpdate(requestId, {
+        $set: {
+          state: 'accepted',
+        },
+      });
 
-        const conversationId = request.conversation;
-        const travelerId = await Traveler.find(trip.Traveler);
-        await Conversation.findByIdAndUpdate(conversationId, {
-          $push: {
-            members: travelerId[0]._id,
-          },
-        })
+      const conversationId = request.conversation;
+      const travelerId = await Traveler.find(trip.Traveler);
+      await Conversation.findByIdAndUpdate(conversationId, {
+        $push: {
+          members: travelerId[0]._id,
+        },
+      });
       return {
         message: 'Request accepted successfully',
       };
@@ -440,7 +441,7 @@ const TravelerAcceptRequest = async (id, req, res) => {
                   new: true,
                 }
               );
-                res.status(200).json({ message: 'request added' });
+              res.status(200).json({ message: 'request added' });
             } else {
               res.status(200).json({ message: 'request already added' });
             }
@@ -509,7 +510,7 @@ const userAcceptTravelerRequest = async (id, req, res) => {
             );
           }
         }
-        const travelerId = await Traveler.find( tripExist.Traveler );
+        const travelerId = await Traveler.find(tripExist.Traveler);
         const conversationId = request.conversation;
         await Conversation.findByIdAndUpdate(conversationId, {
           $push: {
@@ -591,11 +592,10 @@ const ViewAllAcceptedRequests = async (id, req, res) => {
   try {
     const user = await User.findById(id);
     if (user) {
-      const requests = await Request.find({ $or: [
-        { 'state': 'accepted' },
-        { 'state': 'onmyway' },
-        { 'state': 'delivered' },
-      ], userId: id });
+      const requests = await Request.find({
+        $or: [{ state: 'accepted' }, { state: 'onmyway' }, { state: 'delivered' }],
+        userId: id,
+      });
       if (requests) {
         res.status(200).json({ message: 'requests found successfully', requests });
       } else {
@@ -610,18 +610,18 @@ const ViewAllAcceptedRequests = async (id, req, res) => {
 };
 
 // checkout with tripPrice
-const checkout = async(id, req, res) => {
+const checkout = async (id, req, res) => {
   const request = await userviewrequests(id);
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
         price_data: {
-          currency: "egp",
-          unit_amount: (request.requests[request.requests.length-1].tripPrice) * 100,
+          currency: 'egp',
+          unit_amount: request.requests[request.requests.length - 1].tripPrice * 100,
           product_data: {
             name: 'Delivery Fees',
-           // description: '',
-          }
+            // description: '',
+          },
         },
         quantity: 1,
       },
@@ -633,23 +633,24 @@ const checkout = async(id, req, res) => {
     cancel_url: `http://${redirectUrl}`,
   });
 
-  res.status(200).json({ message: 'Checkout Successfully' ,session:session.url });
-}
+  res.status(200).json({ message: 'Checkout Successfully', session: session.url });
+};
 
 //checkout with tripPrice + Price of the item
-const checkoutWithPrice = async(id, req, res) => {
+const checkoutWithPrice = async (id, req, res) => {
   const request = await userviewrequests(id);
-  const totalPrice = request.requests[request.requests.length-1].tripPrice + request.requests[request.requests.length-1].price
+  const totalPrice =
+    request.requests[request.requests.length - 1].tripPrice + request.requests[request.requests.length - 1].price;
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
         price_data: {
-          currency: "egp",
-          unit_amount: totalPrice*100,
+          currency: 'egp',
+          unit_amount: totalPrice * 100,
           product_data: {
             name: 'Delivery Fees',
             description: 'Item Price + Delivery Fees',
-          }
+          },
         },
         quantity: 1,
       },
@@ -661,8 +662,8 @@ const checkoutWithPrice = async(id, req, res) => {
     cancel_url: `http://${redirectUrl}`,
   });
 
-  res.status(200).json({ message: 'Checkout Successfully' ,session:session.url });
-}
+  res.status(200).json({ message: 'Checkout Successfully', session: session.url });
+};
 
 const filterRequestsByCity = async (req, res) => {
   const { from } = req.body;
@@ -679,33 +680,32 @@ const filterRequestsByCity = async (req, res) => {
 };
 
 const getAceeptedRequests = async (req, res) => {
-    const id = req.user._id;
-    const foundedUser= await User.findById(id);
-    console.log(foundedUser);
-    if(foundedUser.role === 'traveler'){
-      const traveler = await Traveler.findOne({
-        userId: id,
-      })
-      const trip = await Trip.findOne({
-        Traveler: traveler._id,
-      }).sort({ createdAt: -1 });
-      const requests = await Request.find({
-        trip: trip._id,
-        state: 'accepted',
-      }).populate({
-        path: 'userId',
-        select: 'name phoneNumber',
-      });
-      res.status(200).json({
-        message: 'requests found successfully',
-        requests,
-      });
-    }
-    else{
-      return{
-        message: 'You are not a traveler'
-      }
-    }
+  const id = req.user._id;
+  const foundedUser = await User.findById(id);
+  console.log(foundedUser);
+  if (foundedUser.role === 'traveler') {
+    const traveler = await Traveler.findOne({
+      userId: id,
+    });
+    const trip = await Trip.findOne({
+      Traveler: traveler._id,
+    }).sort({ createdAt: -1 });
+    const requests = await Request.find({
+      trip: trip._id,
+      state: 'accepted',
+    }).populate({
+      path: 'userId',
+      select: 'name phoneNumber',
+    });
+    res.status(200).json({
+      message: 'requests found successfully',
+      requests,
+    });
+  } else {
+    return {
+      message: 'You are not a traveler',
+    };
+  }
 };
 
 module.exports = {
@@ -718,7 +718,6 @@ module.exports = {
   userviewrequests,
   userviewrequest,
   acceptrequest,
-  // acceptanyrequest,
   declinerequest,
   viewAllRequests,
   DeclineTrip,
@@ -730,5 +729,5 @@ module.exports = {
   checkout,
   checkoutWithPrice,
   filterRequestsByCity,
-  getAceeptedRequests
+  getAceeptedRequests,
 };
