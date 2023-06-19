@@ -67,14 +67,6 @@ const acceptRequest = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(request);
 })
 
-const acceptAnyRequest = catchAsync(async (req, res) => {
-  const id = req.user._id;
-  const requestId = req.params.requestId;
-  const request = await requestService.acceptanyrequest(id, requestId, req);
-  res.status(httpStatus.CREATED).send(request);
-})
-
-
 
 const declineRequest = catchAsync(async (req, res) => {
   const id = req.user._id;
@@ -156,7 +148,6 @@ module.exports = {
   userViewRequests,
   userViewRequest,
   acceptRequest,
-  acceptAnyRequest,
   declineRequest,
   viewAllRequest,
   DeclineTrip,

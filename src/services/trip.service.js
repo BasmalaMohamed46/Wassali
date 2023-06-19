@@ -24,7 +24,7 @@ const addTrip = async (id, req) => {
             Traveler: foundedTraveler._id,
             TripTime,
           });
-          foundedTraveler = await Traveler.findByIdAndUpdate(
+          await Traveler.findByIdAndUpdate(
             { _id: foundedTraveler._id },
             { $push: { Trip: trip[0]._id } },
             { new: true }

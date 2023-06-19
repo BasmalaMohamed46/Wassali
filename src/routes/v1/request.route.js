@@ -37,6 +37,6 @@ router
 router.post('/sendrequest/:tripId',validate(requestValidation.sendRequest),auth(),requestController.sendRequest)
 
 router.post('/acceptrequest/:requestId', auth(), requestController.acceptRequest)
-router.post('/acceptanyrequest/:requestId', auth(), requestController.acceptAnyRequest)
+// router.post('/acceptanyrequest/:requestId', auth(), requestController.acceptAnyRequest)
 router.post('/declinerequest/:requestId', auth(), requestController.declineRequest)
 module.exports = router;
