@@ -7,3 +7,4 @@ module.exports.conversationService = require('./conversation.service');
 module.exports.messageService = require('./message.service');
 module.exports.travelerService = require('./traveler.service');
 module.exports.tripService = require('./trip.service');
+module.exports.adminService = require('./admin.service');

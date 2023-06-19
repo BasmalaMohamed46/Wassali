@@ -5,16 +5,16 @@ const docsRoute = require('./docs.route');
 const requestRoutes = require('./request.route');
 const travelerRoute = require('./traveler.route');
 const tripRoute = require('./trip.route');
-const  conversationRoute = require('./conversation.route');
-const  messageRoute = require('./message.route');
-
+const conversationRoute = require('./conversation.route');
+const messageRoute = require('./message.route');
+const adminRoute = require('./admin.route');
 
 const config = require('../../config/config');
 
 const router = express.Router();
 
-
-const defaultRoutes = [{
+const defaultRoutes = [
+  {
     path: '/auth',
     route: authRoute,
   },
@@ -41,6 +41,10 @@ const defaultRoutes = [{
   {
     path: '/messages',
     route: messageRoute,
+  },
+  {
+    path: '/admins',
+    route: adminRoute,
   },
 ];
 

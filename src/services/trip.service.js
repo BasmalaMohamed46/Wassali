@@ -8,30 +8,36 @@ const addTrip = async (id, req) => {
     const userExist = await User.findById(id);
     if (userExist) {
       let foundedTraveler = await Traveler.findOne({ userId: id });
-      const { from, to, TripDate, AvailableWeight, unAcceptablaPackage, TripTime } = req.body;
-      if (foundedTraveler) {
-        const trip = await Trip.insertMany({
-          from,
-          to,
-          TripDate,
-          AvailableWeight,
-          unAcceptablaPackage,
-          Traveler: foundedTraveler._id,
-          TripTime,
-        });
-        foundedTraveler = await Traveler.findByIdAndUpdate(
-          { _id: foundedTraveler._id },
-          { $push: { Trip: trip[0]._id } },
-          { new: true }
-        );
+      if (!foundedTraveler.isAdminVerificationPending) {
         return {
-          message: 'Trip added successfully',
-          trip,
+          message: 'Your document is under review. You will be notified by email soon.',
         };
       } else {
-        return {
-          message: 'Trip not added',
-        };
+        const { from, to, TripDate, AvailableWeight, unAcceptablaPackage, TripTime } = req.body;
+        if (foundedTraveler) {
+          const trip = await Trip.insertMany({
+            from,
+            to,
+            TripDate,
+            AvailableWeight,
+            unAcceptablaPackage,
+            Traveler: foundedTraveler._id,
+            TripTime,
+          });
+          foundedTraveler = await Traveler.findByIdAndUpdate(
+            { _id: foundedTraveler._id },
+            { $push: { Trip: trip[0]._id } },
+            { new: true }
+          );
+          return {
+            message: 'Trip added successfully',
+            trip,
+          };
+        } else {
+          return {
+            message: 'Trip not added',
+          };
+        }
       }
     } else {
       return {
@@ -243,5 +249,5 @@ module.exports = {
   viewtravelertrips,
   viewtrip,
   updateTrip,
-  filterTripsByCity
+  filterTripsByCity,
 };
