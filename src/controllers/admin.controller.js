@@ -6,6 +6,7 @@ const register = catchAsync(async (req, res) => {
   const admin = await adminService.createAdmin(req.body);
   const user = await User.create(req.body);
   user.role = 'admin';
+  user.isEmailVerified=true;
   await user.save();
   res.status(httpStatus.CREATED).send(admin);
 });
