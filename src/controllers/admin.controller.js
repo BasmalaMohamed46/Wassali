@@ -1,8 +1,13 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { authService, userService, adminService } = require('../services');
+const User = require('../models/user.model');
 const register = catchAsync(async (req, res) => {
   const admin = await adminService.createAdmin(req.body);
+  const user = await User.create(req.body);
+  user.role = 'admin';
+  user.isEmailVerified=true;
+  await user.save();
   res.status(httpStatus.CREATED).send(admin);
 });
 
@@ -107,5 +112,5 @@ module.exports = {
   getTrip,
   getAllTrips,
   deleteTrip,
-  verifyDocuments
+  verifyDocuments,
 };
