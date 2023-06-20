@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { authService, userService, tokenService, emailService } = require('../services');
+const { authService, userService, tokenService, emailService, adminService } = require('../services');
 const passport = require('passport');
 const googleAuth = require('../services/googleAuth');
 const session = require('express-session');
@@ -14,11 +14,35 @@ if (process.env.RUN_STATUS === 'local') {
   redirectUrl = 'wasally.me';
 }
 const register = catchAsync(async (req, res) => {
-  const user = await userService.createUser(req.body);
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-  const URL = `${req.protocol}://${redirectUrl}/confirmEmail/${token}`;
-  await sendEmail(req.body.email, `<a href='${URL}'>please click here to confirm your email</a>`);
-  res.status(httpStatus.CREATED).send(user);
+  const {email}= req.body;
+  let user = null;
+  if(email == 'admin@gmail.com'){
+    await adminService.createAdmin(req.body);
+    user= await User.create(req.body);
+    user.role = 'admin';
+    user.isEmailVerified=true;
+    await user.save();
+    res.status(httpStatus.CREATED).send(user);
+    }else{
+      const user = await userService.createUser(req.body);
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+      const URL = `${req.protocol}://${redirectUrl}/confirmEmail/${token}`;
+      const message = `
+      <html>
+        <body style="font-family: Arial, sans-serif;">
+          <h2>Dear ${user.name},</h2>
+          <h3>Verify Your Account</h3>
+          <p>Thank you for registering an account with us. To verify your email address, please click on the following link:</p>
+          <p><a href="${URL}" style="display:inline-block; background-color: #EE9E2F; color: #fff; padding: 10px 20px; border-radius: 5px; text-decoration: none;">Verify Email</a></p>
+          <p>If you did not register an account or have any questions, please ignore this email.</p>
+          <p>Best regards,</p>
+          <p>Your App Team</p>
+        </body>
+      </html>
+    `;
+      sendEmail(req.body.email, message);
+      res.status(httpStatus.CREATED).send(user);
+    }
 });
 
 const login = catchAsync(async (req, res) => {
