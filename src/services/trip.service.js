@@ -8,11 +8,11 @@ const addTrip = async (id, req) => {
     const userExist = await User.findById(id);
     if (userExist) {
       let foundedTraveler = await Traveler.findOne({ userId: id });
-      if (!foundedTraveler.isAdminVerificationPending) {
-        return {
-          message: 'Your document is under review. You will be notified by email soon.',
-        };
-      } else {
+      // if (!foundedTraveler.isAdminVerificationPending) {
+      //   return {
+      //     message: 'Your document is under review. You will be notified by email soon.',
+      //   };
+      // } else {
         const { from, to, TripDate, AvailableWeight, unAcceptablaPackage, TripTime } = req.body;
         if (foundedTraveler) {
           const trip = await Trip.insertMany({
@@ -38,7 +38,7 @@ const addTrip = async (id, req) => {
             message: 'Trip not added',
           };
         }
-      }
+      // }
     } else {
       return {
         message: 'User not found',

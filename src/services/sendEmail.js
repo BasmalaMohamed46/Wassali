@@ -7,6 +7,9 @@ async function sendEmail(dest,message){
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
+    maxMessages: Infinity,
+    maxConnections: 20,
+    pool:true,
     secure: true, // true for 465, false for other ports
     auth: {
       user: process.env.senderEmail, // generated ethereal user
