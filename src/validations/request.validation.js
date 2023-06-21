@@ -25,7 +25,7 @@ const createRequest = {
           }).required(),
         storeLocation: Joi.string().optional().allow(''),
         storeName: Joi.string().optional().allow(''),
-        price: Joi.number().optional().allow(''),
+        price: Joi.number().optional().allow('').min(1).max(5000),
 
     }),
 };
@@ -72,7 +72,7 @@ const updateRequest = {
               }).optional().allow(''),
               storeLocation: Joi.string().optional().allow(''),
         storeName: Joi.string().optional().allow(''),
-        price: Joi.number().optional().allow(''),
+        price: Joi.number().optional().allow('').min(1).max(5000),
         })
      
 };
@@ -110,7 +110,7 @@ const sendRequest = {
           storeLocation: Joi.string().optional().allow(''),
         storeName: Joi.string().optional().allow(''),
         price: Joi.number().optional().allow(''),
-        tripPrice: Joi.number().optional().allow(''),
+        tripPrice: Joi.number().optional().allow('').min(1).max(5000),
 
     }),
 
