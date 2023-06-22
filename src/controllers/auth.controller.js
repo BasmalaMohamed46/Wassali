@@ -26,21 +26,21 @@ const register = catchAsync(async (req, res) => {
     }else{
       const user = await userService.createUser(req.body);
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    //   const URL = `${req.protocol}://${redirectUrl}/confirmEmail/${token}`;
-    //   const message = `
-    //   <html>
-    //     <body style="font-family: Arial, sans-serif;">
-    //       <h2>Dear ${user.name},</h2>
-    //       <h3>Verify Your Account</h3>
-    //       <p>Thank you for registering an account with us. To verify your email address, please click on the following link:</p>
-    //       <p><a href="${URL}" style="display:inline-block; background-color: #EE9E2F; color: #fff; padding: 10px 20px; border-radius: 5px; text-decoration: none;">Verify Email</a></p>
-    //       <p>If you did not register an account or have any questions, please ignore this email.</p>
-    //       <p>Best regards,</p>
-    //       <p>Your App Team</p>
-    //     </body>
-    //   </html>
-    // `;
-    //   sendEmail(req.body.email, message);
+      const URL = `${req.protocol}://${redirectUrl}/confirmEmail/${token}`;
+      const message = `
+      <html>
+        <body style="font-family: Arial, sans-serif;">
+          <h2>Dear ${user.name},</h2>
+          <h3>Verify Your Account</h3>
+          <p>Thank you for registering an account with us. To verify your email address, please click on the following link:</p>
+          <p><a href="${URL}" style="display:inline-block; background-color: #EE9E2F; color: #fff; padding: 10px 20px; border-radius: 5px; text-decoration: none;">Verify Email</a></p>
+          <p>If you did not register an account or have any questions, please ignore this email.</p>
+          <p>Best regards,</p>
+          <p>Your App Team</p>
+        </body>
+      </html>
+    `;
+      sendEmail(req.body.email, message);
       res.status(httpStatus.CREATED).send(user);
     }
 });

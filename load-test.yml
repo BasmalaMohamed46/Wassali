@@ -5,7 +5,7 @@ config:
     - response
   phases:
     - duration: 1
-      arrivalRate: 50
+      arrivalRate: 15
       name: 'testing'
   payload:
     path: ./data.csv
