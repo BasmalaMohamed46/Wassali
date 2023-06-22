@@ -12,6 +12,7 @@ const User = require('../models/user.model');
 const sendEmail = require('./sendEmail');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const Traveler = require('../models/traveler.model');
 var redirectUrl
 if(process.env.RUN_STATUS === 'local'){
   redirectUrl = 'localhost:3001'
@@ -27,17 +28,28 @@ else{
  */
 const loginUserWithEmailAndPassword = async (email, password, res) => {
   const user = await userService.getUserByEmail(email);
+  const traveler= await Traveler.findOne({
+    userId: user._id
+  })
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
   // console.log(user.role);
-  const token = jwt.sign(
-    {
-      id: user._id,
-      role: user.role,
-      name: user.name,
-      email: user.email,
-    },
+  const payload = {
+    id: user._id,
+    role: user.role,
+    name: user.name,
+    email: user.email,
+  }
+  if(traveler){
+    if(traveler.isAdminVerificationPending){
+      payload.travelerVerification = true;
+  }else{
+    payload.travelerVerification = false;
+  }
+  }
+
+  const token = jwt.sign(payload,
     process.env.JWT_SECRET
   );
   // return user;
@@ -206,7 +218,7 @@ const forgotPassword = async (req, res) => {
     return res.status(200).json({
       message: 'Email sent successfully. Please check your email.',
     });
-  
+
   } catch (error) {
     res.status(500).json({
       message: 'Server Error',
@@ -218,7 +230,7 @@ const forgotPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
-    
+
     const user = await User.findOne({ token });
     if (!user) {
       res.status(404).json({
