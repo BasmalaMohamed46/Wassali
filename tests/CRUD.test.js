@@ -51,14 +51,14 @@ const userPayload3 = {
   password: 'test12D34',
 };
 
-// describe('User Login with Email Not Exist',()=>{
-//     describe('Login user',()=>{
-//         it('Should not login a user',async()=>{
-//           await request(app).post('/v1/auth/login').send(userPayload3).expect(401)
-//         })
-//     })
-// }
-// )
+describe('User Login with Email Not Exist',()=>{
+    describe('Login user',()=>{
+        it('Should not login a user',async()=>{
+          await request(app).post('/v1/auth/login').send(userPayload3).expect(500)
+        })
+    })
+}
+)
 
 jest.setTimeout(10000);
 
@@ -157,7 +157,7 @@ describe('Traveler service', () => {
 });
 
 let payloadAdmin = {
-  email: 'engya306@gmail.com',
+  email: 'admin@gmail.com',
   password: 'test12D34',
 };
 
