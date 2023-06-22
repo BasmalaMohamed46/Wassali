@@ -83,7 +83,7 @@ const getUser = async (id, req) => {
 };
 
 const getAllTravelers = async (req, res) => {
-  const travelers = await Traveler.find({ role: 'traveler' });
+  const travelers = await Traveler.find({}).populate('userId');
   if (!travelers) {
     res.status(404).json({
       message: 'travelers not exist',
