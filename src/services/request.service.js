@@ -692,7 +692,7 @@ const getAceeptedRequests = async (req, res) => {
     }).sort({ createdAt: -1 });
     const requests = await Request.find({
       trip: trip._id,
-      state: 'accepted',
+      $or: [{ state: 'accepted' }, { state: 'onmyway' }, { state: 'delivered' }],
     }).populate({
       path: 'userId',
       select: 'name phoneNumber',
