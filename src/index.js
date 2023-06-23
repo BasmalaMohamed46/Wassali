@@ -11,7 +11,8 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
     logger.info(`Listening to port ${config.port}`);
     const io = require('socket.io')(server, {
       cors: {
-        origin: 'http://wasally.me',
+         origin: "*",
+         methods: ["GET", "POST"],
       },
     });
     logger.info('Socket server is running');
